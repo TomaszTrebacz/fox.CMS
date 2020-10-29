@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(process.env.APP_PORT);
   Logger.log(
-    `User-service listening on http://localhost:${process.env.APP_PORT}`,
+    `Blog-service listening on http://localhost:${process.env.APP_PORT}`,
     'Bootstrap',
   );
 }
