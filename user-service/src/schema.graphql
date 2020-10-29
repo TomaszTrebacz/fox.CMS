@@ -3,7 +3,8 @@ scalar Date
 type User {
   id: String!
   email: String!
-  name: String!
+  firstName: String!
+  lastName: String!
   password: String!
   role: String!
   created: Date!
