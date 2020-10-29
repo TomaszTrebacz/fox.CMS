@@ -19,4 +19,6 @@ export class User {
 
 export abstract class IQuery {
     abstract users(): User[] | Promise<User[]>;
+
+    abstract user(id: string): User | Promise<User>;
 }

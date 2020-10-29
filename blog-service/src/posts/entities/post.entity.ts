@@ -21,4 +21,7 @@ export class Post {
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   created: Date;
+
+  @Column()
+  userId: string;
 }

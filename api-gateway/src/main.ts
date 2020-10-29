@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(process.env.APP_PORT);
   Logger.log(
-    `Blog-service listening on http://localhost:${process.env.APP_PORT}/graphql`,
+    `Api-gateway listening on http://localhost:${process.env.APP_PORT}/graphql`,
     'Bootstrap',
   );
 }

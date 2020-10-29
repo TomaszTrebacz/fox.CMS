@@ -1,6 +1,6 @@
 scalar Date
 
-type User {
+type User @key(fields: "id") {
   id: String!
   email: String!
   firstName: String!
@@ -11,6 +11,7 @@ type User {
   updated: Date!
 }
 
-type Query {
+extend type Query {
   users: [User]!
+  user(id: String!): User
 }

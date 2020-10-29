@@ -1,11 +1,18 @@
 scalar Date
 
-type Post {
+type Post @key(fields: "id") {
   id: Int!
   title: String!
   text: String!
+  created: Date!
+  user: User
 }
 
-type Query {
-  posts: [Post]!
+extend type User @key(fields: "id") {
+  id: String! @external
+  posts: [Post]
+}
+
+extend type Query {
+  posts: [Post]
 }

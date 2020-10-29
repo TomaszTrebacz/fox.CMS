@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
 import * as Joi from '@hapi/joi';
 import { DateScalar } from './shared/date.scalar';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLFederationModule } from '@nestjs/graphql';
 import { join } from 'path';
 
 @Module({
@@ -31,7 +31,7 @@ import { join } from 'path';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    GraphQLModule.forRoot({
+    GraphQLFederationModule.forRoot({
       typePaths: ['./**/*.graphql'],
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
