@@ -6,6 +6,17 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class CreateUserInput {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+}
+
+export abstract class IMutation {
+    abstract registerUser(createUserInput?: CreateUserInput): User | Promise<User>;
+}
+
 export class User {
     id: string;
     email: string;

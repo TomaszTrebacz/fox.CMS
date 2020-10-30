@@ -15,6 +15,9 @@ import * as Joi from '@hapi/joi';
       }),
     }),
     GraphQLGatewayModule.forRoot({
+      server: {
+        cors: true,
+      },
       gateway: {
         serviceList: [
           {

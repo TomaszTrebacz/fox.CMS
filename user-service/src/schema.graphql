@@ -15,3 +15,14 @@ extend type Query {
   users: [User]!
   user(id: String!): User
 }
+
+type Mutation {
+  registerUser(createUserInput: CreateUserInput): User
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+}

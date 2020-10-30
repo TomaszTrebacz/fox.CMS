@@ -1,5 +1,14 @@
-import { Resolver, Query, Args, ResolveReference } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  ResolveReference,
+  Mutation,
+} from '@nestjs/graphql';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { UserInputError } from 'apollo-server-core';
 
 @Resolver('User')
 export class UsersResolver {
@@ -18,5 +27,17 @@ export class UsersResolver {
   @ResolveReference()
   resolveReference(reference: { __typename: string; id: string }) {
     return this.usersService.findOneById(reference.id);
+  }
+
+  @Mutation()
+  async registerUser(
+    @Args('createUserInput') registerData: CreateUserDto,
+  ): Promise<User> {
+    try {
+      const createdUser = await this.usersService.createUser(registerData);
+      return createdUser;
+    } catch (err) {
+      throw new UserInputError(err.message);
+    }
   }
 }
