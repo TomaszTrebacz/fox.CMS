@@ -1,10 +1,4 @@
-import {
-  IsEmpty,
-  MinLength,
-  MaxLength,
-  IsEmail,
-  IsEnum,
-} from 'class-validator';
+import { IsEmpty, MinLength, MaxLength, IsEmail } from 'class-validator';
 import { CreateUserInput } from '../../graphql';
 import { userRole } from '../enums/userRole.enum';
 

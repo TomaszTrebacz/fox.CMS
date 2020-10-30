@@ -6,8 +6,10 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   entities: ['dist/**/*.entity.js'],
-  migrations: ['dist/migrations/*.js'],
+  migrations: ['dist/database/migrations/*.js'],
+  seeds: ['dist/database/seeds/*.js'],
+  factories: ['dist/database/factories/*.js'],
   cli: {
-    migrationsDir: 'src/migrations',
+    migrationsDir: 'src/database/migrations',
   },
 };

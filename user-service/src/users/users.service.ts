@@ -19,6 +19,12 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
+  findOneByEmail(email: string) {
+    const lowercaseEmail = this.lowercaseField(email);
+
+    return this.usersRepository.find({ where: { email: lowercaseEmail } });
+  }
+
   async createUser(createData: User): Promise<User> {
     let user = new User();
 
