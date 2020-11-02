@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { join } from 'path';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { DateScalar } from './shared/date.scalar';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { DateScalar } from './shared/date.scalar';
       },
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],

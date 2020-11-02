@@ -11,9 +11,15 @@ type User @key(fields: "id") {
   updated: Date!
 }
 
+type LoginResponse {
+  user: User!
+  token: String!
+}
+
 extend type Query {
   users: [User]!
   user(id: String!): User
+  login(loginCredentials: LoginInput): LoginResponse
 }
 
 type Mutation {
@@ -33,4 +39,9 @@ input UpdateUserInput {
   id: String!
   firstName: String!
   lastName: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

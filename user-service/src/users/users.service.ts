@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
@@ -20,9 +22,9 @@ export class UsersService {
   }
 
   findOneByEmail(email: string) {
-    const lowercaseEmail = this.lowercaseField(email);
+    const lowercaseEmail = this.authService.lowercaseField(email);
 
-    return this.usersRepository.find({ where: { email: lowercaseEmail } });
+    return this.usersRepository.findOne({ where: { email: lowercaseEmail } });
   }
 
   async createUser(createData: User): Promise<User> {
@@ -31,8 +33,8 @@ export class UsersService {
     user.firstName = createData.firstName;
     user.lastName = createData.lastName;
 
-    user.email = this.lowercaseField(createData.email);
-    user.password = this.hashPassword(createData.password);
+    user.email = this.authService.lowercaseField(createData.email);
+    user.password = this.authService.hashPassword(createData.password);
 
     await this.usersRepository.save(user);
 
@@ -60,16 +62,5 @@ export class UsersService {
     } else {
       throw new Error('The user has not been deleted.');
     }
-  }
-
-  lowercaseField(field: String) {
-    return field.toLowerCase();
-  }
-
-  hashPassword(password: String) {
-    const saltRounds = parseInt(process.env.SALT_LENGTH);
-    const hash = bcrypt.hashSync(password, saltRounds);
-
-    return hash;
   }
 }
