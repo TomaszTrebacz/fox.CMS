@@ -13,8 +13,18 @@ export class CreateUserInput {
     password: string;
 }
 
+export class UpdateUserInput {
+    id: string;
+    firstName: string;
+    lastName: string;
+}
+
 export abstract class IMutation {
     abstract registerUser(createUserInput?: CreateUserInput): User | Promise<User>;
+
+    abstract updateUser(updateUserInput?: UpdateUserInput): boolean | Promise<boolean>;
+
+    abstract deleteUser(id?: string): boolean | Promise<boolean>;
 }
 
 export class User {

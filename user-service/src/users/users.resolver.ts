@@ -6,6 +6,7 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
@@ -39,5 +40,22 @@ export class UsersResolver {
     } catch (err) {
       throw new UserInputError(err.message);
     }
+  }
+
+  @Mutation()
+  async updateUser(
+    @Args('updateUserInput') updateData: UpdateUserDto,
+  ): Promise<Boolean> {
+    try {
+      await this.usersService.updateUser(updateData);
+      return new Boolean(true);
+    } catch (err) {
+      throw new UserInputError(`Cannot update user: ${err.message}`);
+    }
+  }
+
+  @Mutation()
+  async deleteUser(@Args('id') id: string) {
+    return this.usersService.deleteUser(id);
   }
 }

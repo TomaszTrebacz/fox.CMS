@@ -18,6 +18,8 @@ extend type Query {
 
 type Mutation {
   registerUser(createUserInput: CreateUserInput): User
+  updateUser(updateUserInput: UpdateUserInput): Boolean
+  deleteUser(id: String): Boolean
 }
 
 input CreateUserInput {
@@ -25,4 +27,10 @@ input CreateUserInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input UpdateUserInput {
+  id: String!
+  firstName: String!
+  lastName: String!
 }

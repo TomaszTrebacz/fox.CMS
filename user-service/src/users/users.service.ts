@@ -39,6 +39,29 @@ export class UsersService {
     return user;
   }
 
+  async updateUser(updateData: User): Promise<Boolean> {
+    const currentData = await this.findOneById(updateData.id);
+
+    delete currentData.email;
+    delete currentData.password;
+    delete currentData.role;
+
+    let finalData = Object.assign(currentData, updateData);
+    await this.usersRepository.save(finalData);
+
+    return true;
+  }
+
+  async deleteUser(id: string) {
+    const deleted = await this.usersRepository.delete(id);
+
+    if (deleted.affected == 1) {
+      return true;
+    } else {
+      throw new Error('The user has not been deleted.');
+    }
+  }
+
   lowercaseField(field: String) {
     return field.toLowerCase();
   }
