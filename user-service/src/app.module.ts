@@ -34,11 +34,11 @@ import { AuthModule } from './auth/auth.module';
     }),
     GraphQLFederationModule.forRoot({
       typePaths: ['./**/*.graphql'],
+      context: ({ req }: any) => ({ req }),
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
       },
-      context: ({ req }: any) => ({ req }),
     }),
     UsersModule,
     AuthModule,

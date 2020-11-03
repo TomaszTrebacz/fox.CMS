@@ -61,4 +61,8 @@ export class AuthService {
   lowercaseField(field: String) {
     return field.toLowerCase();
   }
+
+  isAdmin(role: string): boolean {
+    return role.includes('admin');
+  }
 }

@@ -18,6 +18,7 @@ type LoginResponse {
 
 extend type Query {
   users: [User]!
+  currentUser: User!
   user(id: String!): User
   login(loginCredentials: LoginInput): LoginResponse
 }

@@ -12,19 +12,29 @@ import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guards';
+import { CurrentUser } from './decorators/user.decorator';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query('users')
+  @UseGuards(AdminGuard)
   findAll() {
     return this.usersService.findAll();
   }
 
   @Query('user')
+  @UseGuards(AdminGuard)
   getUser(@Args('id') id: string) {
     return this.usersService.findOneById(id);
+  }
+
+  @Query('currentUser')
+  @UseGuards(GqlAuthGuard)
+  currentUser(@CurrentUser() user: User) {
+    return this.usersService.findOneById(user.id);
   }
 
   @ResolveReference()
@@ -57,6 +67,7 @@ export class UsersResolver {
   }
 
   @Mutation()
+  @UseGuards(AdminGuard)
   async deleteUser(@Args('id') id: string) {
     return this.usersService.deleteUser(id);
   }

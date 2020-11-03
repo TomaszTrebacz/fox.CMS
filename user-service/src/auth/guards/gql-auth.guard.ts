@@ -11,7 +11,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     return request;
   }
 
-  handleRequest(err: any, user: any, info: any) {
+  handleRequest(err: any, user: any) {
     if (err || !user) {
       throw err || new AuthenticationError('Can not authenticate with token');
     }
