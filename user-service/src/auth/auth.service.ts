@@ -4,6 +4,7 @@ import { LoginDto } from './dto/login.input';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/graphql';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,16 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return token;
+  }
+
+  async validateJwt(payload: JwtPayload) {
+    const user = await this.usersService.findOneById(payload.id);
+
+    if (user.role !== payload.role) {
+      return undefined;
+    }
+
+    return user;
   }
 
   hashPassword(password: String) {
