@@ -9,7 +9,7 @@ import { UpdateUserInput } from '../../graphql';
 import { userRole } from '../enums/userRole.enum';
 
 export class UpdateUserDto extends UpdateUserInput {
-  @IsUUID()
+  @IsEmpty()
   id: string;
 
   @IsEmpty()

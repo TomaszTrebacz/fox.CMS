@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class ChangeRoleInput {
+    id: string;
+    role: string;
+}
+
 export class CreateUserInput {
     email: string;
     firstName: string;
@@ -35,6 +40,8 @@ export abstract class IMutation {
     abstract updateUser(updateUserInput?: UpdateUserInput): boolean | Promise<boolean>;
 
     abstract deleteUser(id?: string): boolean | Promise<boolean>;
+
+    abstract changeRole(changeRoleInput?: ChangeRoleInput): boolean | Promise<boolean>;
 }
 
 export class User {

@@ -27,6 +27,7 @@ type Mutation {
   registerUser(createUserInput: CreateUserInput): User
   updateUser(updateUserInput: UpdateUserInput): Boolean
   deleteUser(id: String): Boolean
+  changeRole(changeRoleInput: ChangeRoleInput): Boolean
 }
 
 input CreateUserInput {
@@ -45,4 +46,9 @@ input UpdateUserInput {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input ChangeRoleInput {
+  id: String!
+  role: String!
 }

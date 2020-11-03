@@ -26,7 +26,6 @@ export class UsersResolver {
   }
 
   @Query('user')
-  @UseGuards(AdminGuard)
   getUser(@Args('id') id: string) {
     return this.usersService.findOneById(id);
   }
@@ -55,11 +54,13 @@ export class UsersResolver {
   }
 
   @Mutation()
+  @UseGuards(GqlAuthGuard)
   async updateUser(
+    @CurrentUser() user: User,
     @Args('updateUserInput') updateData: UpdateUserDto,
   ): Promise<Boolean> {
     try {
-      await this.usersService.updateUser(updateData);
+      await this.usersService.updateUser(updateData, user);
       return new Boolean(true);
     } catch (err) {
       throw new UserInputError(`Cannot update user: ${err.message}`);

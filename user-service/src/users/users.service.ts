@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
+import { ChangeRoleDto } from '../auth/dto/change-role.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -41,8 +42,8 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(updateData: User): Promise<Boolean> {
-    const currentData = await this.findOneById(updateData.id);
+  async updateUser(updateData: User, user: User): Promise<Boolean> {
+    const currentData = await this.findOneById(user.id);
 
     delete currentData.email;
     delete currentData.password;
@@ -62,5 +63,22 @@ export class UsersService {
     } else {
       throw new Error('The user has not been deleted.');
     }
+  }
+
+  async changeRole(changeRoleData: ChangeRoleDto): Promise<Boolean> {
+    const user = await this.findOneById(changeRoleData.id);
+
+    if (!user) return undefined;
+    if (user.role == 'root')
+      throw new Error('Can not change permissions of root');
+
+    user.role = changeRoleData.role;
+    try {
+      await this.usersRepository.save(user);
+    } catch (err) {
+      throw new Error(`Can not change permissions: ${err.message}`);
+    }
+
+    return true;
   }
 }
