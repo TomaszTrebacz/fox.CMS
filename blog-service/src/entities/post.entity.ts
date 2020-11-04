@@ -3,7 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
+import { Category } from './category.entity';
 
 @Entity('posts')
 export class Post {
@@ -21,6 +23,12 @@ export class Post {
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   created: Date;
+
+  @ManyToOne(
+    () => Category,
+    category => category.posts,
+  )
+  category: Category;
 
   @Column()
   userId: string;

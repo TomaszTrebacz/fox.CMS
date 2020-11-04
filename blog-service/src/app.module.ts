@@ -8,6 +8,7 @@ import * as Joi from '@hapi/joi';
 import { DateScalar } from './shared/date.scalar';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { join } from 'path';
       },
     }),
     PostsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],

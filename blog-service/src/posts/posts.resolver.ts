@@ -1,5 +1,5 @@
 import { Resolver, Query, ResolveProperty, Parent } from '@nestjs/graphql';
-import { Post } from './entities/post.entity';
+import { Post } from '../entities/post.entity';
 import { PostsService } from './posts.service';
 
 @Resolver('Post')

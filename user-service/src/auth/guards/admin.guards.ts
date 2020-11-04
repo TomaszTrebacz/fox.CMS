@@ -13,7 +13,7 @@ export class AdminGuard extends GqlAuthGuard {
   }
 
   handleRequest(err, user) {
-    if (user.role !== 'admin') {
+    if (user.role !== 'admin' || user.role !== 'root') {
       throw new AuthenticationError(
         'Can not access this part of api with your privileges.',
       );

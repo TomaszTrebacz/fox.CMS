@@ -5,7 +5,14 @@ type Post @key(fields: "id") {
   title: String!
   text: String!
   created: Date!
+  category: Category
   user: User
+}
+
+type Category {
+  id: Int!
+  name: String!
+  posts: [Post]
 }
 
 extend type User @key(fields: "id") {
@@ -15,4 +22,5 @@ extend type User @key(fields: "id") {
 
 extend type Query {
   posts: [Post]
+  categories: [Category]
 }
