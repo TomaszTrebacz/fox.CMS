@@ -23,4 +23,19 @@ extend type User @key(fields: "id") {
 extend type Query {
   posts: [Post]
   categories: [Category]
+  category(id: Int): Category
+}
+
+extend type Mutation {
+  createCategory(createCategoryInput: CreateCategoryInput): Category
+  editCategory(editCategoryInput: EditCategoryInput): Boolean
+}
+
+input CreateCategoryInput {
+  name: String!
+}
+
+input EditCategoryInput {
+  id: Int!
+  name: String!
 }

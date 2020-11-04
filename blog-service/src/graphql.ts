@@ -6,6 +6,15 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class CreateCategoryInput {
+    name: string;
+}
+
+export class EditCategoryInput {
+    id: number;
+    name: string;
+}
+
 export class Category {
     id: number;
     name: string;
@@ -21,10 +30,18 @@ export class Post {
     user?: User;
 }
 
+export abstract class IMutation {
+    abstract createCategory(createCategoryInput?: CreateCategoryInput): Category | Promise<Category>;
+
+    abstract editCategory(editCategoryInput?: EditCategoryInput): boolean | Promise<boolean>;
+}
+
 export abstract class IQuery {
     abstract posts(): Post[] | Promise<Post[]>;
 
     abstract categories(): Category[] | Promise<Category[]>;
+
+    abstract category(id?: number): Category | Promise<Category>;
 }
 
 export class User {
