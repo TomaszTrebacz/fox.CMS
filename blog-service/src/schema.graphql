@@ -4,9 +4,10 @@ type Post @key(fields: "id") {
   id: Int!
   title: String!
   text: String!
-  created: Date!
-  category: Category
   user: User
+  created: Date!
+  updated: Date!
+  category: Category
 }
 
 type Category {
@@ -29,6 +30,8 @@ extend type Query {
 extend type Mutation {
   createCategory(createCategoryInput: CreateCategoryInput): Category
   editCategory(editCategoryInput: EditCategoryInput): Boolean
+  createPost(createPostInput: CreatePostInput): Post
+  editPost(editPostInput: EditPostInput): Boolean
 }
 
 input CreateCategoryInput {
@@ -38,4 +41,17 @@ input CreateCategoryInput {
 input EditCategoryInput {
   id: Int!
   name: String!
+}
+
+input CreatePostInput {
+  title: String!
+  text: String!
+  category: ID!
+  userId: String!
+}
+
+input EditPostInput {
+  id: ID!
+  title: String!
+  text: String!
 }
