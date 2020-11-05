@@ -33,6 +33,7 @@
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/typeorm": "^7.1.4",
+    "@squareboat/nest-mailman": "^0.1.9",
     "@types/bcrypt": "^3.0.0",
     "apollo-server-express": "^2.18.2",
     "bcrypt": "^5.0.0",

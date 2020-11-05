@@ -21,6 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new AuthenticationError('Error with authentication.');
     }
 
-    return user;
+    return payload;
   }
 }

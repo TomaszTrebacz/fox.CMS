@@ -14,10 +14,14 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { AdminGuard } from 'src/auth/guards/admin.guards';
 import { CurrentUser } from './decorators/user.decorator';
+import { MailService } from 'src/mail/mail.service';
 
 @Resolver('User')
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly mailService: MailService,
+  ) {}
 
   @Query('users')
   @UseGuards(AdminGuard)
@@ -47,6 +51,16 @@ export class UsersResolver {
   ): Promise<User> {
     try {
       const createdUser = await this.usersService.createUser(registerData);
+
+      const mail = {
+        greeting: `Hi ${createdUser.firstName} ${createdUser.lastName}!`,
+        content: 'Welcome on the board!',
+        subject: 'Registration',
+        mailAddress: createdUser.email,
+      };
+
+      this.mailService.sendMail(mail);
+
       return createdUser;
     } catch (err) {
       throw new UserInputError(err.message);

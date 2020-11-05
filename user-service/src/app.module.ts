@@ -9,6 +9,8 @@ import { join } from 'path';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
+import { MailmanModule } from '@squareboat/nest-mailman';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { AuthModule } from './auth/auth.module';
         outputAs: 'class',
       },
     }),
+    MailModule,
     UsersModule,
     AuthModule,
   ],
