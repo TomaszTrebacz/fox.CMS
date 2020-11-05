@@ -6,7 +6,11 @@ import {
   Mutation,
   Args,
 } from '@nestjs/graphql';
-import { CreatePostInput, EditPostInput } from 'src/graphql';
+import {
+  CreatePostInput,
+  EditPostInput,
+  ChangeCategoryPostInput,
+} from 'src/graphql';
 import { Post } from '../entities/post.entity';
 import { PostsService } from './posts.service';
 
@@ -42,6 +46,22 @@ export class PostsResolver {
     } catch (err) {
       throw new Error(`Can not edit post: ${err.message}`);
     }
+
+    return new Boolean(true);
+  }
+
+  @Mutation('changeCategoryPost')
+  async changeCategoryPost(
+    @Args('changeCategoryPostInput') changeData: ChangeCategoryPostInput,
+  ): Promise<Post> {
+    const changedPost = await this.postsService.changeCategoryPost(changeData);
+
+    return changedPost;
+  }
+
+  @Mutation('deletePost')
+  async deletePost(@Args('id') id: number): Promise<Boolean> {
+    await this.postsService.deletePost(id);
 
     return new Boolean(true);
   }

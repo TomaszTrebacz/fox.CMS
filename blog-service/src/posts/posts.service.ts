@@ -31,10 +31,43 @@ export class PostsService {
         title: updateData.title,
         text: updateData.text,
       });
+
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }
+  }
 
-    return true;
+  async changeCategoryPost(changeData): Promise<Post> {
+    try {
+      await this.PostsRepository.update(changeData.id, {
+        category: changeData.category,
+      });
+
+      const productWithCategory = await this.PostsRepository.findOne({
+        where: { id: changeData.id },
+        relations: ['category'],
+      });
+
+      return productWithCategory;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async deletePost(id: number): Promise<Boolean> {
+    try {
+      const post = await this.PostsRepository.findOne(id);
+
+      if (!post) {
+        throw new Error('There are no post with given id');
+      }
+
+      await this.PostsRepository.delete(id);
+
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 }

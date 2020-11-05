@@ -22,6 +22,9 @@ export class Post {
   @ManyToOne(
     () => Category,
     category => category.posts,
+    {
+      onDelete: 'CASCADE',
+    },
   )
   category: Category;
 

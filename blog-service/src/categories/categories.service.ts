@@ -19,9 +19,12 @@ export class CategoriesService {
   }
 
   async createCategory(createData: Category): Promise<Category> {
-    const category = await this.CategoriesService.save(createData);
-
-    return category;
+    try {
+      const category = await this.CategoriesService.save(createData);
+      return category;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   async editCategory(editData: Category): Promise<Boolean> {
@@ -29,10 +32,25 @@ export class CategoriesService {
       await this.CategoriesService.update(editData.id, {
         name: editData.name,
       });
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }
+  }
 
-    return true;
+  async deleteCategory(id: number): Promise<Boolean> {
+    try {
+      const category = await this.CategoriesService.findOne(id);
+
+      if (!category) {
+        throw new Error('There are no category with given id');
+      }
+
+      await this.CategoriesService.delete(id);
+
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 }

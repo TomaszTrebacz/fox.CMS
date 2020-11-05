@@ -41,4 +41,11 @@ export class CategoriesResolver {
 
     return new Boolean(true);
   }
+
+  @Mutation('deleteCategory')
+  async deleteCategory(@Args('id') id: number): Promise<Boolean> {
+    await this.categoriesService.deleteCategory(id);
+
+    return new Boolean(true);
+  }
 }

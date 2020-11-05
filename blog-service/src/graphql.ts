@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class ChangeCategoryPostInput {
+    id: string;
+    category: string;
+}
+
 export class CreateCategoryInput {
     name: string;
 }
@@ -52,6 +57,12 @@ export abstract class IMutation {
     abstract createPost(createPostInput?: CreatePostInput): Post | Promise<Post>;
 
     abstract editPost(editPostInput?: EditPostInput): boolean | Promise<boolean>;
+
+    abstract changeCategoryPost(changeCategoryPostInput?: ChangeCategoryPostInput): Post | Promise<Post>;
+
+    abstract deleteCategory(id: number): boolean | Promise<boolean>;
+
+    abstract deletePost(id: number): boolean | Promise<boolean>;
 }
 
 export abstract class IQuery {
