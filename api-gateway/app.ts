@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { ApolloServer } = require("apollo-server");
-const { ApolloGateway } = require("@apollo/gateway");
+const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
 
 const gateway = new ApolloGateway({
   serviceList: [
@@ -13,6 +13,16 @@ const gateway = new ApolloGateway({
       url: `http://localhost:${process.env.BLOG_PORT}/graphql`,
     },
   ],
+  buildService({ url }) {
+    return new RemoteGraphQLDataSource({
+      url,
+      willSendRequest({ request, context }) {
+        if (context.Authorization) {
+          request.http.headers.set("Authorization", context.Authorization);
+        }
+      },
+    });
+  },
 });
 
 (async () => {
@@ -20,6 +30,11 @@ const gateway = new ApolloGateway({
     gateway,
     engine: false,
     subscriptions: false,
+    context: ({ req }) => {
+      return {
+        Authorization: req.headers.authorization || null,
+      };
+    },
   });
 
   server.listen(process.env.APP_PORT).then(({ url }) => {
