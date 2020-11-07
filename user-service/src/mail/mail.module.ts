@@ -5,12 +5,12 @@ import { MailService } from './mail.service';
 @Module({
   imports: [
     MailmanModule.register({
-      host: 'smtp.mailtrap.io',
-      port: 2525,
-      username: '4221e1429d652b',
-      password: 'dda98f01422614',
-      from: 'sender@emailaddress.com',
-      path: '/project-dir/resources/mails',
+      host: process.env.MAIL_HOST,
+      port: +process.env.MAIL_PORT,
+      username: process.env.MAIL_USERNAME,
+      password: process.env.MAIL_PASSWORD,
+      from: process.env.MAIL_SENDER_ID,
+      path: process.env.MAIL_PATH,
     }),
   ],
   providers: [MailService],
