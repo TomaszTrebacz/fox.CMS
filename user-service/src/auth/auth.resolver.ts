@@ -59,6 +59,8 @@ export class AuthResolver {
         numbers: true,
       });
 
+      await this.usersService.changePassword(user.id, password);
+
       const mail = {
         greeting: `Hi ${user.firstName} ${user.lastName}!`,
         content: `Your new password is ${password}`,

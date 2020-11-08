@@ -6,6 +6,7 @@ type User @key(fields: "id") {
   firstName: String!
   lastName: String!
   password: String!
+  phoneNumber: String!
   role: String!
   created: Date!
   updated: Date!
@@ -36,12 +37,14 @@ input CreateUserInput {
   firstName: String!
   lastName: String!
   password: String!
+  phoneNumber: String!
 }
 
 input UpdateUserInput {
   id: String!
   firstName: String!
   lastName: String!
+  phoneNumber: String!
 }
 
 input LoginInput {

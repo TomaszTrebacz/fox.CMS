@@ -1,4 +1,10 @@
-import { IsEmpty, MinLength, MaxLength, IsEmail } from 'class-validator';
+import {
+  IsEmpty,
+  MinLength,
+  MaxLength,
+  IsEmail,
+  IsPhoneNumber,
+} from 'class-validator';
 import { CreateUserInput } from '../../graphql';
 import { userRole } from '../enums/userRole.enum';
 
@@ -20,6 +26,9 @@ export class CreateUserDto extends CreateUserInput {
   @MinLength(3)
   @MaxLength(30)
   password: string;
+
+  @IsPhoneNumber('PL')
+  phoneNumber: string;
 
   @IsEmpty()
   role: userRole;

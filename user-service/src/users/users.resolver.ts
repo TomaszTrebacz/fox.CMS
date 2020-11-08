@@ -14,13 +14,13 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { AdminGuard } from 'src/auth/guards/admin.guards';
 import { CurrentUser } from './decorators/user.decorator';
-import { MailService } from 'src/mail/mail.service';
+import { SmsService } from 'src/sms/sms.service';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
-    private readonly mailService: MailService,
+    private smsService: SmsService,
   ) {}
 
   @Query('users')
@@ -49,17 +49,26 @@ export class UsersResolver {
   async registerUser(
     @Args('createUserInput') registerData: CreateUserDto,
   ): Promise<User> {
+    const emailUsed = await this.usersService.findOneByEmail(
+      registerData.email,
+    );
+    if (emailUsed) {
+      throw new Error('Email is in database.');
+    }
+
     try {
       const createdUser = await this.usersService.createUser(registerData);
 
-      const mail = {
-        greeting: `Hi ${createdUser.firstName} ${createdUser.lastName}!`,
-        content: 'Welcome on the board!',
-        subject: 'Registration',
-        mailAddress: createdUser.email,
-      };
+      const smsEnabled = process.env.SMS_ENABLED;
 
-      this.mailService.sendMail(mail);
+      if (smsEnabled === 'TRUE') {
+        const smsData = {
+          phoneNumber: '+48732033549',
+          body: 'Welcome in TravelCove!',
+        };
+
+        await this.smsService.sendSMS(smsData);
+      }
 
       return createdUser;
     } catch (err) {

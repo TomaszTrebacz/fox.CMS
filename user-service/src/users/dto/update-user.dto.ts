@@ -4,6 +4,7 @@ import {
   MaxLength,
   IsUUID,
   IsOptional,
+  IsPhoneNumber,
 } from 'class-validator';
 import { UpdateUserInput } from '../../graphql';
 import { userRole } from '../enums/userRole.enum';
@@ -27,6 +28,9 @@ export class UpdateUserDto extends UpdateUserInput {
 
   @IsEmpty()
   password: string;
+
+  @IsPhoneNumber('PL')
+  phoneNumber: string;
 
   @IsEmpty()
   role: userRole;

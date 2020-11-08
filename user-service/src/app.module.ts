@@ -9,8 +9,9 @@ import { join } from 'path';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { DateScalar } from './shared/date.scalar';
 import { AuthModule } from './auth/auth.module';
-import { MailmanModule } from '@squareboat/nest-mailman';
 import { MailModule } from './mail/mail.module';
+import { TwilioModule } from 'nestjs-twilio';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -42,9 +43,14 @@ import { MailModule } from './mail/mail.module';
         outputAs: 'class',
       },
     }),
+    TwilioModule.forRoot({
+      accountSid: process.env.TWILIO_SID,
+      authToken: process.env.TWILIO_AUTH_TOKEN,
+    }),
     MailModule,
     UsersModule,
     AuthModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],

@@ -33,6 +33,7 @@ export class UsersService {
 
     user.firstName = createData.firstName;
     user.lastName = createData.lastName;
+    user.phoneNumber = createData.phoneNumber;
 
     user.email = this.authService.lowercaseField(createData.email);
     user.password = this.authService.hashPassword(createData.password);
@@ -80,5 +81,13 @@ export class UsersService {
     }
 
     return true;
+  }
+
+  async changePassword(id: string, password: string): Promise<Boolean> {
+    const hashedPassword = this.authService.hashPassword(password);
+
+    await this.usersRepository.update(id, { password: hashedPassword });
+
+    return new Boolean(true);
   }
 }

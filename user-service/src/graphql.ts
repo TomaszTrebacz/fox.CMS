@@ -16,6 +16,7 @@ export class CreateUserInput {
     firstName: string;
     lastName: string;
     password: string;
+    phoneNumber: string;
 }
 
 export class LoginInput {
@@ -27,6 +28,7 @@ export class UpdateUserInput {
     id: string;
     firstName: string;
     lastName: string;
+    phoneNumber: string;
 }
 
 export class LoginResponse {
@@ -52,6 +54,7 @@ export class User {
     firstName: string;
     lastName: string;
     password: string;
+    phoneNumber: string;
     role: string;
     created: Date;
     updated: Date;
