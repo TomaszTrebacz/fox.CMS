@@ -42,6 +42,8 @@ export abstract class IMutation {
     abstract deleteUser(id?: string): boolean | Promise<boolean>;
 
     abstract changeRole(changeRoleInput?: ChangeRoleInput): boolean | Promise<boolean>;
+
+    abstract resetPassword(email?: string): boolean | Promise<boolean>;
 }
 
 export class User {

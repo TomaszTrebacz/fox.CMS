@@ -8,12 +8,15 @@ import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
 import { UsersService } from 'src/users/users.service';
 import { UseGuards } from '@nestjs/common';
 import { UserInputError } from 'apollo-server-core';
+import { MailService } from 'src/mail/mail.service';
+import * as generator from 'generate-password';
 
 @Resolver('Auth')
 export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
+    private readonly mailService: MailService,
   ) {}
 
   @Query('login')
@@ -42,5 +45,31 @@ export class AuthResolver {
     if (!user) throw new UserInputError('The user does not exist');
 
     return true;
+  }
+
+  @Mutation()
+  async resetPassword(@Args('email') email: string): Promise<Boolean> {
+    try {
+      const user = await this.usersService.findOneByEmail(email);
+
+      if (!user) throw new UserInputError('The user does not exist');
+
+      const password = generator.generate({
+        length: 8,
+        numbers: true,
+      });
+
+      const mail = {
+        greeting: `Hi ${user.firstName} ${user.lastName}!`,
+        content: `Your new password is ${password}`,
+        subject: `Forger password for user ${user.firstName} ${user.lastName}`,
+        mailAddress: user.email,
+      };
+
+      this.mailService.sendMail(mail);
+      return true;
+    } catch (err) {
+      throw new Error(`Can not send email with new password: ${err.message}`);
+    }
   }
 }
