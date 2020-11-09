@@ -5,6 +5,8 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/graphql';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { RedisDbService } from 'src/redis-db/redis-db.service';
+import { ChangeRoleDto } from './dto/change-role.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,11 +14,13 @@ export class AuthService {
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
+    private redisService: RedisDbService,
   ) {}
 
   async validateUser(loginCredentials: LoginDto) {
     const user = await this.usersService.findOneByEmail(loginCredentials.email);
-    if (!user) {
+
+    if (user == undefined) {
       throw new Error('Wrong email or password!');
     }
 
@@ -26,14 +30,14 @@ export class AuthService {
     );
 
     if (!passwordMatch) {
-      return undefined;
+      throw new Error('Wrong email or password!');
     }
 
     return user;
   }
 
-  createJwt(user: User) {
-    const payload = { id: user.id, role: user.role };
+  createJwt(user: User, role: string) {
+    const payload = { id: user.id, role: role };
 
     const token = this.jwtService.sign(payload);
 
@@ -41,13 +45,27 @@ export class AuthService {
   }
 
   async validateJwt(payload: JwtPayload) {
-    const user = await this.usersService.findOneById(payload.id);
+    await this.usersService.findOneById(payload.id);
 
-    if (user.role !== payload.role) {
-      return undefined;
+    const role = await this.redisService.getRole(payload.id);
+
+    if (role !== payload.role) {
+      throw new Error('Authorization error');
+    }
+  }
+
+  async changeRole(changeRoleData: ChangeRoleDto): Promise<Boolean> {
+    const user = await this.usersService.findOneById(changeRoleData.id);
+
+    if (user == undefined) throw new Error('No user with given id');
+
+    try {
+      await this.redisService.changeRole(changeRoleData);
+    } catch (err) {
+      throw new Error(`Can not update role in db: ${err.message}`);
     }
 
-    return user;
+    return true;
   }
 
   hashPassword(password: String) {
@@ -63,9 +81,5 @@ export class AuthService {
 
   lowercaseField(field: String) {
     return field.toLowerCase();
-  }
-
-  isAdmin(role: string): boolean {
-    return role.includes('admin');
   }
 }

@@ -33,9 +33,6 @@ export class UpdateUserDto extends UpdateUserInput {
   phoneNumber: string;
 
   @IsEmpty()
-  role: userRole;
-
-  @IsEmpty()
   created: Date;
 
   @IsEmpty()

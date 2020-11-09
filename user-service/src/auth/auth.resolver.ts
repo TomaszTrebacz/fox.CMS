@@ -10,6 +10,7 @@ import { UseGuards } from '@nestjs/common';
 import { UserInputError } from 'apollo-server-core';
 import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
+import { RedisDbService } from 'src/redis-db/redis-db.service';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -17,16 +18,15 @@ export class AuthResolver {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly mailService: MailService,
+    private readonly redisService: RedisDbService,
   ) {}
 
   @Query('login')
   async login(@Args('loginCredentials') loginCredentials: LoginDto) {
     const user = await this.authService.validateUser(loginCredentials);
-    if (!user) {
-      throw new AuthenticationError('Wrong e-mail or password.');
-    }
+    const role = await this.redisService.getRole(user.id);
 
-    const token = await this.authService.createJwt(user);
+    const token = await this.authService.createJwt(user, role);
 
     const loginResponse = new LoginResponse();
     loginResponse.user = user;
@@ -40,9 +40,7 @@ export class AuthResolver {
   async changeRole(
     @Args('changeRoleInput') changeRoleData: ChangeRoleDto,
   ): Promise<Boolean> {
-    const user = await this.usersService.changeRole(changeRoleData);
-
-    if (!user) throw new UserInputError('The user does not exist');
+    await this.authService.changeRole(changeRoleData);
 
     return true;
   }
@@ -52,7 +50,8 @@ export class AuthResolver {
     try {
       const user = await this.usersService.findOneByEmail(email);
 
-      if (!user) throw new UserInputError('The user does not exist');
+      if (user == undefined)
+        throw new UserInputError('The user does not exist');
 
       const password = generator.generate({
         length: 8,
@@ -69,9 +68,12 @@ export class AuthResolver {
       };
 
       this.mailService.sendMail(mail);
-      return true;
+
+      return new Boolean(true);
     } catch (err) {
-      throw new Error(`Can not send email with new password: ${err.message}`);
+      throw new Error(
+        `Can not reset password and send email with new one: ${err.message}`,
+      );
     }
   }
 }

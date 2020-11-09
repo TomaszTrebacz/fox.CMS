@@ -7,7 +7,6 @@ type User @key(fields: "id") {
   lastName: String!
   password: String!
   phoneNumber: String!
-  role: String!
   created: Date!
   updated: Date!
 }

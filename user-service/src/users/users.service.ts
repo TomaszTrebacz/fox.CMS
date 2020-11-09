@@ -4,6 +4,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
 import { ChangeRoleDto } from '../auth/dto/change-role.dto';
 import { User } from './entities/user.entity';
+import { userRole } from './enums/userRole.enum';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,9 @@ export class UsersService {
   findOneByEmail(email: string) {
     const lowercaseEmail = this.authService.lowercaseField(email);
 
-    return this.usersRepository.findOne({ where: { email: lowercaseEmail } });
+    return this.usersRepository.findOne({
+      where: { email: lowercaseEmail },
+    });
   }
 
   async createUser(createData: User): Promise<User> {
@@ -48,12 +51,11 @@ export class UsersService {
 
     delete currentData.email;
     delete currentData.password;
-    delete currentData.role;
 
     let finalData = Object.assign(currentData, updateData);
     await this.usersRepository.save(finalData);
 
-    return true;
+    return new Boolean(true);
   }
 
   async deleteUser(id: string) {
@@ -66,28 +68,17 @@ export class UsersService {
     }
   }
 
-  async changeRole(changeRoleData: ChangeRoleDto): Promise<Boolean> {
-    const user = await this.findOneById(changeRoleData.id);
-
-    if (!user) return undefined;
-    if (user.role == 'root')
-      throw new Error('Can not change permissions of root');
-
-    user.role = changeRoleData.role;
-    try {
-      await this.usersRepository.save(user);
-    } catch (err) {
-      throw new Error(`Can not change permissions: ${err.message}`);
-    }
-
-    return true;
-  }
-
   async changePassword(id: string, password: string): Promise<Boolean> {
     const hashedPassword = this.authService.hashPassword(password);
 
-    await this.usersRepository.update(id, { password: hashedPassword });
+    const changed = await this.usersRepository.update(id, {
+      password: hashedPassword,
+    });
 
-    return new Boolean(true);
+    if (changed.affected == 1) {
+      return new Boolean(true);
+    } else {
+      throw new Error('The password has not been updated.');
+    }
   }
 }

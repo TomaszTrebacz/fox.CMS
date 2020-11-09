@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { MailService } from 'src/mail/mail.service';
+import { RedisDbModule } from 'src/redis-db/redis-db.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailService } from 'src/mail/mail.service';
         signOptions: { expiresIn: '10000s' },
       }),
     }),
+    RedisDbModule,
   ],
   providers: [AuthResolver, AuthService, JwtStrategy, MailService],
   exports: [AuthService],

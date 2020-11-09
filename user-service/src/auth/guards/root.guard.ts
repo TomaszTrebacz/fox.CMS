@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { GqlAuthGuard } from './gql-auth.guard';
 import { AuthenticationError } from 'apollo-server-core';
+import { userRole } from 'src/users/enums/userRole.enum';
 
 @Injectable()
 export class RootGuard extends GqlAuthGuard {
@@ -13,7 +14,7 @@ export class RootGuard extends GqlAuthGuard {
   }
 
   handleRequest(err, user) {
-    if (user.role !== 'root') {
+    if (user.role != userRole.ROOT) {
       throw new AuthenticationError(
         'Can not access this part of api with your privileges.',
       );

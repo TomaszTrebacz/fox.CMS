@@ -31,9 +31,6 @@ export class CreateUserDto extends CreateUserInput {
   phoneNumber: string;
 
   @IsEmpty()
-  role: userRole;
-
-  @IsEmpty()
   created: Date;
 
   @IsEmpty()

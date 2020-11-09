@@ -55,7 +55,6 @@ export class User {
     lastName: string;
     password: string;
     phoneNumber: string;
-    role: string;
     created: Date;
     updated: Date;
 }

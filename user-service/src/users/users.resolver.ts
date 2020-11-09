@@ -15,16 +15,20 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { AdminGuard } from 'src/auth/guards/admin.guards';
 import { CurrentUser } from './decorators/user.decorator';
 import { SmsService } from 'src/sms/sms.service';
+import { RedisDbService } from 'src/redis-db/redis-db.service';
+import { userRole } from './enums/userRole.enum';
+import { RootGuard } from 'src/auth/guards/root.guard';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
     private smsService: SmsService,
+    private redisService: RedisDbService,
   ) {}
 
   @Query('users')
-  @UseGuards(AdminGuard)
+  @UseGuards(AdminGuard, RootGuard)
   findAll() {
     return this.usersService.findAll();
   }
@@ -70,6 +74,14 @@ export class UsersResolver {
         await this.smsService.sendSMS(smsData);
       }
 
+      const redisData = {
+        id: createdUser.id,
+        // default role for any new user is `user` without any special priviliges in app
+        role: userRole.USER,
+      };
+
+      await this.redisService.saveUser(redisData);
+
       return createdUser;
     } catch (err) {
       throw new UserInputError(err.message);
@@ -92,7 +104,15 @@ export class UsersResolver {
 
   @Mutation()
   @UseGuards(AdminGuard)
-  async deleteUser(@Args('id') id: string) {
-    return this.usersService.deleteUser(id);
+  async deleteUser(@Args('id') id: string): Promise<Boolean> {
+    try {
+      await this.usersService.deleteUser(id);
+      await this.redisService.delete(id);
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(
+        `Can not delete user data from databases: ${err.message}`,
+      );
+    }
   }
 }

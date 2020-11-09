@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
 import { SmsModule } from 'src/sms/sms.module';
+import { RedisDbModule } from 'src/redis-db/redis-db.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SmsModule } from 'src/sms/sms.module';
     forwardRef(() => AuthModule),
     MailModule,
     SmsModule,
+    RedisDbModule,
   ],
   providers: [UsersResolver, UsersService],
   exports: [UsersService],
