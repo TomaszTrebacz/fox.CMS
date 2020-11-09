@@ -64,7 +64,7 @@ export class UsersResolver {
       if (smsEnabled === 'TRUE') {
         const smsData = {
           phoneNumber: createdUser.phoneNumber,
-          body: 'Welcome in TravelCove!',
+          body: `Hi ${createdUser.firstName}! Welcome in the TravelCove!`,
         };
 
         await this.smsService.sendSMS(smsData);
