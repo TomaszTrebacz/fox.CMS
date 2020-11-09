@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
-import { SmsService } from 'src/sms/sms.service';
 import { SmsModule } from 'src/sms/sms.module';
 
 @Module({

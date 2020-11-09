@@ -16,6 +16,9 @@ export class AuthService {
 
   async validateUser(loginCredentials: LoginDto) {
     const user = await this.usersService.findOneByEmail(loginCredentials.email);
+    if (!user) {
+      throw new Error('Wrong email or password!');
+    }
 
     const passwordMatch = await this.comparePassword(
       loginCredentials.password,

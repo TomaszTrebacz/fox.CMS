@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { TwilioModule } from 'nestjs-twilio';
 import { SmsModule } from './sms/sms.module';
+import { RedisDbModule } from './redis-db/redis-db.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { SmsModule } from './sms/sms.module';
     UsersModule,
     AuthModule,
     SmsModule,
+    RedisDbModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],

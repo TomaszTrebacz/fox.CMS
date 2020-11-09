@@ -63,7 +63,7 @@ export class UsersResolver {
 
       if (smsEnabled === 'TRUE') {
         const smsData = {
-          phoneNumber: '+48732033549',
+          phoneNumber: createdUser.phoneNumber,
           body: 'Welcome in TravelCove!',
         };
 
