@@ -11,6 +11,7 @@ import { UserInputError } from 'apollo-server-core';
 import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
+import { GqlAuthGuard } from './guards/gql-auth.guard';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -46,6 +47,7 @@ export class AuthResolver {
   }
 
   @Mutation()
+  @UseGuards(GqlAuthGuard)
   async resetPassword(@Args('email') email: string): Promise<Boolean> {
     try {
       const user = await this.usersService.findOneByEmail(email);

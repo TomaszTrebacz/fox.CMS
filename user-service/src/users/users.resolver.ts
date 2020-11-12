@@ -28,7 +28,7 @@ export class UsersResolver {
   ) {}
 
   @Query('users')
-  @UseGuards(AdminGuard, RootGuard)
+  @UseGuards(AdminGuard)
   findAll() {
     return this.usersService.findAll();
   }
