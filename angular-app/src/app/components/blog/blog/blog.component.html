@@ -9,3 +9,10 @@
     </p>
   </mat-card-content>
 </mat-card>
+
+<div>
+  <h1>Categories</h1>
+<p *ngFor="let category of categories | async">
+{{ category.name }}
+</p>
+</div>
