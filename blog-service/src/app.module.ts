@@ -14,6 +14,7 @@ import databaseConfig from './config/database.config';
 import redisConfig from './config/redis.config';
 import { RedisModule } from 'nestjs-redis';
 import { GqlConfigService } from './config/gql.config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { GqlConfigService } from './config/gql.config';
     PostsModule,
     CategoriesModule,
     RedisDbModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],

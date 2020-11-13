@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -6,6 +7,7 @@ import {
   Mutation,
   Args,
 } from '@nestjs/graphql';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 import {
   CreatePostInput,
   EditPostInput,
@@ -29,6 +31,7 @@ export class PostsResolver {
   }
 
   @Mutation('createPost')
+  @UseGuards(AdminGuard)
   async createPost(
     @Args('createPostInput') createData: CreatePostInput,
   ): Promise<Post> {
@@ -38,6 +41,7 @@ export class PostsResolver {
   }
 
   @Mutation('editPost')
+  @UseGuards(AdminGuard)
   async editPost(
     @Args('editPostInput') editData: EditPostInput,
   ): Promise<Boolean> {
@@ -51,6 +55,7 @@ export class PostsResolver {
   }
 
   @Mutation('changeCategoryPost')
+  @UseGuards(AdminGuard)
   async changeCategoryPost(
     @Args('changeCategoryPostInput') changeData: ChangeCategoryPostInput,
   ): Promise<Post> {
@@ -60,6 +65,7 @@ export class PostsResolver {
   }
 
   @Mutation('deletePost')
+  @UseGuards(AdminGuard)
   async deletePost(@Args('id') id: number): Promise<Boolean> {
     await this.postsService.deletePost(id);
 
