@@ -23,7 +23,7 @@ export class RedisDbService {
     const role = await this.client.hget(id, 'role');
 
     if (!role) {
-      throw new UnprocessableEntityException('Invalid key or null value');
+      throw new UnprocessableEntityException('There is no user with given Id!');
     }
 
     return role;

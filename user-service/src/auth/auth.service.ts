@@ -45,8 +45,6 @@ export class AuthService {
   }
 
   async validateJwt(payload: JwtPayload) {
-    await this.usersService.findOneById(payload.id);
-
     const role = await this.redisService.getRole(payload.id);
 
     if (role !== payload.role) {
