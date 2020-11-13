@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AllPostsGQL } from 'src/app/graphql/allPostsGQL.query';
 import { Post } from 'src/app/interfaces/post.interface';
+import { PostsService } from 'src/app/services/blog/posts.service';
 
 @Component({
   selector: 'app-blog',
@@ -11,12 +12,9 @@ import { Post } from 'src/app/interfaces/post.interface';
 })
 export class BlogComponent implements OnInit {
   posts: Observable<Post[]>;
-
-  constructor(private allPostsGQL: AllPostsGQL) {}
+  constructor(private service: PostsService) {}
 
   ngOnInit() {
-    this.posts = this.allPostsGQL
-      .watch()
-      .valueChanges.pipe(map((result) => result.data.posts));
+    this.posts = this.service.findAll().pipe(map((result) => result));
   }
 }
