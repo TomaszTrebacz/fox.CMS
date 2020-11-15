@@ -11,9 +11,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BlogComponent } from './components/blog/blog/blog.component';
+import { HomeComponent } from './components/home/home.component';
+import { BlogModule } from './components/blog/blog/blog.module';
 
 @NgModule({
-  declarations: [AppComponent, BlogComponent],
+  declarations: [AppComponent, BlogComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -23,6 +25,7 @@ import { BlogComponent } from './components/blog/blog/blog.component';
     MatIconModule,
     GraphQLModule,
     HttpClientModule,
+    BlogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
