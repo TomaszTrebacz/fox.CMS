@@ -23,6 +23,16 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-fw pi-pencil',
         url: 'blog',
       },
+      {
+        label: 'Login',
+        icon: 'pi pi-fw pi-key',
+        url: '/users/login',
+      },
+      {
+        label: 'Register',
+        icon: 'pi pi-fw pi-key',
+        url: '/users/register',
+      },
     ];
   }
 }

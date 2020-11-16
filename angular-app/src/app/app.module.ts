@@ -22,6 +22,9 @@ import { HeaderComponent } from './components/header/header.component';
 
 import { MenuModule } from 'primeng/menu';
 import { AccordionModule } from 'primeng/accordion';
+import { LoginComponent } from './components/users/login/login.component';
+import { RegisterComponent } from './components/users/register/register.component';
+import { UsersModule } from './components/users/users/users.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,8 @@ import { AccordionModule } from 'primeng/accordion';
     FooterComponent,
     BlogComponent,
     HomeComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,6 +46,7 @@ import { AccordionModule } from 'primeng/accordion';
     GraphQLModule,
     HttpClientModule,
     BlogModule,
+    UsersModule,
     MenuModule,
     MenubarModule,
     InputTextModule,
