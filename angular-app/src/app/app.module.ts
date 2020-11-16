@@ -13,9 +13,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { BlogComponent } from './components/blog/blog/blog.component';
 import { HomeComponent } from './components/home/home.component';
 import { BlogModule } from './components/blog/blog/blog.module';
+import { FooterComponent } from './components/footer/footer.component';
+
+import { MenubarModule } from 'primeng/menubar';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { HeaderComponent } from './components/header/header.component';
+
+import { MenuModule } from 'primeng/menu';
+import { AccordionModule } from 'primeng/accordion';
 
 @NgModule({
-  declarations: [AppComponent, BlogComponent, HomeComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    FooterComponent,
+    BlogComponent,
+    HomeComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -26,6 +41,11 @@ import { BlogModule } from './components/blog/blog/blog.module';
     GraphQLModule,
     HttpClientModule,
     BlogModule,
+    MenuModule,
+    MenubarModule,
+    InputTextModule,
+    ButtonModule,
+    AccordionModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
