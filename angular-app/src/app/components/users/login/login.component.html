@@ -1,1 +1,30 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" class="ui-g">
+    <p-panel header="Log in" class="ui-g-12">
+        <div class="ui-g">
+            <label for="email" class="ui-g-12 ui-md-2">E-mail</label>
+            <input pInputText id="email" formControlName="email" placeholder="Enter your email" class="ui-g-12 ui-md-5"/>
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-message ui-messages-error" *ngIf="fieldErrors('email')">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="fieldErrors('email').required">Email is required!</span>
+                    <span *ngIf="fieldErrors('email').email">This is not email!</span>
+                    <span *ngIf="fieldErrors('email').minlength">Email must be 6 characetrs!</span>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g">
+            <label for="password" class="ui-g-12 ui-md-2">Password</label>
+            <input pInputText id="password" formControlName="password" placeholder="Enter your password" class="ui-g-12 ui-md-5"/>
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-message ui-messages-error" *ngIf="fieldErrors('password')">
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="fieldErrors('password').required">Password is required!</span>
+                    <span *ngIf="fieldErrors('password').minlength">Password must be 3 characetrs!</span>
+                </div>
+            </div>
+        </div>
+
+        <button pButton type="button" label="Click" [disabled]="!loginForm.valid" (click)="onSubmit()"></button>
+    </p-panel>
+    
+</form>

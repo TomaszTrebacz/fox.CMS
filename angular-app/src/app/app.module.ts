@@ -19,12 +19,16 @@ import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { HeaderComponent } from './components/header/header.component';
+import { PasswordModule } from 'primeng/password';
 
 import { MenuModule } from 'primeng/menu';
 import { AccordionModule } from 'primeng/accordion';
 import { LoginComponent } from './components/users/login/login.component';
 import { RegisterComponent } from './components/users/register/register.component';
 import { UsersModule } from './components/users/users/users.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PanelModule } from 'primeng/panel';
+import { AccountComponent } from './components/users/account/account.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,7 @@ import { UsersModule } from './components/users/users/users.module';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +57,10 @@ import { UsersModule } from './components/users/users/users.module';
     InputTextModule,
     ButtonModule,
     AccordionModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PasswordModule,
+    PanelModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
