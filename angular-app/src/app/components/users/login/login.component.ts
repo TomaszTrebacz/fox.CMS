@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  error = '';
 
   constructor(
     private authService: AuthService,
@@ -41,9 +43,17 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
+
     this.authService
       .login(this.loginForm.value)
-      .pipe(map((token) => this.router.navigateByUrl('/users/account')))
-      .subscribe();
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl('/users/account');
+        },
+        error: (error) => {
+          this.error = error;
+        },
+      });
   }
 }
