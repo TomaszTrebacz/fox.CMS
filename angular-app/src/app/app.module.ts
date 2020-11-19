@@ -29,6 +29,7 @@ import { UsersModule } from './components/users/users/users.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { AccountComponent } from './components/users/account/account.component';
+import { FielderrorsComponent } from './shared/fielderrors/fielderrors.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { AccountComponent } from './components/users/account/account.component';
     LoginComponent,
     RegisterComponent,
     AccountComponent,
+    FielderrorsComponent,
   ],
   imports: [
     BrowserModule,

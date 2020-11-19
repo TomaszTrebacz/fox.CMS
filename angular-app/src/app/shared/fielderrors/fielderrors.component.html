@@ -1,0 +1,8 @@
+<div class="ui-message ui-messages-error" *ngIf="fieldErrors(fieldName)">
+    <i class="fa fa-close"></i>
+    <span *ngIf="fieldErrors(fieldName).required">{{ name }} is required!</span>
+    <span *ngIf="fieldErrors(fieldName).minlength">{{ name }} must be min {{ fieldErrors(fieldName).minlength.requiredLength }} characters!</span>
+    <span *ngIf="fieldErrors(fieldName).maxlength">{{ name }} must be max {{ fieldErrors(fieldName).maxlength.requiredLength } characters!</span>
+    <span *ngIf="fieldErrors(fieldName).email">{{ name }} must be email!</span>
+
+</div>

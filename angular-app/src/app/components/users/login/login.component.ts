@@ -37,20 +37,7 @@ export class LoginComponent implements OnInit {
     return !this.loginForm.valid;
   }
 
-  fieldErrors(field: string) {
-    let controlState = this.loginForm.controls[field];
-    return controlState.dirty && controlState.errors
-      ? controlState.errors
-      : null;
-  }
-
   onSubmit() {
-    console.log(this.loginForm.value.email);
-    const input = {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password,
-    };
-    console.log(input);
     if (this.loginForm.invalid) {
       return;
     }
