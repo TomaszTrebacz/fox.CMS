@@ -34,6 +34,7 @@ export class UpdateUserInput {
 export class LoginResponse {
     user: User;
     token: string;
+    role: string;
 }
 
 export abstract class IMutation {

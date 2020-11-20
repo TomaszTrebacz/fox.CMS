@@ -32,6 +32,7 @@ export class AuthResolver {
     const loginResponse = new LoginResponse();
     loginResponse.user = user;
     loginResponse.token = token;
+    loginResponse.role = role;
 
     return loginResponse;
   }

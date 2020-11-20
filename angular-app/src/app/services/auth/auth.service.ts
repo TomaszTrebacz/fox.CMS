@@ -1,7 +1,8 @@
 import { Injectable, Input } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginGQL } from 'src/app/graphql/login.query';
+import { User } from 'src/app/interfaces/user.interface';
 
 export interface LoginForm {
   email: string;
@@ -12,15 +13,16 @@ export interface LoginForm {
   providedIn: 'root',
 })
 export class AuthService {
-  isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  userSubject: BehaviorSubject<User>;
+  user: Observable<User | null>;
 
   constructor(private loginGQL: LoginGQL) {
-    if (localStorage.getItem('accesstoken')) this.isAuthenticated.next(true);
-    else this.isAuthenticated.next(false);
+    this.userSubject = new BehaviorSubject<User>(null);
+    this.user = this.userSubject.asObservable();
   }
 
-  isLogged(): boolean {
-    return this.isAuthenticated.getValue();
+  get userValue(): User {
+    return this.userSubject.value;
   }
 
   login(credentials: LoginForm) {
@@ -31,14 +33,19 @@ export class AuthService {
       .pipe(
         map((result) => {
           localStorage.setItem('accesstoken', result.data.login.token);
-          this.isAuthenticated.next(true);
-          return result.data.login.token;
+
+          const user = {
+            ...result.data.login.user,
+            role: result.data.login.role,
+          };
+
+          this.userSubject.next(user);
         })
       );
   }
 
   logout() {
     localStorage.removeItem('accesstoken');
-    this.isAuthenticated.next(false);
+    this.userSubject.next(null);
   }
 }
