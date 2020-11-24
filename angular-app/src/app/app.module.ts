@@ -30,6 +30,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { AccountComponent } from './components/users/account/account.component';
 import { FielderrorsComponent } from './shared/fielderrors/fielderrors.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { AdminModule } from './components/admin/admin.module';
+import { WorkboardComponent } from './components/admin/workboard/workboard.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,7 @@ import { FielderrorsComponent } from './shared/fielderrors/fielderrors.component
     RegisterComponent,
     AccountComponent,
     FielderrorsComponent,
+    WorkboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +67,8 @@ import { FielderrorsComponent } from './shared/fielderrors/fielderrors.component
     ReactiveFormsModule,
     PasswordModule,
     PanelModule,
+    JwtModule,
+    AdminModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
