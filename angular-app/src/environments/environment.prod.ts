@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  aesKey: process.env.AES_KEY,
 };

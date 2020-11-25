@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginGQL } from 'src/app/graphql/login.query';
 import { User } from 'src/app/interfaces/user.interface';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { CryptoService } from './crypto/crypto.service';
 
 export interface LoginForm {
   email: string;
@@ -19,9 +19,29 @@ export interface jwtResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  jwt = new JwtHelperService();
+  private userSubject: BehaviorSubject<any>;
+  public user: Observable<any>;
 
-  constructor(private loginGQL: LoginGQL) {}
+  constructor(
+    private cryptoService: CryptoService,
+    private loginGQL: LoginGQL
+  ) {
+    let userValue = localStorage.getItem('user');
+
+    if (userValue) {
+      this.userSubject = new BehaviorSubject(
+        JSON.parse(this.cryptoService.decrypt(userValue))
+      );
+    } else {
+      this.userSubject = new BehaviorSubject(null);
+    }
+
+    this.user = this.userSubject.asObservable();
+  }
+
+  public get userValue() {
+    return this.userSubject.value;
+  }
 
   login(credentials: LoginForm) {
     return this.loginGQL
@@ -30,26 +50,28 @@ export class AuthService {
       })
       .pipe(
         map((result) => {
-          localStorage.setItem('accesstoken', result.data.login.token);
+          const encryptedAccessToken = this.cryptoService.encrypt(
+            result.data.login.token
+          );
+
+          const user = {
+            ...result.data.login.user,
+            role: result.data.login.role,
+          };
+
+          let encryptedUser = this.cryptoService.encrypt(JSON.stringify(user));
+
+          localStorage.setItem('accesstoken', encryptedAccessToken);
+          localStorage.setItem('user', encryptedUser);
+
+          this.userSubject.next(user);
         })
       );
   }
 
-  isAuthenticated(): jwtResponse {
-    const token = localStorage.getItem('accesstoken');
-    if (!token) return null;
-
-    const decodedToken = this.jwt.decodeToken(token);
-
-    const response = {
-      role: decodedToken.role,
-      valid: !this.jwt.isTokenExpired(token),
-    };
-
-    return response;
-  }
-
   logout() {
     localStorage.removeItem('accesstoken');
+    this.userSubject.next(null);
+    localStorage.removeItem('user');
   }
 }
