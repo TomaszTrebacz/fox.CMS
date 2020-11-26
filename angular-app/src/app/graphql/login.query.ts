@@ -1,4 +1,3 @@
-import { Token } from '@angular/compiler/src/ml_parser/lexer';
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
 

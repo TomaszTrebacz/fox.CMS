@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginGQL } from 'src/app/graphql/login.query';
 import { decrypt, encrypt } from 'src/app/helpers/crypto';
-import { User } from 'src/app/interfaces/user.interface';
 
 export interface LoginForm {
   email: string;

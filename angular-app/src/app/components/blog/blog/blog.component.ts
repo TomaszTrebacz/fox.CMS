@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AllPostsGQL } from 'src/app/graphql/allPostsGQL.query';
-import { Category } from 'src/app/interfaces/category.interface';
-import { Post } from 'src/app/interfaces/post.interface';
+import { Category } from 'src/app/models/category.interface';
+import { Post } from 'src/app/models/post.interface';
 import { CategoriesService } from 'src/app/services/blog/categories/categories.service';
 import { PostsService } from 'src/app/services/blog/posts/posts.service';
 

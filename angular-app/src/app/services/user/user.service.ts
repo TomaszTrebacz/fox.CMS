@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CurrentUserSQL } from 'src/app/graphql/currentUser.query';
-import { User } from 'src/app/interfaces/user.interface';
+import { User } from 'src/app/models/user.interface';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 

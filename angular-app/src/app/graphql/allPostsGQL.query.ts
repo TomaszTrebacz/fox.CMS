@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
-import { Post } from '../interfaces/post.interface';
+import { Post } from '../models/post.interface';
 
 export interface Response {
   posts: Post[];

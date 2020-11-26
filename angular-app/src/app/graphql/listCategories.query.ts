@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
-import { Category } from '../interfaces/category.interface';
+import { Category } from '../models/category.interface';
 
 export interface Response {
   categories: Category[];

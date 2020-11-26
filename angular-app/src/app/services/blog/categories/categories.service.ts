@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ListCategoriesGQL } from 'src/app/graphql/listCategories.query';
-import { Category } from 'src/app/interfaces/category.interface';
+import { Category } from 'src/app/models/category.interface';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
