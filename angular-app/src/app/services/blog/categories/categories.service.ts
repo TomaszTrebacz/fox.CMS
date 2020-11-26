@@ -15,5 +15,4 @@ export class CategoriesService {
       .watch()
       .valueChanges.pipe(map((result) => result.data.categories));
   }
-  f;
 }

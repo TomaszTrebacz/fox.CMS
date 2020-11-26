@@ -1,6 +1,9 @@
 require("dotenv").config();
 const { ApolloServer } = require("apollo-server");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
+import CryptoJS from "crypto-js";
+
+const secretKey = process.env.AES_KEY;
 
 const gateway = new ApolloGateway({
   serviceList: [
@@ -18,7 +21,26 @@ const gateway = new ApolloGateway({
       url,
       willSendRequest({ request, context }) {
         if (context.Authorization) {
-          request.http.headers.set("Authorization", context.Authorization);
+          const encryptedJWT = context.Authorization.replace("Bearer ", "");
+          const decryptedJWT = CryptoJS.AES.decrypt(
+            encryptedJWT,
+            "dwjiaodawawdjniwdiu23sa"
+          );
+
+          const originalText = decryptedJWT.toString(CryptoJS.enc.Utf8);
+
+          const decryptedHeader = `Bearer ${decryptedJWT}`;
+
+          const decryptedData = decryptedJWT.toString(CryptoJS.enc.Utf8);
+
+          console.log(originalText); // 'my message'
+
+          const chuj = `Bearer ${originalText}`;
+
+          //  console.log("chuj");
+          //   console.log(context.Authorization);
+          // console.log("end");
+          request.http.headers.set("Authorization", chuj);
         }
       },
     });

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import CryptoES from 'crypto-es';
 import { environment } from 'src/environments/environment';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -16,7 +15,7 @@ export class CryptoService {
   constructor() {}
 
   encrypt(value: string): string {
-    return CryptoES.AES.encrypt(value, this.secretKey.trim()).toString();
+    return CryptoES.AES.encrypt(value, 'dwjiaodawawdjniwdiu23sa').toString();
   }
 
   decrypt(value: string) {

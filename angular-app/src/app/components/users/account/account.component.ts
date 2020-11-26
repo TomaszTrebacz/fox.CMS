@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { User } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { UserService } from 'src/app/services/user/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-account',
@@ -8,11 +11,11 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./account.component.css'],
 })
 export class AccountComponent implements OnInit {
-  user: User;
+  user: Observable<User>;
 
-  constructor(private authService: AuthService) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.user = this.authService.userValue;
+    this.user = this.userService.getCurrentUser().pipe(map((result) => result));
   }
 }

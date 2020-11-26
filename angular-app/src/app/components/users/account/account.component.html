@@ -1,1 +1,4 @@
-<p>Hi {{ user.firstName }}!</p>
+<p *ngIf="(user | async) as user">
+Hi {{ user.firstName }} {{ user.lastName }}!
+phone: {{ user.phoneNumber }}
+</p>
