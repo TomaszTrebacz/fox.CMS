@@ -5,6 +5,7 @@ import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache, ApolloLink } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { environment } from 'src/environments/environment';
+import { decrypt, encrypt } from './helpers/crypto';
 
 const uri = environment.backendUrl;
 
@@ -18,14 +19,15 @@ export function createApollo(httpLink: HttpLink) {
   const auth = setContext((operation, context) => {
     const accesstoken = localStorage.getItem('accesstoken');
 
-    if (accesstoken === null) {
-      return {};
-    } else {
+    if (accesstoken) {
+      const decryptedJWT = decrypt(accesstoken);
       return {
         headers: {
-          Authorization: `Bearer ${accesstoken}`,
+          Authorization: `Bearer ${decryptedJWT}`,
         },
       };
+    } else {
+      return null;
     }
   });
 

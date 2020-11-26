@@ -2,8 +2,8 @@ import { Injectable, Input } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginGQL } from 'src/app/graphql/login.query';
+import { decrypt, encrypt } from 'src/app/helpers/crypto';
 import { User } from 'src/app/interfaces/user.interface';
-import { CryptoService } from './crypto/crypto.service';
 
 export interface LoginForm {
   email: string;
@@ -22,16 +22,11 @@ export class AuthService {
   private userSubject: BehaviorSubject<any>;
   public user: Observable<any>;
 
-  constructor(
-    private cryptoService: CryptoService,
-    private loginGQL: LoginGQL
-  ) {
+  constructor(private loginGQL: LoginGQL) {
     let userValue = localStorage.getItem('user');
 
     if (userValue) {
-      this.userSubject = new BehaviorSubject(
-        JSON.parse(this.cryptoService.decrypt(userValue))
-      );
+      this.userSubject = new BehaviorSubject(JSON.parse(decrypt(userValue)));
     } else {
       this.userSubject = new BehaviorSubject(null);
     }
@@ -50,16 +45,14 @@ export class AuthService {
       })
       .pipe(
         map((result) => {
-          const encryptedAccessToken = this.cryptoService.encrypt(
-            result.data.login.token
-          );
+          const encryptedAccessToken = encrypt(result.data.login.token);
 
           const user = {
             ...result.data.login.user,
             role: result.data.login.role,
           };
 
-          let encryptedUser = this.cryptoService.encrypt(JSON.stringify(user));
+          let encryptedUser = encrypt(JSON.stringify(user));
 
           localStorage.setItem('accesstoken', encryptedAccessToken);
           localStorage.setItem('user', encryptedUser);
