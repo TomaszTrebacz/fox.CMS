@@ -55,7 +55,11 @@ export class AuthService {
   }
 
   async validateJwt(payload: JwtPayload) {
-    const role = await this.redisService.getRole(payload.id);
+    const redisData = {
+      id: payload.id,
+      key: 'role',
+    };
+    const role = await this.redisService.getValue(redisData);
 
     if (role !== payload.role) {
       throw new Error('Authorization error');

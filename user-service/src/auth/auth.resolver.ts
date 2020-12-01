@@ -112,7 +112,13 @@ export class AuthResolver {
         numbers: true,
       });
 
-      let count = await this.redisService.getCount(user.id);
+      const redisData = {
+        id: user.id,
+        key: 'count',
+      };
+      const value = await this.redisService.getValue(redisData);
+      // all values in redis are stored as strings
+      let count = parseInt(value, 10);
       count++;
 
       await this.redisService.changeCount(user.id, count.toString());

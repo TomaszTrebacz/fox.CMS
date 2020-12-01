@@ -1,8 +1,8 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { RedisService } from 'nestjs-redis';
-import { parse } from 'path';
-import { userInfoInterface } from './userInfo.interface';
+import { getValueInterface } from './interfaces/getValue.interface';
+import { userInfoInterface } from './interfaces/userInfo.interface';
 
 @Injectable()
 export class RedisDbService {
@@ -47,34 +47,14 @@ export class RedisDbService {
     return data;
   }
 
-  async getCount(id: string) {
-    let count = await this.client.hget(id, 'count');
+  async getValue({ id, key }: getValueInterface) {
+    const value = await this.client.hget(id, key);
 
-    if (!count) {
+    if (!value) {
       throw new UnprocessableEntityException('There is no user with given Id!');
     }
 
-    return parseInt(count);
-  }
-
-  async getRole(id: string) {
-    const role = await this.client.hget(id, 'role');
-
-    if (!role) {
-      throw new UnprocessableEntityException('There is no user with given Id!');
-    }
-
-    return role;
-  }
-
-  async getToken(id: string) {
-    const token = await this.client.hget(id, 'refreshtoken');
-
-    if (!token) {
-      throw new UnprocessableEntityException('There is no user with given Id!');
-    }
-
-    return token;
+    return value;
   }
 
   async changeRole({ id, role }: userInfoInterface) {
@@ -85,8 +65,8 @@ export class RedisDbService {
     await this.client.hmset(id, { count: count });
   }
 
-  async deleteKeyField(id: string, key: string) {
-    let isRemoved = await this.client.hdel(id, key);
+  async deleteKeyField(id: string, key: string): Promise<Boolean> {
+    const isRemoved = await this.client.hdel(id, key);
 
     if (isRemoved !== 1) {
       throw new UnprocessableEntityException('There is no user with given Id!');
