@@ -4,4 +4,7 @@ module.exports = {
   plugins: [
     new Dotenv(),
   ],
+  node: {
+    fs: "empty"
+  }
 };

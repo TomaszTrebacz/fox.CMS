@@ -76,8 +76,11 @@ export class UsersResolver {
 
       const redisData = {
         id: createdUser.id,
-        // default role for any new user is `user` without any special priviliges in app
+        // default role for any new user is (enum)`user` without any special priviliges in app
         role: userRole.USER,
+        // count mechanism is an alternative to a blacklist, default is 0 -> count++ when user change password etc.
+        // count is string because of redis
+        count: '0',
       };
 
       await this.redisService.saveUser(redisData);

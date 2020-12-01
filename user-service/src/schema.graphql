@@ -13,8 +13,14 @@ type User @key(fields: "id") {
 
 type LoginResponse {
   user: User!
-  token: String!
+  accessToken: String!
+  refreshToken: String!
   role: String!
+}
+
+type TokenResponse {
+  accessToken: String
+  refreshToken: String
 }
 
 extend type Query {
@@ -30,6 +36,8 @@ type Mutation {
   deleteUser(id: String): Boolean
   changeRole(changeRoleInput: ChangeRoleInput): Boolean
   resetPassword(email: String): Boolean
+  refreshToken(refreshToken: String): TokenResponse
+  logout(id: String): Boolean
 }
 
 input CreateUserInput {

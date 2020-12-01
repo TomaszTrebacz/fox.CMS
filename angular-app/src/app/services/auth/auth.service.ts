@@ -1,7 +1,9 @@
-import { Injectable, Input } from '@angular/core';
+import { Injectable, Input, ɵConsole } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginGQL } from 'src/app/graphql/login.query';
+import { LogoutGQL } from 'src/app/graphql/logout.mutation';
+
 import { decrypt, encrypt } from 'src/app/helpers/crypto';
 
 export interface LoginForm {
@@ -21,7 +23,7 @@ export class AuthService {
   private userSubject: BehaviorSubject<any>;
   public user: Observable<any>;
 
-  constructor(private loginGQL: LoginGQL) {
+  constructor(private loginGQL: LoginGQL, private logoutGQL: LogoutGQL) {
     let userValue = localStorage.getItem('user');
 
     if (userValue) {
@@ -44,7 +46,8 @@ export class AuthService {
       })
       .pipe(
         map((result) => {
-          const encryptedAccessToken = encrypt(result.data.login.token);
+          const encryptedAccessToken = encrypt(result.data.login.accessToken);
+          const encryptedRefreshToken = encrypt(result.data.login.refreshToken);
 
           const user = {
             ...result.data.login.user,
@@ -54,6 +57,7 @@ export class AuthService {
           let encryptedUser = encrypt(JSON.stringify(user));
 
           localStorage.setItem('accesstoken', encryptedAccessToken);
+          localStorage.setItem('refreshtoken', encryptedRefreshToken);
           localStorage.setItem('user', encryptedUser);
 
           this.userSubject.next(user);
@@ -62,8 +66,12 @@ export class AuthService {
   }
 
   logout() {
+    const user = this.userValue;
+    this.logoutGQL.mutate({ id: user.id }).subscribe();
+
     localStorage.removeItem('accesstoken');
-    this.userSubject.next(null);
+    localStorage.removeItem('refreshtoken');
     localStorage.removeItem('user');
+    this.userSubject.next(null);
   }
 }

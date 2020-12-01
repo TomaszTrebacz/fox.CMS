@@ -36,10 +36,20 @@ export class AuthService {
     return user;
   }
 
-  createJwt(user: User, role: string) {
-    const payload = { id: user.id, role: role };
+  createAccessJwt(id: string, role: string) {
+    const payload = { id: id, role: role };
 
     const token = this.jwtService.sign(payload);
+
+    return token;
+  }
+
+  createRefreshJwt(id: string, count: number) {
+    const payload = { id: id, count: count };
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.REFRESH_JWT_SECRET,
+      expiresIn: process.env.REFRESH_JWT_EXP,
+    });
 
     return token;
   }

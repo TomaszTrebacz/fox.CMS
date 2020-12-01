@@ -9,11 +9,13 @@ export class LoginGQL extends Query<any> {
     query($input: LoginInput) {
       login(loginCredentials: $input) {
         user {
+          id
           firstName
           lastName
           phoneNumber
         }
-        token
+        accessToken
+        refreshToken
         role
       }
     }

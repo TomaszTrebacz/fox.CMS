@@ -2,7 +2,6 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.input';
 import { AuthenticationError } from 'apollo-server-core';
-import { LoginResponse } from '../graphql';
 import { RootGuard } from './guards/root.guard';
 import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
 import { UsersService } from 'src/users/users.service';
@@ -12,6 +11,7 @@ import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
+var jwt = require('jsonwebtoken');
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -25,16 +25,67 @@ export class AuthResolver {
   @Query('login')
   async login(@Args('loginCredentials') loginCredentials: LoginDto) {
     const user = await this.authService.validateUser(loginCredentials);
-    const role = await this.redisService.getRole(user.id);
 
-    const token = await this.authService.createJwt(user, role);
+    const rdsUser = await this.redisService.getUser(user.id);
 
-    const loginResponse = new LoginResponse();
-    loginResponse.user = user;
-    loginResponse.token = token;
-    loginResponse.role = role;
+    const accessToken = await this.authService.createAccessJwt(
+      user.id,
+      rdsUser.role,
+    );
+
+    const refreshToken = await this.authService.createRefreshJwt(
+      user.id,
+      rdsUser.count,
+    );
+
+    await this.redisService.saveToken(user.id, refreshToken);
+
+    const loginResponse = {
+      user: user,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      role: rdsUser.role,
+    };
 
     return loginResponse;
+  }
+
+  @Mutation('refreshToken')
+  async refreshToken(@Args('refreshToken') refreshToken: string): Promise<any> {
+    try {
+      const decodedJWT = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_JWT_SECRET,
+      );
+
+      const user = await this.redisService.getUser(decodedJWT.id);
+
+      if (
+        refreshToken === user.refreshToken &&
+        decodedJWT.count === user.count // count mechanism is an alternative to blackmailing tokens
+      ) {
+        const newAccessToken = await this.authService.createAccessJwt(
+          decodedJWT.id,
+          user.role,
+        );
+
+        const newRefreshToken = await this.authService.createRefreshJwt(
+          decodedJWT.id,
+          decodedJWT.count,
+        );
+
+        await this.redisService.saveToken(decodedJWT.id, newRefreshToken);
+
+        const TokenResponse = {
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        };
+
+        return TokenResponse;
+      }
+    } catch (err) {
+      throw new AuthenticationError(err);
+    }
   }
 
   @Mutation()
@@ -61,6 +112,11 @@ export class AuthResolver {
         numbers: true,
       });
 
+      let count = await this.redisService.getCount(user.id);
+      count++;
+
+      await this.redisService.changeCount(user.id, count.toString());
+
       await this.usersService.changePassword(user.id, password);
 
       const mail = {
@@ -77,6 +133,16 @@ export class AuthResolver {
       throw new Error(
         `Can not reset password and send email with new one: ${err.message}`,
       );
+    }
+  }
+
+  @Mutation()
+  async logout(@Args('id') id: string): Promise<Boolean> {
+    try {
+      await this.redisService.deleteKeyField(id, 'refreshtoken');
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(err);
     }
   }
 }

@@ -33,7 +33,8 @@ export class UpdateUserInput {
 
 export class LoginResponse {
     user: User;
-    token: string;
+    accessToken: string;
+    refreshToken: string;
     role: string;
 }
 
@@ -47,6 +48,15 @@ export abstract class IMutation {
     abstract changeRole(changeRoleInput?: ChangeRoleInput): boolean | Promise<boolean>;
 
     abstract resetPassword(email?: string): boolean | Promise<boolean>;
+
+    abstract refreshToken(refreshToken?: string): TokenResponse | Promise<TokenResponse>;
+
+    abstract logout(id?: string): boolean | Promise<boolean>;
+}
+
+export class TokenResponse {
+    accessToken?: string;
+    refreshToken?: string;
 }
 
 export class User {
