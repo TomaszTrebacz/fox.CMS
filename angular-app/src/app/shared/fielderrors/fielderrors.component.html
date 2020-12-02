@@ -2,7 +2,7 @@
     <i class="fa fa-close"></i>
     <span *ngIf="fieldErrors(fieldName).required">{{ name }} is required!</span>
     <span *ngIf="fieldErrors(fieldName).minlength">{{ name }} must be min {{ fieldErrors(fieldName).minlength.requiredLength }} characters!</span>
-    <span *ngIf="fieldErrors(fieldName).maxlength">{{ name }} must be max {{ fieldErrors(fieldName).maxlength.requiredLength } characters!</span>
+    <span *ngIf="fieldErrors(fieldName).maxlength">{{ name }} must be max {{ fieldErrors(fieldName).maxlength.requiredLength }} characters!</span>
     <span *ngIf="fieldErrors(fieldName).email">{{ name }} must be email!</span>
-
+    <span *ngIf="fieldErrors(fieldName).pattern">{{ name }} should be in valid {{ fieldErrors(fieldName).pattern.requiredPattern }} form!</span>
 </div>

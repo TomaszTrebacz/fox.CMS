@@ -35,6 +35,8 @@ import { AdminModule } from './components/admin/admin.module';
 import { WorkboardComponent } from './components/admin/workboard/workboard.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
   declarations: [
@@ -73,6 +75,8 @@ import { MessageModule } from 'primeng/message';
     PanelModule,
     JwtModule,
     AdminModule,
+    ToastModule,
+    InputMaskModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
