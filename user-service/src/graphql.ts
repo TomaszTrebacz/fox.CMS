@@ -52,6 +52,8 @@ export abstract class IMutation {
     abstract refreshToken(refreshToken?: string): TokenResponse | Promise<TokenResponse>;
 
     abstract logout(id?: string): boolean | Promise<boolean>;
+
+    abstract confirmUser(confirmToken?: string): boolean | Promise<boolean>;
 }
 
 export class TokenResponse {

@@ -33,6 +33,8 @@ import { FielderrorsComponent } from './shared/fielderrors/fielderrors.component
 import { JwtModule } from '@auth0/angular-jwt';
 import { AdminModule } from './components/admin/admin.module';
 import { WorkboardComponent } from './components/admin/workboard/workboard.component';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { WorkboardComponent } from './components/admin/workboard/workboard.compo
     MatCardModule,
     MatIconModule,
     GraphQLModule,
+    MessageModule,
+    MessagesModule,
     HttpClientModule,
     BlogModule,
     UsersModule,

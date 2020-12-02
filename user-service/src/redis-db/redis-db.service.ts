@@ -16,12 +16,20 @@ export class RedisDbService {
     return this.redisService.getClient();
   }
 
-  async saveUser({ id, role, count }: userInfoInterface) {
+  async saveUser({
+    id,
+    role,
+    confirmed,
+    confirmToken,
+    count,
+  }: userInfoInterface) {
     await this.client.hmset(
       id,
       new Map([
         ['role', role],
         ['count', count],
+        ['confirmed', confirmed],
+        ['confirmtoken', confirmToken],
       ]),
     );
   }
@@ -65,7 +73,11 @@ export class RedisDbService {
     await this.client.hmset(id, { count: count });
   }
 
-  async deleteKeyField(id: string, key: string): Promise<Boolean> {
+  async confirmUser(id: string) {
+    await this.client.hmset(id, { confirmed: 'true' });
+  }
+
+  async deleteKeyField({ id, key }: getValueInterface): Promise<Boolean> {
     const isRemoved = await this.client.hdel(id, key);
 
     if (isRemoved !== 1) {

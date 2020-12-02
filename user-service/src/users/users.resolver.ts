@@ -18,6 +18,8 @@ import { SmsService } from 'src/sms/sms.service';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { userRole } from './enums/userRole.enum';
 import { RootGuard } from 'src/auth/guards/root.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Resolver('User')
 export class UsersResolver {
@@ -25,6 +27,8 @@ export class UsersResolver {
     private readonly usersService: UsersService,
     private smsService: SmsService,
     private redisService: RedisDbService,
+    private authService: AuthService,
+    private mailService: MailService,
   ) {}
 
   @Query('users')
@@ -74,6 +78,20 @@ export class UsersResolver {
         await this.smsService.sendSMS(smsData);
       }
 
+      const JWTpayload = {
+        id: createdUser.id,
+      };
+
+      const JWToptions = {
+        secret: process.env.CONFIRM_JWT_SECRET,
+        expiresIn: process.env.CONFIRM_JWT_EXP,
+      };
+
+      const confirmJWT = await this.authService.createJWT(
+        JWTpayload,
+        JWToptions,
+      );
+
       const redisData = {
         id: createdUser.id,
         // default role for any new user is (enum)`user` without any special priviliges in app
@@ -81,7 +99,23 @@ export class UsersResolver {
         // count mechanism is an alternative to a blacklist, default is 0 -> count++ when user change password etc.
         // count is string because of redis
         count: '0',
+        confirmed: 'false',
+        confirmToken: confirmJWT,
       };
+
+      // will be updated in the future, when frontend will be finished
+      const confirmLink = '';
+
+      const mail = {
+        greeting: `Hi ${createdUser.firstName} ${createdUser.lastName}!`,
+        content: `I'm so glad you registered in our app! 
+                  Please confirm your mail by clicking in this link: ${confirmLink}. 
+                  Make sure you don't share this link publicly, because it's unique for you!`,
+        subject: `Registration in TravelCove app | Confirm your email! `,
+        mailAddress: createdUser.email,
+      };
+
+      this.mailService.sendMail(mail);
 
       await this.redisService.saveUser(redisData);
 

@@ -54,11 +54,24 @@ export class AuthService {
     return token;
   }
 
+  // secret & exp is setted in auth.module.ts in config env
+  createDefaultJWT(payload) {
+    return this.jwtService.sign(payload);
+  }
+
+  createJWT(payload, { secret, expiresIn }) {
+    return this.jwtService.sign(payload, {
+      secret: secret,
+      expiresIn: expiresIn,
+    });
+  }
+
   async validateJwt(payload: JwtPayload) {
     const redisData = {
       id: payload.id,
       key: 'role',
     };
+
     const role = await this.redisService.getValue(redisData);
 
     if (role !== payload.role) {

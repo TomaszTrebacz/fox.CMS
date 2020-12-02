@@ -11,6 +11,7 @@ import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
+import { JwtService } from '@nestjs/jwt';
 var jwt = require('jsonwebtoken');
 
 @Resolver('Auth')
@@ -20,6 +21,7 @@ export class AuthResolver {
     private readonly usersService: UsersService,
     private readonly mailService: MailService,
     private readonly redisService: RedisDbService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Query('login')
@@ -99,6 +101,36 @@ export class AuthResolver {
   }
 
   @Mutation()
+  async confirmUser(
+    @Args('confirmToken') confirmToken: string,
+  ): Promise<Boolean> {
+    try {
+      const { id } = this.jwtService.verify(confirmToken, {
+        secret: process.env.CONFIRM_JWT_SECRET,
+      });
+
+      const redisData = {
+        id: id,
+        key: 'confirmtoken',
+      };
+
+      const actualToken = await this.redisService.getValue(redisData);
+
+      if (confirmToken == actualToken) {
+        await this.redisService.confirmUser(id);
+
+        await this.redisService.deleteKeyField(redisData);
+      } else {
+        throw new Error('Please check your email. Token is not valid.');
+      }
+
+      return true;
+    } catch (err) {
+      throw new Error(`Can not confirm user: ${err.message}`);
+    }
+  }
+
+  @Mutation()
   @UseGuards(GqlAuthGuard)
   async resetPassword(@Args('email') email: string): Promise<Boolean> {
     try {
@@ -145,7 +177,12 @@ export class AuthResolver {
   @Mutation()
   async logout(@Args('id') id: string): Promise<Boolean> {
     try {
-      await this.redisService.deleteKeyField(id, 'refreshtoken');
+      const redisData = {
+        id: id,
+        key: 'refreshtoken',
+      };
+
+      await this.redisService.deleteKeyField(redisData);
       return new Boolean(true);
     } catch (err) {
       throw new Error(err);

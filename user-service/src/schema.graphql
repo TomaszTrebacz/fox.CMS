@@ -38,6 +38,7 @@ type Mutation {
   resetPassword(email: String): Boolean
   refreshToken(refreshToken: String): TokenResponse
   logout(id: String): Boolean
+  confirmUser(confirmToken: String): Boolean
 }
 
 input CreateUserInput {
