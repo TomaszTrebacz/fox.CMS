@@ -20,6 +20,16 @@ export class AuthService {
   async validateUser(loginCredentials: LoginDto) {
     const user = await this.usersService.findOneByEmail(loginCredentials.email);
 
+    const redisData = {
+      id: user.id,
+      key: 'confirmed',
+    };
+    const isConfirmed = await this.redisService.getValue(redisData);
+
+    if (isConfirmed === 'false') {
+      throw new Error('User is not confirmed. Please confirm accout');
+    }
+
     if (user == undefined) {
       throw new Error('Wrong email or password!');
     }

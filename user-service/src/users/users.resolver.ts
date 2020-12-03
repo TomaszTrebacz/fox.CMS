@@ -103,8 +103,7 @@ export class UsersResolver {
         confirmToken: confirmJWT,
       };
 
-      // will be updated in the future, when frontend will be finished
-      const confirmLink = '';
+      const confirmLink = `${process.env.FRONTEND_URL}/users/confirm-account?token=${confirmJWT}`;
 
       const mail = {
         greeting: `Hi ${createdUser.firstName} ${createdUser.lastName}!`,

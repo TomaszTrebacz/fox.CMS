@@ -1,6 +1,8 @@
 import { Injectable, Input, ɵConsole } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ChangeConfirmTokenGQL } from 'src/app/graphql/changeConfirmToken.mutation';
+import { ConfirmUserGQL } from 'src/app/graphql/confirmUser.mutation';
 import { LoginGQL } from 'src/app/graphql/login.query';
 import { LogoutGQL } from 'src/app/graphql/logout.mutation';
 
@@ -23,7 +25,12 @@ export class AuthService {
   private userSubject: BehaviorSubject<any>;
   public user: Observable<any>;
 
-  constructor(private loginGQL: LoginGQL, private logoutGQL: LogoutGQL) {
+  constructor(
+    private loginGQL: LoginGQL,
+    private logoutGQL: LogoutGQL,
+    private confirmUserGQL: ConfirmUserGQL,
+    private changeConfirmTokenGQL: ChangeConfirmTokenGQL
+  ) {
     let userValue = localStorage.getItem('user');
 
     if (userValue) {
@@ -73,5 +80,13 @@ export class AuthService {
     localStorage.removeItem('refreshtoken');
     localStorage.removeItem('user');
     this.userSubject.next(null);
+  }
+
+  confirmUser(token: string): Observable<any> {
+    return this.confirmUserGQL.mutate({ token: token });
+  }
+
+  changeConfirmToken(email: string) {
+    return this.changeConfirmTokenGQL.mutate({ email: email });
   }
 }

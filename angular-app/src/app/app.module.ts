@@ -25,7 +25,7 @@ import { MenuModule } from 'primeng/menu';
 import { AccordionModule } from 'primeng/accordion';
 import { LoginComponent } from './components/users/login/login.component';
 import { RegisterComponent } from './components/users/register/register.component';
-import { UsersModule } from './components/users/users/users.module';
+import { UsersModule } from './components/users/users.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { AccountComponent } from './components/users/account/account.component';
@@ -38,6 +38,8 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageService } from 'primeng/api';
+import { ConfirmAccountComponent } from './components/users/confirm-account/confirm-account.component';
+import { ResendConfirmLinkComponent } from './components/users/resend-confirm-link/resend-confirm-link.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { MessageService } from 'primeng/api';
     AccountComponent,
     FielderrorsComponent,
     WorkboardComponent,
+    ConfirmAccountComponent,
+    ResendConfirmLinkComponent,
   ],
   imports: [
     BrowserModule,

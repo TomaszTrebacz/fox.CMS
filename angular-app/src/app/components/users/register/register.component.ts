@@ -69,11 +69,12 @@ export class RegisterComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
+          this.router.navigateByUrl('/');
           this.messageService.add({
             key: 'defaultToast',
             severity: 'success',
             summary: 'Successfully registered!',
-            detail: `You have to confirm your account by clicking lint sent on email!`,
+            detail: `You have to confirm your account by clicking link sent on email!`,
           });
         },
         error: (error) => {

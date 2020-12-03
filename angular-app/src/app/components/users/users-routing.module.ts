@@ -2,9 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from 'src/app/helpers/auth.guard';
 import { userRole } from 'src/app/models/userRole.interface';
-import { AccountComponent } from '../account/account.component';
-import { LoginComponent } from '../login/login.component';
-import { RegisterComponent } from '../register/register.component';
+import { AccountComponent } from './account/account.component';
+import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { ResendConfirmLinkComponent } from './resend-confirm-link/resend-confirm-link.component';
 
 const userRoutes: Routes = [
   {
@@ -17,6 +19,14 @@ const userRoutes: Routes = [
       {
         path: 'register',
         component: RegisterComponent,
+      },
+      {
+        path: 'confirm-account',
+        component: ConfirmAccountComponent,
+      },
+      {
+        path: 'resend-confirmLink',
+        component: ResendConfirmLinkComponent,
       },
       {
         path: 'account',

@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { first } from 'rxjs/operators';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +53,12 @@ export class LoginComponent implements OnInit {
           this.router.navigateByUrl('/users/account');
         },
         error: (error) => {
-          this.error = error;
+          this.messageService.add({
+            key: 'defaultMessage',
+            severity: 'error',
+            summary: 'Can not log in',
+            detail: error,
+          });
         },
       });
   }

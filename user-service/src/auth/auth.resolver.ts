@@ -131,6 +131,64 @@ export class AuthResolver {
   }
 
   @Mutation()
+  async changeConfirmToken(@Args('email') email: string): Promise<Boolean> {
+    try {
+      const {
+        id,
+        firstName,
+        lastName,
+      } = await this.usersService.findOneByEmail(email);
+
+      if (!id) {
+        throw new Error('There is no user with given email!');
+      }
+
+      const redisData = {
+        id: id,
+        key: 'confirmed',
+      };
+      const confirmed = await this.redisService.getValue(redisData);
+
+      if (confirmed === 'true') {
+        throw new Error('User has been confirmed earlier.');
+      }
+
+      const JWTpayload = {
+        id: id,
+      };
+
+      const JWToptions = {
+        secret: process.env.CONFIRM_JWT_SECRET,
+        expiresIn: process.env.CONFIRM_JWT_EXP,
+      };
+
+      const newConfirmJWT = await this.authService.createJWT(
+        JWTpayload,
+        JWToptions,
+      );
+
+      await this.redisService.saveToken(id, newConfirmJWT);
+
+      const newConfirmLink = `${process.env.FRONTEND_URL}/users/confirm-account?token=${newConfirmJWT}`;
+
+      const mail = {
+        greeting: `Hi ${firstName} ${lastName}!`,
+        content: `We've heard that you asked for new confirmation link.
+                Please confirm your mail by clicking in this link: ${newConfirmLink}. 
+                Make sure you don't share this link publicly, because it's unique for you!`,
+        subject: `Resend confirmation link`,
+        mailAddress: email,
+      };
+
+      this.mailService.sendMail(mail);
+
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(`Can not resend confirmation link: ${err.message}`);
+    }
+  }
+
+  @Mutation()
   @UseGuards(GqlAuthGuard)
   async resetPassword(@Args('email') email: string): Promise<Boolean> {
     try {

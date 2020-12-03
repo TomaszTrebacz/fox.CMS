@@ -54,6 +54,8 @@ export abstract class IMutation {
     abstract logout(id?: string): boolean | Promise<boolean>;
 
     abstract confirmUser(confirmToken?: string): boolean | Promise<boolean>;
+
+    abstract changeConfirmToken(email?: string): boolean | Promise<boolean>;
 }
 
 export class TokenResponse {

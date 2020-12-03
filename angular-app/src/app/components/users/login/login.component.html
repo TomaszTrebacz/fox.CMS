@@ -18,6 +18,10 @@
         </div>
 
         <button pButton type="button" label="Click" [disabled]="!loginForm.valid" (click)="onSubmit()"></button>
+        <div class="ui-g-12 ui-md-5">
+            <a routerLink="/users/resend-confirmLink">Click to resend confirmation link to your email</a>
+    
+        </div>
     </p-panel>
     
 </form>
