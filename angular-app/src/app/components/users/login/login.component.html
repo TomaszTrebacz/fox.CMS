@@ -13,14 +13,15 @@
             <input pInputText id="password" formControlName="password" placeholder="Enter your password" class="ui-g-12 ui-md-5"/>
             <div class="ui-g-12 ui-md-5">
                 <app-fielderrors [form]="loginForm" field="password" nicename="password"></app-fielderrors>
-
             </div>
         </div>
 
         <button pButton type="button" label="Click" [disabled]="!loginForm.valid" (click)="onSubmit()"></button>
-        <div class="ui-g-12 ui-md-5">
+        <div class="ui-g">
             <a routerLink="/users/resend-confirmLink">Click to resend confirmation link to your email</a>
-    
+        </div>
+           <div class="ui-g">
+            <a routerLink="/users/reset-password">Click to reset password by email or phone number</a>
         </div>
     </p-panel>
     

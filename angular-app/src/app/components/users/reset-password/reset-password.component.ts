@@ -5,18 +5,20 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
-  selector: 'app-resend-confirm-link',
-  templateUrl: './resend-confirm-link.component.html',
-  styleUrls: ['./resend-confirm-link.component.css'],
+  selector: 'app-reset-password',
+  templateUrl: './reset-password.component.html',
+  styleUrls: ['./reset-password.component.css'],
 })
-export class ResendConfirmLinkComponent implements OnInit {
-  form: FormGroup;
-  error: '';
+export class ResetPasswordComponent implements OnInit {
+  phoneForm: FormGroup;
+  error = '';
+  numberPattern = '^[+][0-9]*$';
 
   constructor(
     private fb: FormBuilder,
@@ -25,40 +27,37 @@ export class ResendConfirmLinkComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      email: [
-        '',
-        [Validators.required, Validators.email, Validators.minLength(6)],
-      ],
+    this.phoneForm = this.fb.group({
+      phoneNumber: ['', [Validators.pattern(this.numberPattern)]],
     });
   }
 
   hasFormErrors() {
-    return !this.form.valid;
+    return !this.phoneForm.valid;
   }
 
-  onSubmit() {
-    if (this.form.invalid) {
+  onPhoneFormSubmit() {
+    if (this.phoneForm.invalid) {
       return;
     }
 
     this.authService
-      .changeConfirmToken(this.form.value.email)
+      .sendCodePhone(this.phoneForm.value.phoneNumber)
       .pipe(first())
       .subscribe({
         next: () => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'success',
-            summary: 'Email with new link was send.',
-            detail: 'Please confirm your account!',
+            summary: 'Code sent!',
+            detail: 'Please check your phone!',
           });
         },
         error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Can not resend email with new link',
+            summary: 'Code was not send',
             detail: error,
           });
         },

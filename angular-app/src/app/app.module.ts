@@ -40,6 +40,9 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { MessageService } from 'primeng/api';
 import { ConfirmAccountComponent } from './components/users/confirm-account/confirm-account.component';
 import { ResendConfirmLinkComponent } from './components/users/resend-confirm-link/resend-confirm-link.component';
+import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
+import { ConfirmationCodeComponent } from './components/users/reset-password/confirmation-code/confirmation-code.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,8 @@ import { ResendConfirmLinkComponent } from './components/users/resend-confirm-li
     WorkboardComponent,
     ConfirmAccountComponent,
     ResendConfirmLinkComponent,
+    ResetPasswordComponent,
+    ConfirmationCodeComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,6 +87,7 @@ import { ResendConfirmLinkComponent } from './components/users/resend-confirm-li
     AdminModule,
     ToastModule,
     InputMaskModule,
+    ProgressSpinnerModule,
   ],
   providers: [MessageService],
   bootstrap: [AppComponent],

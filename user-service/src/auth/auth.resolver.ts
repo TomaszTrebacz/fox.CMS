@@ -4,6 +4,7 @@ import { LoginDto } from './dto/login.input';
 import { AuthenticationError } from 'apollo-server-core';
 import { RootGuard } from './guards/root.guard';
 import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
+import { ResetPasswordDto } from 'src/auth/dto/reset-password.dto';
 import { UsersService } from 'src/users/users.service';
 import { UseGuards } from '@nestjs/common';
 import { UserInputError } from 'apollo-server-core';
@@ -12,6 +13,7 @@ import * as generator from 'generate-password';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { SmsService } from 'src/sms/sms.service';
 var jwt = require('jsonwebtoken');
 
 @Resolver('Auth')
@@ -22,6 +24,7 @@ export class AuthResolver {
     private readonly mailService: MailService,
     private readonly redisService: RedisDbService,
     private readonly jwtService: JwtService,
+    private readonly smsService: SmsService,
   ) {}
 
   @Query('login')
@@ -133,15 +136,12 @@ export class AuthResolver {
   @Mutation()
   async changeConfirmToken(@Args('email') email: string): Promise<Boolean> {
     try {
-      const {
-        id,
-        firstName,
-        lastName,
-      } = await this.usersService.findOneByEmail(email);
+      const user = await this.usersService.findOneByEmail(email);
 
-      if (!id) {
+      if (user == undefined) {
         throw new Error('There is no user with given email!');
       }
+      const { id, firstName, lastName } = user;
 
       const redisData = {
         id: id,
@@ -189,13 +189,72 @@ export class AuthResolver {
   }
 
   @Mutation()
-  @UseGuards(GqlAuthGuard)
-  async resetPassword(@Args('email') email: string): Promise<Boolean> {
+  async sendCodePhone(
+    @Args('phoneNumber') phoneNumber: string,
+  ): Promise<Boolean> {
     try {
-      const user = await this.usersService.findOneByEmail(email);
+      const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
 
-      if (user == undefined)
-        throw new UserInputError('The user does not exist');
+      if (user == undefined) {
+        throw new Error('Wrong phone number.');
+      }
+
+      const randomNumber = Math.floor(1000 + Math.random() * 9000);
+
+      const JWTpayload = {
+        code: randomNumber,
+      };
+
+      const JWToptions = {
+        secret: process.env.PHONECODE_JWT_SECRET,
+        expiresIn: process.env.PHONECODE_JWT_EXP,
+      };
+
+      const codeToken = await this.authService.createJWT(
+        JWTpayload,
+        JWToptions,
+      );
+
+      await this.redisService.saveCodeToken(user.id, codeToken);
+
+      const smsData = {
+        phoneNumber: user.phoneNumber,
+        body: `Your confirmation code for reset password is ${randomNumber}. Please enter it on website within 5 minutes.`,
+      };
+
+      await this.smsService.sendSMS(smsData);
+
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(`Can not send confirmation code: ${err.message}`);
+    }
+  }
+
+  @Mutation()
+  async resetPassword(
+    @Args('resetPasswordInput') { phoneNumber, code }: ResetPasswordDto,
+  ): Promise<Boolean> {
+    try {
+      const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
+
+      if (user == undefined) {
+        throw new Error('Wrong phone number.');
+      }
+
+      const idKey = {
+        id: user.id,
+        key: 'codetoken',
+      };
+
+      const codeToken = await this.redisService.getValue(idKey);
+
+      const jwtPayload = await this.jwtService.verify(codeToken, {
+        secret: process.env.PHONECODE_JWT_SECRET,
+      });
+
+      if (jwtPayload.code !== code) {
+        throw new Error('Wrong code.');
+      }
 
       const password = generator.generate({
         length: 8,
@@ -207,28 +266,26 @@ export class AuthResolver {
         key: 'count',
       };
       const value = await this.redisService.getValue(redisData);
+
       // all values in redis are stored as strings
       let count = parseInt(value, 10);
       count++;
 
       await this.redisService.changeCount(user.id, count.toString());
+      await this.redisService.deleteKeyField(idKey);
 
       await this.usersService.changePassword(user.id, password);
 
-      const mail = {
-        greeting: `Hi ${user.firstName} ${user.lastName}!`,
-        content: `Your new password is ${password}`,
-        subject: `Forger password for user ${user.firstName} ${user.lastName}`,
-        mailAddress: user.email,
+      const smsData = {
+        phoneNumber: user.phoneNumber,
+        body: `Your new password is ${password}. Log in and change it quickly.`,
       };
 
-      this.mailService.sendMail(mail);
+      await this.smsService.sendSMS(smsData);
 
       return new Boolean(true);
     } catch (err) {
-      throw new Error(
-        `Can not reset password and send email with new one: ${err.message}`,
-      );
+      throw new Error(`Can not reset password: ${err.message}`);
     }
   }
 

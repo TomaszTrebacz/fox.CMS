@@ -2,12 +2,10 @@ import {
   IsEmpty,
   MinLength,
   MaxLength,
-  IsUUID,
   IsOptional,
-  IsPhoneNumber,
+  IsMobilePhone,
 } from 'class-validator';
 import { UpdateUserInput } from '../../graphql';
-import { userRole } from '../enums/userRole.enum';
 
 export class UpdateUserDto extends UpdateUserInput {
   @IsEmpty()
@@ -29,7 +27,7 @@ export class UpdateUserDto extends UpdateUserInput {
   @IsEmpty()
   password: string;
 
-  @IsPhoneNumber('PL')
+  @IsMobilePhone()
   phoneNumber: string;
 
   @IsEmpty()

@@ -60,8 +60,13 @@ export class UsersResolver {
     const emailUsed = await this.usersService.findOneByEmail(
       registerData.email,
     );
-    if (emailUsed) {
-      throw new Error('Email is in database.');
+
+    const phoneUsed = await this.usersService.findOneByPhoneNumber(
+      registerData.phoneNumber,
+    );
+
+    if (emailUsed || phoneUsed) {
+      throw new Error('Email and/or phone number is in database.');
     }
 
     try {

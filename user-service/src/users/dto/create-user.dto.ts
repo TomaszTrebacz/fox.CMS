@@ -3,10 +3,9 @@ import {
   MinLength,
   MaxLength,
   IsEmail,
-  IsPhoneNumber,
+  IsMobilePhone,
 } from 'class-validator';
 import { CreateUserInput } from '../../graphql';
-import { userRole } from '../enums/userRole.enum';
 
 export class CreateUserDto extends CreateUserInput {
   @IsEmpty()
@@ -27,7 +26,7 @@ export class CreateUserDto extends CreateUserInput {
   @MaxLength(30)
   password: string;
 
-  @IsPhoneNumber('PL')
+  @IsMobilePhone()
   phoneNumber: string;
 
   @IsEmpty()

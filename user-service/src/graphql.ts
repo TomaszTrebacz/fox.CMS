@@ -24,6 +24,11 @@ export class LoginInput {
     password: string;
 }
 
+export class ResetPasswordInput {
+    phoneNumber?: string;
+    code?: number;
+}
+
 export class UpdateUserInput {
     id: string;
     firstName: string;
@@ -47,7 +52,7 @@ export abstract class IMutation {
 
     abstract changeRole(changeRoleInput?: ChangeRoleInput): boolean | Promise<boolean>;
 
-    abstract resetPassword(email?: string): boolean | Promise<boolean>;
+    abstract resetPassword(resetPasswordInput?: ResetPasswordInput): boolean | Promise<boolean>;
 
     abstract refreshToken(refreshToken?: string): TokenResponse | Promise<TokenResponse>;
 
@@ -56,6 +61,8 @@ export abstract class IMutation {
     abstract confirmUser(confirmToken?: string): boolean | Promise<boolean>;
 
     abstract changeConfirmToken(email?: string): boolean | Promise<boolean>;
+
+    abstract sendCodePhone(phoneNumber?: string): boolean | Promise<boolean>;
 }
 
 export class TokenResponse {

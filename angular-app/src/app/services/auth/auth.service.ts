@@ -3,14 +3,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeConfirmTokenGQL } from 'src/app/graphql/changeConfirmToken.mutation';
 import { ConfirmUserGQL } from 'src/app/graphql/confirmUser.mutation';
+import { ResetPasswordGQL } from 'src/app/graphql/resetPassword.mutation';
 import { LoginGQL } from 'src/app/graphql/login.query';
 import { LogoutGQL } from 'src/app/graphql/logout.mutation';
+import { SendCodePhoneGQL } from 'src/app/graphql/sendCodePhone.mutation';
 
 import { decrypt, encrypt } from 'src/app/helpers/crypto';
 
 export interface LoginForm {
   email: string;
   password: string;
+}
+
+export interface resetForm {
+  code: number;
+  phoneNumber: string;
 }
 
 export interface jwtResponse {
@@ -29,7 +36,9 @@ export class AuthService {
     private loginGQL: LoginGQL,
     private logoutGQL: LogoutGQL,
     private confirmUserGQL: ConfirmUserGQL,
-    private changeConfirmTokenGQL: ChangeConfirmTokenGQL
+    private changeConfirmTokenGQL: ChangeConfirmTokenGQL,
+    private sendCodePhoneGQL: SendCodePhoneGQL,
+    private resetPasswordGQL: ResetPasswordGQL
   ) {
     let userValue = localStorage.getItem('user');
 
@@ -86,7 +95,15 @@ export class AuthService {
     return this.confirmUserGQL.mutate({ token: token });
   }
 
+  sendCodePhone(phoneNumber: string): Observable<any> {
+    return this.sendCodePhoneGQL.mutate({ phoneNumber: phoneNumber });
+  }
+
   changeConfirmToken(email: string) {
     return this.changeConfirmTokenGQL.mutate({ email: email });
+  }
+
+  resetPassword(input: resetForm) {
+    return this.resetPasswordGQL.mutate({ input: input });
   }
 }

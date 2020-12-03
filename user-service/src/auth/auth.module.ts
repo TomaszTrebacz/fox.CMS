@@ -8,6 +8,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { MailService } from 'src/mail/mail.service';
 import { RedisDbModule } from 'src/redis-db/redis-db.module';
+import { SmsService } from 'src/sms/sms.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { RedisDbModule } from 'src/redis-db/redis-db.module';
     }),
     RedisDbModule,
   ],
-  providers: [AuthResolver, AuthService, JwtStrategy, MailService],
+  providers: [AuthResolver, AuthService, JwtStrategy, MailService, SmsService],
   exports: [AuthService],
 })
 export class AuthModule {}

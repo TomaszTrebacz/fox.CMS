@@ -1,0 +1,25 @@
+<form [formGroup]="codeForm" class="ui-g">
+    <p-panel header="Confirmation Code" class="ui-g-12">
+        <p-progressSpinner *ngIf="loading == Loading.true"[style]="{width: '10rem', height: '10rem'}" strokeWidth="3" animationDuration=".5s"></p-progressSpinner>
+        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div class="ui-g">
+            <label for="phoneNumber" class="ui-g-12 ui-md-2">Phone Number</label>
+            <p-inputMask pInputMask id="phoneNumber" formControlName="phoneNumber" mask="+99999999999" placeholder="+99999999999"></p-inputMask>
+            <div class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="codeForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
+            </div>
+        </div>
+        
+        <div class="ui-g">
+            <label for="code" class="ui-g-12 ui-md-2">Code</label>
+            <p-inputMask pInputMask id="code" pKeyFilter="int" formControlName="code" mask="9999" placeholder="0000"></p-inputMask>
+            <div class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="codeForm" field="code" nicename="code"></app-fielderrors>
+            </div>
+        </div>
+       
+        <button pButton type="button" label="Click" [disabled]="!codeForm.valid" (click)="onSubmit()"></button>
+
+    </p-panel>
+    
+</form>

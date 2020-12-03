@@ -35,11 +35,12 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput): Boolean
   deleteUser(id: String): Boolean
   changeRole(changeRoleInput: ChangeRoleInput): Boolean
-  resetPassword(email: String): Boolean
+  resetPassword(resetPasswordInput: ResetPasswordInput): Boolean
   refreshToken(refreshToken: String): TokenResponse
   logout(id: String): Boolean
   confirmUser(confirmToken: String): Boolean
   changeConfirmToken(email: String): Boolean
+  sendCodePhone(phoneNumber: String): Boolean
 }
 
 input CreateUserInput {
@@ -65,4 +66,9 @@ input LoginInput {
 input ChangeRoleInput {
   id: String!
   role: String!
+}
+
+input ResetPasswordInput {
+  phoneNumber: String
+  code: Int
 }

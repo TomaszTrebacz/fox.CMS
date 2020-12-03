@@ -31,6 +31,12 @@ export class UsersService {
     });
   }
 
+  findOneByPhoneNumber(phoneNumber: string) {
+    return this.usersRepository.findOne({
+      where: { phoneNumber: phoneNumber },
+    });
+  }
+
   async createUser(createData: User): Promise<User> {
     let user = new User();
 

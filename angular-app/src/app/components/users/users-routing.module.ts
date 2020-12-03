@@ -7,6 +7,8 @@ import { ConfirmAccountComponent } from './confirm-account/confirm-account.compo
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ResendConfirmLinkComponent } from './resend-confirm-link/resend-confirm-link.component';
+import { ConfirmationCodeComponent } from './reset-password/confirmation-code/confirmation-code.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const userRoutes: Routes = [
   {
@@ -27,6 +29,19 @@ const userRoutes: Routes = [
       {
         path: 'resend-confirmLink',
         component: ResendConfirmLinkComponent,
+      },
+      {
+        path: 'reset-password',
+        children: [
+          {
+            path: '',
+            component: ResetPasswordComponent,
+          },
+          {
+            path: 'confirmation-code',
+            component: ConfirmationCodeComponent,
+          },
+        ],
       },
       {
         path: 'account',
