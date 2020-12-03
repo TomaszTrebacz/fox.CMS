@@ -43,6 +43,10 @@ import { ResendConfirmLinkComponent } from './components/users/resend-confirm-li
 import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
 import { ConfirmationCodeComponent } from './components/users/reset-password/confirmation-code/confirmation-code.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ProgressBarComponent } from './shared/progress-bar/progress-bar.component';
+import { ProgressBarService } from './services/progress-bar/progress-bar.service';
+import { ProgressBarInterceptor } from './interceptors/progress-bar.interceptor';
 
 @NgModule({
   declarations: [
@@ -60,6 +64,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ResendConfirmLinkComponent,
     ResetPasswordComponent,
     ConfirmationCodeComponent,
+    ProgressBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,8 +93,17 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ToastModule,
     InputMaskModule,
     ProgressSpinnerModule,
+    ProgressBarModule,
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService,
+    ProgressBarService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ProgressBarInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
