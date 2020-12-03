@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { first } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user/user.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +24,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private userService: UserService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -67,10 +69,20 @@ export class RegisterComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
-          this.router.navigateByUrl('/users/login');
+          this.messageService.add({
+            key: 'defaultToast',
+            severity: 'success',
+            summary: 'Successfully registered!',
+            detail: `You have to confirm your account by clicking lint sent on email!`,
+          });
         },
         error: (error) => {
-          this.error = error;
+          this.messageService.add({
+            key: 'defaultMessage',
+            severity: 'error',
+            summary: 'Can not register user',
+            detail: error,
+          });
         },
       });
   }

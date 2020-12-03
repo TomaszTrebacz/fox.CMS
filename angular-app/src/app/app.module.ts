@@ -37,6 +37,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,7 @@ import { InputMaskModule } from 'primeng/inputmask';
     ToastModule,
     InputMaskModule,
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

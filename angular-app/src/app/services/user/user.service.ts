@@ -29,10 +29,8 @@ export class UserService {
   }
 
   register(credentials: RegisterForm): Observable<any> {
-    return this.registerGQL
-      .mutate({
-        input: credentials,
-      })
-      .pipe(map((result) => result.data));
+    return this.registerGQL.mutate({
+      input: credentials,
+    });
   }
 }
