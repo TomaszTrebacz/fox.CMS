@@ -2,6 +2,8 @@ import { Injectable, Input, ɵConsole } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeConfirmTokenGQL } from 'src/app/graphql/changeConfirmToken.mutation';
+import { ChangePassByTokenGQL } from 'src/app/graphql/changePassByToken.mutation';
+import { SendChangePassEmailGQL } from 'src/app/graphql/sendChangePassEmail.mutation';
 import { ConfirmUserGQL } from 'src/app/graphql/confirmUser.mutation';
 import { ResetPasswordGQL } from 'src/app/graphql/resetPassword.mutation';
 import { LoginGQL } from 'src/app/graphql/login.query';
@@ -25,6 +27,11 @@ export interface jwtResponse {
   valid: boolean;
 }
 
+export interface changePassByTokenForm {
+  token: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,7 +45,9 @@ export class AuthService {
     private confirmUserGQL: ConfirmUserGQL,
     private changeConfirmTokenGQL: ChangeConfirmTokenGQL,
     private sendCodePhoneGQL: SendCodePhoneGQL,
-    private resetPasswordGQL: ResetPasswordGQL
+    private resetPasswordGQL: ResetPasswordGQL,
+    private changePassByTokenGQL: ChangePassByTokenGQL,
+    private sendChangePassEmailGQL: SendChangePassEmailGQL
   ) {
     let userValue = localStorage.getItem('user');
 
@@ -105,5 +114,13 @@ export class AuthService {
 
   resetPassword(input: resetForm) {
     return this.resetPasswordGQL.mutate({ input: input });
+  }
+
+  sendChangePassEmail(email: string) {
+    return this.sendChangePassEmailGQL.mutate({ email: email });
+  }
+
+  changePassByToken(input: changePassByTokenForm) {
+    return this.changePassByTokenGQL.mutate({ input: input });
   }
 }

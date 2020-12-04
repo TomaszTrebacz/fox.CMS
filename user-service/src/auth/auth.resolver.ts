@@ -315,7 +315,7 @@ export class AuthResolver {
 
       await this.redisService.saveEmailToken(user.id, changePassToken);
 
-      const changePassLink = `${process.env.FRONTEND_URL}/users/change-password?token=${changePassToken}`;
+      const changePassLink = `${process.env.FRONTEND_URL}/users/reset-password/changePass?token=${changePassToken}`;
 
       const mail = {
         greeting: `Hi ${user.firstName} ${user.lastName}!`,
@@ -350,7 +350,7 @@ export class AuthResolver {
 
       const actualToken = await this.redisService.getValue(redisData);
 
-      if (token == actualToken) {
+      if (token === actualToken) {
         await this.usersService.changePassword(id, password);
 
         await this.redisService.deleteKeyField(redisData);

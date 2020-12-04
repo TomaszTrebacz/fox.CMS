@@ -29,16 +29,18 @@ export class ConfirmationCodeComponent implements OnInit {
 
   ngOnInit(): void {
     this.codeForm = this.fb.group({
-      phoneNumber: ['', [Validators.pattern(this.numberPattern)]],
-      code: ['', [Validators.minLength(4), Validators.maxLength(4)]],
+      phoneNumber: [
+        '',
+        [Validators.required, Validators.pattern(this.numberPattern)],
+      ],
+      code: [
+        '',
+        [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
+      ],
     });
   }
 
-  hasFormErrors() {
-    return !this.codeForm.valid;
-  }
-
-  onSubmit() {
+  onConfirmSubmit() {
     if (this.codeForm.invalid) {
       return;
     }

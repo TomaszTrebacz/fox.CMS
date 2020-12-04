@@ -6,9 +6,9 @@ import { AccountComponent } from './account/account.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { ResendConfirmLinkComponent } from './resend-confirm-link/resend-confirm-link.component';
-import { ConfirmationCodeComponent } from './reset-password/confirmation-code/confirmation-code.component';
+import { ResendConfirmLinkComponent } from './confirm-account/resend-confirm-link/resend-confirm-link.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ChangePassComponent } from './reset-password/by-email/change-pass/change-pass.component';
 
 const userRoutes: Routes = [
   {
@@ -38,8 +38,8 @@ const userRoutes: Routes = [
             component: ResetPasswordComponent,
           },
           {
-            path: 'confirmation-code',
-            component: ConfirmationCodeComponent,
+            path: 'changePass',
+            component: ChangePassComponent,
           },
         ],
       },

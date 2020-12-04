@@ -39,14 +39,17 @@ import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageService } from 'primeng/api';
 import { ConfirmAccountComponent } from './components/users/confirm-account/confirm-account.component';
-import { ResendConfirmLinkComponent } from './components/users/resend-confirm-link/resend-confirm-link.component';
+import { ResendConfirmLinkComponent } from './components/users/confirm-account/resend-confirm-link/resend-confirm-link.component';
 import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
-import { ConfirmationCodeComponent } from './components/users/reset-password/confirmation-code/confirmation-code.component';
+import { ConfirmationCodeComponent } from './components/users/reset-password/by-phone/confirmation-code/confirmation-code.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ProgressBarComponent } from './shared/progress-bar/progress-bar.component';
 import { ProgressBarService } from './services/progress-bar/progress-bar.service';
 import { ProgressBarInterceptor } from './interceptors/progress-bar.interceptor';
+import { ByPhoneComponent } from './components/users/reset-password/by-phone/by-phone.component';
+import { ByEmailComponent } from './components/users/reset-password/by-email/by-email.component';
+import { ChangePassComponent } from './components/users/reset-password/by-email/change-pass/change-pass.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +68,9 @@ import { ProgressBarInterceptor } from './interceptors/progress-bar.interceptor'
     ResetPasswordComponent,
     ConfirmationCodeComponent,
     ProgressBarComponent,
+    ByPhoneComponent,
+    ByEmailComponent,
+    ChangePassComponent,
   ],
   imports: [
     BrowserModule,

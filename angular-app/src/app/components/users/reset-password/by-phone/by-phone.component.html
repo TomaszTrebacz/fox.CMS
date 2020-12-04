@@ -1,0 +1,16 @@
+<form [formGroup]="phoneForm" class="ui-g">
+    <p-panel header="Reset password by phone" class="ui-g-12">
+        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div class="ui-g">
+            <label for="phoneNumber" class="ui-g-12 ui-md-2">Phone Number</label>
+            <p-inputMask pInputMask id="phoneNumber" formControlName="phoneNumber" mask="+99999999999" placeholder="+99999999999"></p-inputMask>
+            <div class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="phoneForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
+            </div>
+        </div>
+        <button pButton type="button" label="Click" [disabled]="!phoneForm.valid" (click)="onPhoneFormSubmit()"></button>
+        <div class="ui-g">
+            <a routerLink="/users/reset-password/confirmation-code">Type confirmation code</a>
+        </div>
+    </p-panel>    
+</form>
