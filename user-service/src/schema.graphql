@@ -41,6 +41,8 @@ type Mutation {
   confirmUser(confirmToken: String): Boolean
   changeConfirmToken(email: String): Boolean
   sendCodePhone(phoneNumber: String): Boolean
+  sendChangePassEmail(email: String): Boolean
+  changePassByToken(changePassByTokenInput: ChangePassByTokenInput): Boolean
 }
 
 input CreateUserInput {
@@ -71,4 +73,9 @@ input ChangeRoleInput {
 input ResetPasswordInput {
   phoneNumber: String
   code: Int
+}
+
+input ChangePassByTokenInput {
+  token: String
+  password: String
 }

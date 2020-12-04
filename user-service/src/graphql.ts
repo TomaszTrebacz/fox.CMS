@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class ChangePassByTokenInput {
+    token?: string;
+    password?: string;
+}
+
 export class ChangeRoleInput {
     id: string;
     role: string;
@@ -63,6 +68,10 @@ export abstract class IMutation {
     abstract changeConfirmToken(email?: string): boolean | Promise<boolean>;
 
     abstract sendCodePhone(phoneNumber?: string): boolean | Promise<boolean>;
+
+    abstract sendChangePassEmail(email?: string): boolean | Promise<boolean>;
+
+    abstract changePassByToken(changePassByTokenInput?: ChangePassByTokenInput): boolean | Promise<boolean>;
 }
 
 export class TokenResponse {

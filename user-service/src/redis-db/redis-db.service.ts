@@ -39,8 +39,13 @@ export class RedisDbService {
   }
 
   // function for reset password by phone number
-  async saveCodeToken(id: string, codeToken: string) {
-    await this.client.hmset(id, { codetoken: codeToken });
+  async saveCodeToken(id: string, token: string) {
+    await this.client.hmset(id, { codetoken: token });
+  }
+
+  // function for change password by email
+  async saveEmailToken(id: string, token: string) {
+    await this.client.hmset(id, { changepasstoken: token });
   }
 
   async getUser(id: string) {

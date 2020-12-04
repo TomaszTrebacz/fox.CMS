@@ -14,6 +14,7 @@ import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { SmsService } from 'src/sms/sms.service';
+import { ChangePassByTokenDto } from './dto/changePassByToken.dto';
 var jwt = require('jsonwebtoken');
 
 @Resolver('Auth')
@@ -286,6 +287,80 @@ export class AuthResolver {
       return new Boolean(true);
     } catch (err) {
       throw new Error(`Can not reset password: ${err.message}`);
+    }
+  }
+
+  @Mutation()
+  async sendChangePassEmail(@Args('email') email: string): Promise<Boolean> {
+    try {
+      const user = await this.usersService.findOneByEmail(email);
+
+      if (user == undefined) {
+        throw new Error('Wrong email.');
+      }
+
+      const JWTpayload = {
+        id: user.id,
+      };
+
+      const JWToptions = {
+        secret: process.env.EMAIL_JWT_SECRET,
+        expiresIn: process.env.EMAIL_JWT_EXP,
+      };
+
+      const changePassToken = await this.authService.createJWT(
+        JWTpayload,
+        JWToptions,
+      );
+
+      await this.redisService.saveEmailToken(user.id, changePassToken);
+
+      const changePassLink = `${process.env.FRONTEND_URL}/users/change-password?token=${changePassToken}`;
+
+      const mail = {
+        greeting: `Hi ${user.firstName} ${user.lastName}!`,
+        content: `We've heard that you forget your password.
+                Please click in this link: ${changePassLink}. 
+                Make sure you don't share this link publicly, because it's unique!`,
+        subject: `Forget password`,
+        mailAddress: user.email,
+      };
+
+      this.mailService.sendMail(mail);
+
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  @Mutation()
+  async changePassByToken(
+    @Args('changePassByTokenInput') { token, password }: ChangePassByTokenDto,
+  ): Promise<Boolean> {
+    try {
+      const { id } = this.jwtService.verify(token, {
+        secret: process.env.EMAIL_JWT_SECRET,
+      });
+
+      const redisData = {
+        id: id,
+        key: 'changepasstoken',
+      };
+
+      const actualToken = await this.redisService.getValue(redisData);
+
+      if (token == actualToken) {
+        await this.usersService.changePassword(id, password);
+
+        await this.redisService.deleteKeyField(redisData);
+      } else {
+        throw new Error('Link is not valid.');
+      }
+
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 
