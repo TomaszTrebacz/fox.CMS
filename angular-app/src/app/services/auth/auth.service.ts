@@ -11,6 +11,7 @@ import { LogoutGQL } from 'src/app/graphql/logout.mutation';
 import { SendCodePhoneGQL } from 'src/app/graphql/sendCodePhone.mutation';
 
 import { decrypt, encrypt } from 'src/app/helpers/crypto';
+import { ChangePasswordGQL } from 'src/app/graphql/changePassword.mutation';
 
 export interface LoginForm {
   email: string;
@@ -47,7 +48,8 @@ export class AuthService {
     private sendCodePhoneGQL: SendCodePhoneGQL,
     private resetPasswordGQL: ResetPasswordGQL,
     private changePassByTokenGQL: ChangePassByTokenGQL,
-    private sendChangePassEmailGQL: SendChangePassEmailGQL
+    private sendChangePassEmailGQL: SendChangePassEmailGQL,
+    private changePasswordGQL: ChangePasswordGQL
   ) {
     let userValue = localStorage.getItem('user');
 
@@ -122,5 +124,9 @@ export class AuthService {
 
   changePassByToken(input: changePassByTokenForm) {
     return this.changePassByTokenGQL.mutate({ input: input });
+  }
+
+  changePassword(password: string) {
+    return this.changePasswordGQL.mutate({ password: password });
   }
 }

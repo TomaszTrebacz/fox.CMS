@@ -15,6 +15,8 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { SmsService } from 'src/sms/sms.service';
 import { ChangePassByTokenDto } from './dto/changePassByToken.dto';
+import { CurrentUser } from 'src/users/decorators/user.decorator';
+import { User } from 'src/graphql';
 var jwt = require('jsonwebtoken');
 
 @Resolver('Auth')
@@ -262,17 +264,6 @@ export class AuthResolver {
         numbers: true,
       });
 
-      const redisData = {
-        id: user.id,
-        key: 'count',
-      };
-      const value = await this.redisService.getValue(redisData);
-
-      // all values in redis are stored as strings
-      let count = parseInt(value, 10);
-      count++;
-
-      await this.redisService.changeCount(user.id, count.toString());
       await this.redisService.deleteKeyField(idKey);
 
       await this.usersService.changePassword(user.id, password);
@@ -354,9 +345,23 @@ export class AuthResolver {
         await this.usersService.changePassword(id, password);
 
         await this.redisService.deleteKeyField(redisData);
+        return new Boolean(true);
       } else {
         throw new Error('Link is not valid.');
       }
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  @Mutation()
+  @UseGuards(GqlAuthGuard)
+  async changePassword(
+    @CurrentUser() user: User,
+    @Args('password') password: string,
+  ): Promise<Boolean> {
+    try {
+      await this.usersService.changePassword(user.id, password);
 
       return new Boolean(true);
     } catch (err) {

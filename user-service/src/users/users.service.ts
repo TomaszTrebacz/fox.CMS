@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
+import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { Repository } from 'typeorm';
 import { ChangeRoleDto } from '../auth/dto/change-role.dto';
 import { User } from './entities/user.entity';
@@ -13,6 +14,7 @@ export class UsersService {
     private authService: AuthService,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private redisService: RedisDbService,
   ) {}
 
   findAll(): Promise<User[]> {
@@ -77,11 +79,29 @@ export class UsersService {
   async changePassword(id: string, password: string): Promise<Boolean> {
     const hashedPassword = this.authService.hashPassword(password);
 
+    const user = await this.findOneById(id);
+
+    if (hashedPassword === user.password) {
+      throw new Error('Passwords are the same');
+    }
+
     const changed = await this.usersRepository.update(id, {
       password: hashedPassword,
     });
 
     if (changed.affected == 1) {
+      const redisData = {
+        id: id,
+        key: 'count',
+      };
+      const value = await this.redisService.getValue(redisData);
+
+      // all values in redis are stored as strings
+      let count = parseInt(value, 10);
+      count++;
+
+      await this.redisService.changeCount(id, count.toString());
+
       return new Boolean(true);
     } else {
       throw new Error('The password has not been updated.');

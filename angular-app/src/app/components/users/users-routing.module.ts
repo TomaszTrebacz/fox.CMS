@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 import { ResendConfirmLinkComponent } from './confirm-account/resend-confirm-link/resend-confirm-link.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ChangePassComponent } from './reset-password/by-email/change-pass/change-pass.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 const userRoutes: Routes = [
   {
@@ -46,6 +47,11 @@ const userRoutes: Routes = [
       {
         path: 'account',
         component: AccountComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordComponent,
         canActivate: [AuthGuard],
       },
     ],

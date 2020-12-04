@@ -72,6 +72,8 @@ export abstract class IMutation {
     abstract sendChangePassEmail(email?: string): boolean | Promise<boolean>;
 
     abstract changePassByToken(changePassByTokenInput?: ChangePassByTokenInput): boolean | Promise<boolean>;
+
+    abstract changePassword(password?: string): boolean | Promise<boolean>;
 }
 
 export class TokenResponse {

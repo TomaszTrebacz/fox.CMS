@@ -43,6 +43,7 @@ type Mutation {
   sendCodePhone(phoneNumber: String): Boolean
   sendChangePassEmail(email: String): Boolean
   changePassByToken(changePassByTokenInput: ChangePassByTokenInput): Boolean
+  changePassword(password: String): Boolean
 }
 
 input CreateUserInput {

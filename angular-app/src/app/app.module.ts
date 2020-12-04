@@ -50,6 +50,7 @@ import { ProgressBarInterceptor } from './interceptors/progress-bar.interceptor'
 import { ByPhoneComponent } from './components/users/reset-password/by-phone/by-phone.component';
 import { ByEmailComponent } from './components/users/reset-password/by-email/by-email.component';
 import { ChangePassComponent } from './components/users/reset-password/by-email/change-pass/change-pass.component';
+import { ChangePasswordComponent } from './components/users/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { ChangePassComponent } from './components/users/reset-password/by-email/
     ByPhoneComponent,
     ByEmailComponent,
     ChangePassComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,
