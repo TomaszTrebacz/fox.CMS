@@ -30,6 +30,7 @@ export class UsersService {
 
     return this.usersRepository.findOne({
       where: { email: lowercaseEmail },
+      withDeleted: true,
     });
   }
 
@@ -47,7 +48,7 @@ export class UsersService {
     user.phoneNumber = createData.phoneNumber;
 
     user.email = this.authService.lowercaseField(createData.email);
-    user.password = this.authService.hashPassword(createData.password);
+    user.password = await this.authService.hashPassword(createData.password);
 
     await this.usersRepository.save(user);
 
@@ -76,20 +77,10 @@ export class UsersService {
     }
   }
 
-  async changePassword(id: string, password: string): Promise<Boolean> {
-    const hashedPassword = this.authService.hashPassword(password);
+  async changePasswordByUser(id: string, password: string): Promise<Boolean> {
+    try {
+      await this.updatePassword(id, password);
 
-    const user = await this.findOneById(id);
-
-    if (hashedPassword === user.password) {
-      throw new Error('Passwords are the same');
-    }
-
-    const changed = await this.usersRepository.update(id, {
-      password: hashedPassword,
-    });
-
-    if (changed.affected == 1) {
       const redisData = {
         id: id,
         key: 'count',
@@ -102,6 +93,26 @@ export class UsersService {
 
       await this.redisService.changeCount(id, count.toString());
 
+      return new Boolean(true);
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async updatePassword(id: string, password: string): Promise<Boolean> {
+    const hashedPassword = await this.authService.hashPassword(password);
+
+    const user = await this.findOneById(id);
+
+    if (hashedPassword === user.password) {
+      throw new Error('Passwords are the same');
+    }
+
+    const changed = await this.usersRepository.update(id, {
+      password: hashedPassword,
+    });
+
+    if (changed.affected == 1) {
       return new Boolean(true);
     } else {
       throw new Error('The password has not been updated.');

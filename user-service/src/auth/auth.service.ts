@@ -7,6 +7,7 @@ import { User } from 'src/graphql';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { ChangeRoleDto } from './dto/change-role.dto';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -24,27 +25,35 @@ export class AuthService {
       throw new Error('Wrong email or password!');
     }
 
+    // migrate from bcrypt (which hashes start with '$2')to argon
+    if (user.password.startsWith('$2')) {
+      const passwordMatch = await this.comparePasswordBcrypt;
+
+      if (!passwordMatch) {
+        throw new Error('Wrong email or password!');
+      }
+
+      await this.usersService.updatePassword(user.id, user.password);
+    } else {
+      const passwordMatch = this.comparePassword(
+        loginCredentials.password,
+        user.password,
+      );
+
+      if (!passwordMatch) {
+        throw new Error('Wrong email or password!');
+      }
+    }
+
     const redisData = {
       id: user.id,
       key: 'confirmed',
     };
+
     const isConfirmed = await this.redisService.getValue(redisData);
 
     if (isConfirmed === 'false') {
       throw new Error('User is not confirmed. Please confirm accout');
-    }
-
-    if (user == undefined) {
-      throw new Error('Wrong email or password!');
-    }
-
-    const passwordMatch = await this.comparePassword(
-      loginCredentials.password,
-      user.password,
-    );
-
-    if (!passwordMatch) {
-      throw new Error('Wrong email or password!');
     }
 
     return user;
@@ -107,15 +116,38 @@ export class AuthService {
     return true;
   }
 
-  hashPassword(password: String) {
-    const saltRounds = parseInt(process.env.SALT_LENGTH);
-    const hash = bcrypt.hashSync(password, saltRounds);
-
-    return hash;
+  async hashPassword(password: string): Promise<string> {
+    try {
+      return await argon2.hash(password, {
+        type: argon2.argon2i,
+        hashLength: 40,
+      });
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
-  comparePassword(rawPassword, hashPassword) {
-    return bcrypt.compare(rawPassword, hashPassword);
+  async comparePassword(
+    rawPassword: string,
+    hashPassword: string,
+  ): Promise<Boolean> {
+    try {
+      return argon2.verify(hashPassword, rawPassword);
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  // deprecated, use only for migration reason (from bcrypt to argon)
+  async comparePasswordBcrypt(
+    rawPassword: string,
+    hashPassword: string,
+  ): Promise<Boolean> {
+    try {
+      return bcrypt.compare(hashPassword, rawPassword);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   lowercaseField(field: String) {

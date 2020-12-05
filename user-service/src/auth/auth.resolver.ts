@@ -266,7 +266,7 @@ export class AuthResolver {
 
       await this.redisService.deleteKeyField(idKey);
 
-      await this.usersService.changePassword(user.id, password);
+      await this.usersService.changePasswordByUser(user.id, password);
 
       const smsData = {
         phoneNumber: user.phoneNumber,
@@ -342,7 +342,7 @@ export class AuthResolver {
       const actualToken = await this.redisService.getValue(redisData);
 
       if (token === actualToken) {
-        await this.usersService.changePassword(id, password);
+        await this.usersService.changePasswordByUser(id, password);
 
         await this.redisService.deleteKeyField(redisData);
         return new Boolean(true);
@@ -361,7 +361,7 @@ export class AuthResolver {
     @Args('password') password: string,
   ): Promise<Boolean> {
     try {
-      await this.usersService.changePassword(user.id, password);
+      await this.usersService.changePasswordByUser(user.id, password);
 
       return new Boolean(true);
     } catch (err) {
