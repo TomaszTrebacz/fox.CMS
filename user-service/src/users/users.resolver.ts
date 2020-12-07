@@ -57,18 +57,6 @@ export class UsersResolver {
   async registerUser(
     @Args('createUserInput') registerData: CreateUserDto,
   ): Promise<User> {
-    const emailUsed = await this.usersService.findOneByEmail(
-      registerData.email,
-    );
-
-    const phoneUsed = await this.usersService.findOneByPhoneNumber(
-      registerData.phoneNumber,
-    );
-
-    if (emailUsed || phoneUsed) {
-      throw new Error('Email and/or phone number is in database.');
-    }
-
     try {
       const createdUser = await this.usersService.createUser(registerData);
 

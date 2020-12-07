@@ -30,7 +30,6 @@ export class UsersService {
 
     return this.usersRepository.findOne({
       where: { email: lowercaseEmail },
-      withDeleted: true,
     });
   }
 

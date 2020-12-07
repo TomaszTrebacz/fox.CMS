@@ -46,13 +46,17 @@ const userRoutes: Routes = [
       },
       {
         path: 'account',
-        component: AccountComponent,
         canActivate: [AuthGuard],
-      },
-      {
-        path: 'change-password',
-        component: ChangePasswordComponent,
-        canActivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            component: AccountComponent,
+          },
+          {
+            path: 'change-password',
+            component: ChangePasswordComponent,
+          },
+        ],
       },
     ],
   },

@@ -7,6 +7,8 @@ import { AuthModule } from 'src/auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
 import { SmsModule } from 'src/sms/sms.module';
 import { RedisDbModule } from 'src/redis-db/redis-db.module';
+import { phoneNumberExists } from './validators/phoneNumberExists';
+import { emailExists } from './validators/emailExists';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { RedisDbModule } from 'src/redis-db/redis-db.module';
     SmsModule,
     RedisDbModule,
   ],
-  providers: [UsersResolver, UsersService],
+  providers: [UsersResolver, UsersService, phoneNumberExists, emailExists],
   exports: [UsersService],
 })
 export class UsersModule {}

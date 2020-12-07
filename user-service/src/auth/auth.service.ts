@@ -27,7 +27,10 @@ export class AuthService {
 
     // migrate from bcrypt (which hashes start with '$2')to argon
     if (user.password.startsWith('$2')) {
-      const passwordMatch = await this.comparePasswordBcrypt;
+      const passwordMatch = await this.comparePasswordBcrypt(
+        loginCredentials.password,
+        user.password,
+      );
 
       if (!passwordMatch) {
         throw new Error('Wrong email or password!');

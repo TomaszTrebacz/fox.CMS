@@ -19,6 +19,8 @@ import mailConfig from './config/mail.config';
 import twilioConfig from './config/twilio.config';
 import databaseConfig from './config/database.config';
 import redisConfig from './config/redis.config';
+import { APP_PIPE } from '@nestjs/core';
+import { formatValidatorErrorsPipe } from './formatValidatorErrors.pipe';
 
 @Module({
   imports: [
@@ -56,6 +58,13 @@ import redisConfig from './config/redis.config';
     RedisDbModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DateScalar],
+  providers: [
+    AppService,
+    DateScalar,
+    {
+      provide: APP_PIPE,
+      useClass: formatValidatorErrorsPipe,
+    },
+  ],
 })
 export class AppModule {}

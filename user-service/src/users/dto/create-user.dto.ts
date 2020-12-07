@@ -4,29 +4,35 @@ import {
   MaxLength,
   IsEmail,
   IsMobilePhone,
+  IsNotEmpty,
+  IsString,
+  Validate,
 } from 'class-validator';
 import { CreateUserInput } from '../../graphql';
+import { emailExists } from '../validators/emailExists';
+import { FieldLength } from '../validators/FieldLength';
+import { phoneNumberExists } from '../validators/phoneNumberExists';
 
 export class CreateUserDto extends CreateUserInput {
   @IsEmpty()
   id: string;
 
   @IsEmail()
+  @Validate(FieldLength, [6, 62])
+  @Validate(emailExists)
   email: string;
 
-  @MinLength(3)
-  @MaxLength(20)
+  @Validate(FieldLength, [2, 50])
   firstName: string;
 
-  @MinLength(3)
-  @MaxLength(30)
+  @Validate(FieldLength, [6, 50])
   lastName: string;
 
-  @MinLength(3)
-  @MaxLength(30)
+  @Validate(FieldLength, [8, 128])
   password: string;
 
   @IsMobilePhone()
+  @Validate(phoneNumberExists)
   phoneNumber: string;
 
   @IsEmpty()
