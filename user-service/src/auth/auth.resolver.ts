@@ -2,7 +2,6 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.input';
 import { AuthenticationError } from 'apollo-server-core';
-import { RootGuard } from './guards/root.guard';
 import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
 import { ResetPasswordDto } from 'src/auth/dto/reset-password.dto';
 import { UsersService } from 'src/users/users.service';
@@ -12,11 +11,14 @@ import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 import { JwtService } from '@nestjs/jwt';
 import { SmsService } from 'src/sms/sms.service';
 import { ChangePassByTokenDto } from './dto/changePassByToken.dto';
 import { CurrentUser } from 'src/users/decorators/user.decorator';
 import { User } from 'src/graphql';
+import { Roles } from './decorators/roles.decorator';
+import { userRole } from 'src/users/enums/userRole.enum';
 var jwt = require('jsonwebtoken');
 
 @Resolver('Auth')
@@ -97,7 +99,8 @@ export class AuthResolver {
   }
 
   @Mutation()
-  @UseGuards(RootGuard)
+  @Roles(userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async changeRole(
     @Args('changeRoleInput') changeRoleData: ChangeRoleDto,
   ): Promise<Boolean> {

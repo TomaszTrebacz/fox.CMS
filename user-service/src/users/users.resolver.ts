@@ -12,14 +12,14 @@ import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
-import { AdminGuard } from 'src/auth/guards/admin.guards';
 import { CurrentUser } from './decorators/user.decorator';
 import { SmsService } from 'src/sms/sms.service';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { userRole } from './enums/userRole.enum';
-import { RootGuard } from 'src/auth/guards/root.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { MailService } from 'src/mail/mail.service';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Resolver('User')
 export class UsersResolver {
@@ -32,7 +32,8 @@ export class UsersResolver {
   ) {}
 
   @Query('users')
-  @UseGuards(AdminGuard)
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   findAll() {
     return this.usersService.findAll();
   }
@@ -132,7 +133,6 @@ export class UsersResolver {
   }
 
   @Mutation()
-  @UseGuards(AdminGuard)
   async deleteUser(@Args('id') id: string): Promise<Boolean> {
     try {
       await this.usersService.deleteUser(id);
