@@ -38,10 +38,7 @@ export class AuthResolver {
 
     const rdsUser = await this.redisService.getUser(user.id);
 
-    const accessToken = await this.authService.createAccessJwt(
-      user.id,
-      rdsUser.role,
-    );
+    const accessToken = await this.authService.createAccessJwt(user.id);
 
     const refreshToken = await this.authService.createRefreshJwt(
       user.id,
@@ -76,7 +73,6 @@ export class AuthResolver {
       ) {
         const newAccessToken = await this.authService.createAccessJwt(
           decodedJWT.id,
-          user.role,
         );
 
         const newRefreshToken = await this.authService.createRefreshJwt(
@@ -118,17 +114,12 @@ export class AuthResolver {
         secret: process.env.CONFIRM_JWT_SECRET,
       });
 
-      const redisData = {
-        id: id,
-        key: 'confirmtoken',
-      };
-
-      const actualToken = await this.redisService.getValue(redisData);
+      const actualToken = await this.redisService.getValue(id, 'confirmtoken');
 
       if (confirmToken == actualToken) {
         await this.redisService.confirmUser(id);
 
-        await this.redisService.deleteKeyField(redisData);
+        await this.redisService.deleteKeyField(id, 'confirmtoken');
       } else {
         throw new Error('Please check your email. Token is not valid.');
       }
@@ -149,11 +140,7 @@ export class AuthResolver {
       }
       const { id, firstName, lastName } = user;
 
-      const redisData = {
-        id: id,
-        key: 'confirmed',
-      };
-      const confirmed = await this.redisService.getValue(redisData);
+      const confirmed = await this.redisService.getValue(id, 'confirmed');
 
       if (confirmed === 'true') {
         throw new Error('User has been confirmed earlier.');
@@ -247,12 +234,7 @@ export class AuthResolver {
         throw new Error('Wrong phone number.');
       }
 
-      const idKey = {
-        id: user.id,
-        key: 'codetoken',
-      };
-
-      const codeToken = await this.redisService.getValue(idKey);
+      const codeToken = await this.redisService.getValue(user.id, 'codetoken');
 
       const jwtPayload = await this.jwtService.verify(codeToken, {
         secret: process.env.PHONECODE_JWT_SECRET,
@@ -267,7 +249,7 @@ export class AuthResolver {
         numbers: true,
       });
 
-      await this.redisService.deleteKeyField(idKey);
+      await this.redisService.deleteKeyField(user.id, 'codetoken');
 
       await this.usersService.changePasswordByUser(user.id, password);
 
@@ -337,17 +319,15 @@ export class AuthResolver {
         secret: process.env.EMAIL_JWT_SECRET,
       });
 
-      const redisData = {
-        id: id,
-        key: 'changepasstoken',
-      };
-
-      const actualToken = await this.redisService.getValue(redisData);
+      const actualToken = await this.redisService.getValue(
+        id,
+        'changepasstoken',
+      );
 
       if (token === actualToken) {
         await this.usersService.changePasswordByUser(id, password);
 
-        await this.redisService.deleteKeyField(redisData);
+        await this.redisService.deleteKeyField(id, 'changepasstoken');
         return new Boolean(true);
       } else {
         throw new Error('Link is not valid.');
@@ -375,12 +355,8 @@ export class AuthResolver {
   @Mutation()
   async logout(@Args('id') id: string): Promise<Boolean> {
     try {
-      const redisData = {
-        id: id,
-        key: 'refreshtoken',
-      };
+      await this.redisService.deleteKeyField(id, 'refreshtoken');
 
-      await this.redisService.deleteKeyField(redisData);
       return new Boolean(true);
     } catch (err) {
       throw new Error(err);

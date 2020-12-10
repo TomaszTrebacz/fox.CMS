@@ -7,7 +7,10 @@ import {
   Mutation,
   Args,
 } from '@nestjs/graphql';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { userRole } from 'src/auth/enums/userRole.enum';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import {
   CreatePostInput,
   EditPostInput,
@@ -31,7 +34,8 @@ export class PostsResolver {
   }
 
   @Mutation('createPost')
-  @UseGuards(AdminGuard)
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async createPost(
     @Args('createPostInput') createData: CreatePostInput,
   ): Promise<Post> {
@@ -41,7 +45,8 @@ export class PostsResolver {
   }
 
   @Mutation('editPost')
-  @UseGuards(AdminGuard)
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async editPost(
     @Args('editPostInput') editData: EditPostInput,
   ): Promise<Boolean> {
@@ -55,7 +60,8 @@ export class PostsResolver {
   }
 
   @Mutation('changeCategoryPost')
-  @UseGuards(AdminGuard)
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async changeCategoryPost(
     @Args('changeCategoryPostInput') changeData: ChangeCategoryPostInput,
   ): Promise<Post> {
@@ -65,7 +71,8 @@ export class PostsResolver {
   }
 
   @Mutation('deletePost')
-  @UseGuards(AdminGuard)
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async deletePost(@Args('id') id: number): Promise<Boolean> {
     await this.postsService.deletePost(id);
 

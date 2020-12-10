@@ -1,4 +1,8 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Redis } from 'ioredis';
 import { RedisService } from 'nestjs-redis';
 import { getValueInterface } from './interfaces/getValue.interface';
@@ -34,6 +38,12 @@ export class RedisDbService {
     );
   }
 
+  async isUserExists(id: string): Promise<boolean> {
+    const res = await this.client.exists(id);
+
+    return res === 1 ? true : false;
+  }
+
   async saveToken(id: string, token: string) {
     await this.client.hmset(id, { refreshtoken: token });
   }
@@ -65,7 +75,7 @@ export class RedisDbService {
     return data;
   }
 
-  async getValue({ id, key }: getValueInterface) {
+  async getValue(id: string, key: string) {
     const value = await this.client.hget(id, key);
 
     if (!value) {
@@ -87,7 +97,7 @@ export class RedisDbService {
     await this.client.hmset(id, { confirmed: 'true' });
   }
 
-  async deleteKeyField({ id, key }: getValueInterface): Promise<Boolean> {
+  async deleteKeyField(id: string, key: string): Promise<Boolean> {
     const isRemoved = await this.client.hdel(id, key);
 
     if (isRemoved !== 1) {

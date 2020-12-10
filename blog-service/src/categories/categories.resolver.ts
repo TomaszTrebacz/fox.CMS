@@ -1,4 +1,9 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { userRole } from 'src/auth/enums/userRole.enum';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Category } from 'src/entities/category.entity';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -19,6 +24,8 @@ export class CategoriesResolver {
   }
 
   @Mutation('createCategory')
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async createCategory(
     @Args('createCategoryInput') createData: CreateCategoryDto,
   ): Promise<Category> {
@@ -30,6 +37,8 @@ export class CategoriesResolver {
   }
 
   @Mutation('editCategory')
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async editCategory(
     @Args('editCategoryInput') editData: EditCategoryDto,
   ): Promise<Boolean> {
@@ -43,6 +52,8 @@ export class CategoriesResolver {
   }
 
   @Mutation('deleteCategory')
+  @Roles(userRole.ADMIN, userRole.ROOT)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   async deleteCategory(@Args('id') id: number): Promise<Boolean> {
     await this.categoriesService.deleteCategory(id);
 

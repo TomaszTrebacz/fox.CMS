@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
@@ -6,11 +6,15 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 export class AuthService {
   constructor(private redisService: RedisDbService) {}
 
-  async validateJwt(payload: JwtPayload) {
-    const role = await this.redisService.getUser(payload.id);
+  async validateJWT(payload: JwtPayload): Promise<boolean> {
+    const userExists = await this.redisService.isUserExists(payload.id);
 
-    if (role !== payload.role) {
-      throw new Error('Authorization error');
+    if (userExists === false) {
+      throw new UnauthorizedException(
+        'Wrong JWT & User does not exist in database',
+      );
     }
+
+    return true;
   }
 }

@@ -7,7 +7,7 @@ import {
 import { GqlAuthGuard } from './gql-auth.guard';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { userRole } from 'src/users/enums/userRole.enum';
+import { userRole } from 'src/auth/enums/userRole.enum';
 import { AuthenticationError } from 'apollo-server-core';
 
 @Injectable()

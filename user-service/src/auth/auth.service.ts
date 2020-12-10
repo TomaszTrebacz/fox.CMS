@@ -1,9 +1,13 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.input';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/graphql';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { ChangeRoleDto } from './dto/change-role.dto';
@@ -48,12 +52,7 @@ export class AuthService {
       }
     }
 
-    const redisData = {
-      id: user.id,
-      key: 'confirmed',
-    };
-
-    const isConfirmed = await this.redisService.getValue(redisData);
+    const isConfirmed = await this.redisService.getValue(user.id, 'confirmed');
 
     if (isConfirmed === 'false') {
       throw new Error('User is not confirmed. Please confirm accout');
@@ -62,8 +61,8 @@ export class AuthService {
     return user;
   }
 
-  createAccessJwt(id: string, role: string) {
-    const payload = { id: id, role: role };
+  createAccessJwt(id: string) {
+    const payload = { id: id };
 
     const token = this.jwtService.sign(payload);
 
@@ -92,17 +91,16 @@ export class AuthService {
     });
   }
 
-  async validateJwt(payload: JwtPayload) {
-    const redisData = {
-      id: payload.id,
-      key: 'role',
-    };
+  async validateJWT(payload: JwtPayload): Promise<boolean> {
+    const userExists = await this.redisService.isUserExists(payload.id);
 
-    const role = await this.redisService.getValue(redisData);
-
-    if (role !== payload.role) {
-      throw new Error('Authorization error');
+    if (userExists === false) {
+      throw new UnauthorizedException(
+        'Wrong JWT & User does not exist in database',
+      );
     }
+
+    return true;
   }
 
   async changeRole(changeRoleData: ChangeRoleDto): Promise<Boolean> {

@@ -11,7 +11,7 @@ import { RedisDbModule } from 'src/redis-db/redis-db.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        secret: configService.get('ACCESS_JWT_SECRET'),
       }),
     }),
     RedisDbModule,

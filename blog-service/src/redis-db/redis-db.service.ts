@@ -23,4 +23,20 @@ export class RedisDbService {
 
     return role;
   }
+
+  async isUserExists(id: string): Promise<boolean> {
+    const res = await this.client.exists(id);
+
+    return res === 1 ? true : false;
+  }
+
+  async getValue(id: string, key: string) {
+    const value = await this.client.hget(id, key);
+
+    if (!value) {
+      throw new UnprocessableEntityException('There is no user with given Id!');
+    }
+
+    return value;
+  }
 }

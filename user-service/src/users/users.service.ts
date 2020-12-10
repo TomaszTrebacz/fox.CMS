@@ -80,11 +80,7 @@ export class UsersService {
     try {
       await this.updatePassword(id, password);
 
-      const redisData = {
-        id: id,
-        key: 'count',
-      };
-      const value = await this.redisService.getValue(redisData);
+      const value = await this.redisService.getValue(id, 'count');
 
       // all values in redis are stored as strings
       let count = parseInt(value, 10);
