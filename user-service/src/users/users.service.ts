@@ -1,11 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
-import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { Repository } from 'typeorm';
-import { ChangeRoleDto } from '../auth/dto/change-role.dto';
 import { User } from './entities/user.entity';
-import { userRole } from './enums/userRole.enum';
+import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +12,7 @@ export class UsersService {
     private authService: AuthService,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private redisService: RedisDbService,
+    private redisHandler: RedisHandlerService,
   ) {}
 
   findAll(): Promise<User[]> {
@@ -80,13 +78,15 @@ export class UsersService {
     try {
       await this.updatePassword(id, password);
 
-      const value = await this.redisService.getValue(id, 'count');
+      const value = await this.redisHandler.getValue(id, 'count');
 
       // all values in redis are stored as strings
       let count = parseInt(value, 10);
       count++;
 
-      await this.redisService.changeCount(id, count.toString());
+      const countField = new Map<string, string>([['count', count.toString()]]);
+
+      await this.redisHandler.setUser(id, countField);
 
       return new Boolean(true);
     } catch (err) {

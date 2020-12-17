@@ -4,22 +4,19 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.input';
 import { UsersService } from 'src/users/users.service';
-import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { RedisDbService } from 'src/redis-db/redis-db.service';
 import { ChangeRoleDto } from './dto/change-role.dto';
 import * as argon2 from 'argon2';
+import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
-    private jwtService: JwtService,
-    private redisService: RedisDbService,
+    private redisHandler: RedisHandlerService,
   ) {}
 
   async validateUser(loginCredentials: LoginDto) {
@@ -29,30 +26,16 @@ export class AuthService {
       throw new Error('Wrong email or password!');
     }
 
-    // migrate from bcrypt (which hashes start with '$2')to argon
-    if (user.password.startsWith('$2')) {
-      const passwordMatch = await this.comparePasswordBcrypt(
-        loginCredentials.password,
-        user.password,
-      );
+    const passwordMatch = await this.comparePassword(
+      loginCredentials.password,
+      user.password,
+    );
 
-      if (!passwordMatch) {
-        throw new Error('Wrong email or password!');
-      }
-
-      await this.usersService.updatePassword(user.id, user.password);
-    } else {
-      const passwordMatch = this.comparePassword(
-        loginCredentials.password,
-        user.password,
-      );
-
-      if (!passwordMatch) {
-        throw new Error('Wrong email or password!');
-      }
+    if (!passwordMatch) {
+      throw new Error('Wrong email or password!');
     }
 
-    const isConfirmed = await this.redisService.getValue(user.id, 'confirmed');
+    const isConfirmed = await this.redisHandler.getValue(user.id, 'confirmed');
 
     if (isConfirmed === 'false') {
       throw new Error('User is not confirmed. Please confirm accout');
@@ -61,38 +44,8 @@ export class AuthService {
     return user;
   }
 
-  createAccessJwt(id: string) {
-    const payload = { id: id };
-
-    const token = this.jwtService.sign(payload);
-
-    return token;
-  }
-
-  createRefreshJwt(id: string, count: number) {
-    const payload = { id: id, count: count };
-    const token = this.jwtService.sign(payload, {
-      secret: process.env.REFRESH_JWT_SECRET,
-      expiresIn: process.env.REFRESH_JWT_EXP,
-    });
-
-    return token;
-  }
-
-  // secret & exp is setted in auth.module.ts in config env
-  createDefaultJWT(payload) {
-    return this.jwtService.sign(payload);
-  }
-
-  createJWT(payload, { secret, expiresIn }) {
-    return this.jwtService.sign(payload, {
-      secret: secret,
-      expiresIn: expiresIn,
-    });
-  }
-
   async validateJWT(payload: JwtPayload): Promise<boolean> {
-    const userExists = await this.redisService.isUserExists(payload.id);
+    const userExists = await this.redisHandler.userExists(payload.id);
 
     if (userExists === false) {
       throw new UnauthorizedException(
@@ -103,13 +56,15 @@ export class AuthService {
     return true;
   }
 
-  async changeRole(changeRoleData: ChangeRoleDto): Promise<Boolean> {
-    const user = await this.usersService.findOneById(changeRoleData.id);
+  async changeRole({ id, role }: ChangeRoleDto): Promise<Boolean> {
+    const user = await this.usersService.findOneById(id);
 
     if (user == undefined) throw new Error('No user with given id');
 
     try {
-      await this.redisService.changeRole(changeRoleData);
+      const roleField = new Map<string, string>([['role', role]]);
+
+      await this.redisHandler.setUser(id, roleField);
     } catch (err) {
       throw new Error(`Can not update role in db: ${err.message}`);
     }
@@ -133,19 +88,7 @@ export class AuthService {
     hashPassword: string,
   ): Promise<Boolean> {
     try {
-      return argon2.verify(hashPassword, rawPassword);
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
-
-  // deprecated, use only for migration reason (from bcrypt to argon)
-  async comparePasswordBcrypt(
-    rawPassword: string,
-    hashPassword: string,
-  ): Promise<Boolean> {
-    try {
-      return bcrypt.compare(hashPassword, rawPassword);
+      return await argon2.verify(hashPassword, rawPassword);
     } catch (err) {
       throw new Error(err);
     }

@@ -11,24 +11,27 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
-import { CurrentUser } from './decorators/user.decorator';
+import {
+  AuthGqlRedisService,
+  CurrentUser,
+  RedisHandlerService,
+  GqlAuthGuard,
+  RolesGuard,
+  Roles,
+} from '@tomasztrebacz/nest-auth-graphql-redis';
 import { SmsService } from 'src/sms/sms.service';
-import { RedisDbService } from 'src/redis-db/redis-db.service';
-import { userRole } from './enums/userRole.enum';
+import { userRole } from '../shared/userRole.enum';
 import { AuthService } from 'src/auth/auth.service';
 import { MailService } from 'src/mail/mail.service';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
     private smsService: SmsService,
-    private redisService: RedisDbService,
-    private authService: AuthService,
     private mailService: MailService,
+    private redisHandler: RedisHandlerService,
+    private authGqlRedisService: AuthGqlRedisService,
   ) {}
 
   @Query('users')
@@ -76,26 +79,26 @@ export class UsersResolver {
         id: createdUser.id,
       };
 
-      const JWToptions = {
-        secret: process.env.CONFIRM_JWT_SECRET,
-        expiresIn: process.env.CONFIRM_JWT_EXP,
-      };
-
-      const confirmJWT = await this.authService.createJWT(
+      const confirmJWT = await this.authGqlRedisService.createJWT(
         JWTpayload,
-        JWToptions,
+        process.env.CONFIRM_JWT_SECRET,
+        process.env.CONFIRM_JWT_EXP,
       );
 
-      const redisData = {
-        id: createdUser.id,
-        // default role for any new user is (enum)`user` without any special priviliges in app
-        role: userRole.USER,
-        // count mechanism is an alternative to a blacklist, default is 0 -> count++ when user change password etc.
-        // count is string because of redis
-        count: '0',
-        confirmed: 'false',
-        confirmToken: confirmJWT,
-      };
+      /*
+        type string is required for all values because of redis database
+        - default role for any new user is (enum)`user` without any special priviliges in app
+        - count mechanism is an alternative to a blacklist, 
+          default is 0 -> count++ when user change password etc.
+      */
+      const userProperties = new Map<string, string>([
+        ['role', userRole.USER],
+        ['count', '0'],
+        ['confirmed', 'false'],
+        ['confirmtoken', confirmJWT],
+      ]);
+
+      await this.redisHandler.setUser(createdUser.id, userProperties);
 
       const confirmLink = `${process.env.FRONTEND_URL}/users/confirm-account?token=${confirmJWT}`;
 
@@ -109,8 +112,6 @@ export class UsersResolver {
       };
 
       this.mailService.sendMail(mail);
-
-      await this.redisService.saveUser(redisData);
 
       return createdUser;
     } catch (err) {
@@ -136,7 +137,7 @@ export class UsersResolver {
   async deleteUser(@Args('id') id: string): Promise<Boolean> {
     try {
       await this.usersService.deleteUser(id);
-      await this.redisService.delete(id);
+      await this.redisHandler.deleteUser(id);
       return new Boolean(true);
     } catch (err) {
       throw new Error(

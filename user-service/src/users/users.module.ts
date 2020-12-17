@@ -6,9 +6,9 @@ import { User } from './entities/user.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
 import { SmsModule } from 'src/sms/sms.module';
-import { RedisDbModule } from 'src/redis-db/redis-db.module';
 import { phoneNumberExists } from './validators/phoneNumberExists';
 import { emailExists } from './validators/emailExists';
+import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { emailExists } from './validators/emailExists';
     forwardRef(() => AuthModule),
     MailModule,
     SmsModule,
-    RedisDbModule,
+    AuthGqlRedisModule,
   ],
   providers: [UsersResolver, UsersService, phoneNumberExists, emailExists],
   exports: [UsersService],

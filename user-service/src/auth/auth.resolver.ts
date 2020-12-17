@@ -6,20 +6,22 @@ import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
 import { ResetPasswordDto } from 'src/auth/dto/reset-password.dto';
 import { UsersService } from 'src/users/users.service';
 import { UseGuards } from '@nestjs/common';
-import { UserInputError } from 'apollo-server-core';
 import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
-import { RedisDbService } from 'src/redis-db/redis-db.service';
-import { GqlAuthGuard } from './guards/gql-auth.guard';
-import { RolesGuard } from './guards/roles.guard';
-import { JwtService } from '@nestjs/jwt';
 import { SmsService } from 'src/sms/sms.service';
 import { ChangePassByTokenDto } from './dto/changePassByToken.dto';
-import { CurrentUser } from 'src/users/decorators/user.decorator';
+import {
+  AuthGqlRedisService,
+  GqlAuthGuard,
+  RolesGuard,
+  Roles,
+  RedisHandlerService,
+  CurrentUser,
+} from '@tomasztrebacz/nest-auth-graphql-redis';
 import { User } from 'src/graphql';
-import { Roles } from './decorators/roles.decorator';
-import { userRole } from 'src/users/enums/userRole.enum';
-var jwt = require('jsonwebtoken');
+import { userRole } from 'src/shared/userRole.enum';
+import { ExtendedUserData } from './interfaces/extended-user-data.interface';
+import { RedisUser } from './interfaces/redis-user.interface';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -27,31 +29,50 @@ export class AuthResolver {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly mailService: MailService,
-    private readonly redisService: RedisDbService,
-    private readonly jwtService: JwtService,
+    private readonly redisHandler: RedisHandlerService,
+    private readonly authGqlRedisService: AuthGqlRedisService,
     private readonly smsService: SmsService,
   ) {}
 
   @Query('login')
   async login(@Args('loginCredentials') loginCredentials: LoginDto) {
-    const user = await this.authService.validateUser(loginCredentials);
+    const partialUser = await this.authService.validateUser(loginCredentials);
 
-    const rdsUser = await this.redisService.getUser(user.id);
+    const keys: string[] = ['role', 'count'];
+    const redisUser = await this.redisHandler.getFields(partialUser.id, keys);
 
-    const accessToken = await this.authService.createAccessJwt(user.id);
+    const user: ExtendedUserData = {
+      ...partialUser,
+      ...redisUser,
+      count: parseInt(redisUser.count),
+    };
 
-    const refreshToken = await this.authService.createRefreshJwt(
+    const accessToken = await this.authGqlRedisService.createDefaultJWT(
       user.id,
-      rdsUser.count,
     );
 
-    await this.redisService.saveToken(user.id, refreshToken);
+    const refreshPayload = {
+      id: user.id,
+      count: user.count,
+    };
+
+    const refreshToken = await this.authGqlRedisService.createJWT(
+      refreshPayload,
+      process.env.REFRESH_JWT_SECRET,
+      process.env.REFRESH_JWT_EXP,
+    );
+
+    const refreshField = new Map<string, string>([
+      ['refreshtoken', refreshToken],
+    ]);
+
+    await this.redisHandler.setUser(user.id, refreshField);
 
     const loginResponse = {
       user: user,
       accessToken: accessToken,
       refreshToken: refreshToken,
-      role: rdsUser.role,
+      role: 'user',
     };
 
     return loginResponse;
@@ -60,27 +81,41 @@ export class AuthResolver {
   @Mutation('refreshToken')
   async refreshToken(@Args('refreshToken') refreshToken: string): Promise<any> {
     try {
-      const decodedJWT = jwt.verify(
+      const decodedJWT = await this.authGqlRedisService.verifyToken(
         refreshToken,
         process.env.REFRESH_JWT_SECRET,
       );
 
-      const user = await this.redisService.getUser(decodedJWT.id);
+      const keys: string[] = ['refreshtoken', 'count'];
+      const user: RedisUser = await this.redisHandler.getFields(
+        decodedJWT.id,
+        keys,
+      );
 
       if (
-        refreshToken === user.refreshToken &&
+        refreshToken === user.refreshtoken &&
         decodedJWT.count === user.count // count mechanism is an alternative to blackmailing tokens
       ) {
-        const newAccessToken = await this.authService.createAccessJwt(
+        const newAccessToken = await this.authGqlRedisService.createDefaultJWT(
           decodedJWT.id,
         );
 
-        const newRefreshToken = await this.authService.createRefreshJwt(
-          decodedJWT.id,
-          decodedJWT.count,
+        const refreshPayload = {
+          id: decodedJWT.id,
+          count: decodedJWT.count,
+        };
+
+        const newRefreshToken = await this.authGqlRedisService.createJWT(
+          refreshPayload,
+          process.env.REFRESH_JWT_SECRET,
+          process.env.REFRESH_JWT_EXP,
         );
 
-        await this.redisService.saveToken(decodedJWT.id, newRefreshToken);
+        const refreshField = new Map<string, string>([
+          ['refreshtoken', newRefreshToken],
+        ]);
+
+        await this.redisHandler.setUser(decodedJWT.id, refreshField);
 
         const TokenResponse = {
           accessToken: newAccessToken,
@@ -110,16 +145,19 @@ export class AuthResolver {
     @Args('confirmToken') confirmToken: string,
   ): Promise<Boolean> {
     try {
-      const { id } = this.jwtService.verify(confirmToken, {
-        secret: process.env.CONFIRM_JWT_SECRET,
-      });
+      const { id } = await this.authGqlRedisService.verifyToken(
+        confirmToken,
+        process.env.CONFIRM_JWT_SECRET,
+      );
 
-      const actualToken = await this.redisService.getValue(id, 'confirmtoken');
+      const actualToken = await this.redisHandler.getValue(id, 'confirmtoken');
 
       if (confirmToken == actualToken) {
-        await this.redisService.confirmUser(id);
+        const confirmField = new Map<string, string>([['confirmed', 'true']]);
 
-        await this.redisService.deleteKeyField(id, 'confirmtoken');
+        await this.redisHandler.setUser(id, confirmField);
+
+        await this.redisHandler.deleteField(id, 'confirmtoken');
       } else {
         throw new Error('Please check your email. Token is not valid.');
       }
@@ -140,7 +178,7 @@ export class AuthResolver {
       }
       const { id, firstName, lastName } = user;
 
-      const confirmed = await this.redisService.getValue(id, 'confirmed');
+      const confirmed = await this.redisHandler.getValue(id, 'confirmed');
 
       if (confirmed === 'true') {
         throw new Error('User has been confirmed earlier.');
@@ -150,17 +188,17 @@ export class AuthResolver {
         id: id,
       };
 
-      const JWToptions = {
-        secret: process.env.CONFIRM_JWT_SECRET,
-        expiresIn: process.env.CONFIRM_JWT_EXP,
-      };
-
-      const newConfirmJWT = await this.authService.createJWT(
+      const newConfirmJWT = await this.authGqlRedisService.createJWT(
         JWTpayload,
-        JWToptions,
+        process.env.CONFIRM_JWT_SECRET,
+        process.env.CONFIRM_JWT_EXP,
       );
 
-      await this.redisService.saveToken(id, newConfirmJWT);
+      const confirmField = new Map<string, string>([
+        ['confirmtoken', newConfirmJWT],
+      ]);
+
+      await this.redisHandler.setUser(id, confirmField);
 
       const newConfirmLink = `${process.env.FRONTEND_URL}/users/confirm-account?token=${newConfirmJWT}`;
 
@@ -198,17 +236,15 @@ export class AuthResolver {
         code: randomNumber,
       };
 
-      const JWToptions = {
-        secret: process.env.PHONECODE_JWT_SECRET,
-        expiresIn: process.env.PHONECODE_JWT_EXP,
-      };
-
-      const codeToken = await this.authService.createJWT(
+      const codeToken = await this.authGqlRedisService.createJWT(
         JWTpayload,
-        JWToptions,
+        process.env.PHONECODE_JWT_SECRET,
+        process.env.PHONECODE_JWT_EXP,
       );
 
-      await this.redisService.saveCodeToken(user.id, codeToken);
+      const codeField = new Map<string, string>([['codetoken', codeToken]]);
+
+      await this.redisHandler.setUser(user.id, codeField);
 
       const smsData = {
         phoneNumber: user.phoneNumber,
@@ -234,11 +270,12 @@ export class AuthResolver {
         throw new Error('Wrong phone number.');
       }
 
-      const codeToken = await this.redisService.getValue(user.id, 'codetoken');
+      const codeToken = await this.redisHandler.getValue(user.id, 'codetoken');
 
-      const jwtPayload = await this.jwtService.verify(codeToken, {
-        secret: process.env.PHONECODE_JWT_SECRET,
-      });
+      const jwtPayload = await this.authGqlRedisService.verifyToken(
+        codeToken,
+        process.env.PHONECODE_JWT_SECRET,
+      );
 
       if (jwtPayload.code !== code) {
         throw new Error('Wrong code.');
@@ -249,7 +286,7 @@ export class AuthResolver {
         numbers: true,
       });
 
-      await this.redisService.deleteKeyField(user.id, 'codetoken');
+      await this.redisHandler.deleteField(user.id, 'codetoken');
 
       await this.usersService.changePasswordByUser(user.id, password);
 
@@ -279,17 +316,16 @@ export class AuthResolver {
         id: user.id,
       };
 
-      const JWToptions = {
-        secret: process.env.EMAIL_JWT_SECRET,
-        expiresIn: process.env.EMAIL_JWT_EXP,
-      };
-
-      const changePassToken = await this.authService.createJWT(
+      const changePassToken = await this.authGqlRedisService.createJWT(
         JWTpayload,
-        JWToptions,
+        process.env.EMAIL_JWT_SECRET,
+        process.env.EMAIL_JWT_EXP,
       );
+      const changePassField = new Map<string, string>([
+        ['changepasstoken', changePassToken],
+      ]);
 
-      await this.redisService.saveEmailToken(user.id, changePassToken);
+      await this.redisHandler.setUser(user.id, changePassField);
 
       const changePassLink = `${process.env.FRONTEND_URL}/users/reset-password/changePass?token=${changePassToken}`;
 
@@ -315,11 +351,12 @@ export class AuthResolver {
     @Args('changePassByTokenInput') { token, password }: ChangePassByTokenDto,
   ): Promise<Boolean> {
     try {
-      const { id } = this.jwtService.verify(token, {
-        secret: process.env.EMAIL_JWT_SECRET,
-      });
+      const { id } = await this.authGqlRedisService.verifyToken(
+        token,
+        process.env.EMAIL_JWT_SECRET,
+      );
 
-      const actualToken = await this.redisService.getValue(
+      const actualToken = await this.redisHandler.getValue(
         id,
         'changepasstoken',
       );
@@ -327,7 +364,7 @@ export class AuthResolver {
       if (token === actualToken) {
         await this.usersService.changePasswordByUser(id, password);
 
-        await this.redisService.deleteKeyField(id, 'changepasstoken');
+        await this.redisHandler.deleteField(id, 'changepasstoken');
         return new Boolean(true);
       } else {
         throw new Error('Link is not valid.');
@@ -355,7 +392,7 @@ export class AuthResolver {
   @Mutation()
   async logout(@Args('id') id: string): Promise<Boolean> {
     try {
-      await this.redisService.deleteKeyField(id, 'refreshtoken');
+      await this.redisHandler.deleteField(id, 'refreshtoken');
 
       return new Boolean(true);
     } catch (err) {

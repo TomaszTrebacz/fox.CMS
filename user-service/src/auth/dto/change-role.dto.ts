@@ -1,6 +1,6 @@
 import { IsString, IsUUID } from 'class-validator';
 import { ChangeRoleInput } from '../../graphql';
-import { userRole } from '../../users/enums/userRole.enum';
+import { userRole } from '../../shared/userRole.enum';
 
 export class ChangeRoleDto extends ChangeRoleInput {
   @IsUUID()
