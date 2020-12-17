@@ -11,8 +11,6 @@ export class LoginGQL extends Query<any> {
         user {
           id
           firstName
-          lastName
-          phoneNumber
         }
         accessToken
         refreshToken

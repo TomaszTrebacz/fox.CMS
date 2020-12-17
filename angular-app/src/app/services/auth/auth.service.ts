@@ -12,6 +12,9 @@ import { SendCodePhoneGQL } from 'src/app/graphql/sendCodePhone.mutation';
 
 import { decrypt, encrypt } from 'src/app/helpers/crypto';
 import { ChangePasswordGQL } from 'src/app/graphql/changePassword.mutation';
+import { AccessToken } from 'src/app/helpers/storage/access-token.storage';
+import { RefreshToken } from 'src/app/helpers/storage/refresh-token.storage';
+import { UserStorage } from 'src/app/helpers/storage/user.storage';
 
 export interface LoginForm {
   email: string;
@@ -40,6 +43,10 @@ export class AuthService {
   private userSubject: BehaviorSubject<any>;
   public user: Observable<any>;
 
+  @AccessToken() private accessToken: string;
+  @RefreshToken() private refreshToken: string;
+  @UserStorage() private userStorage: string;
+
   constructor(
     private loginGQL: LoginGQL,
     private logoutGQL: LogoutGQL,
@@ -51,14 +58,7 @@ export class AuthService {
     private sendChangePassEmailGQL: SendChangePassEmailGQL,
     private changePasswordGQL: ChangePasswordGQL
   ) {
-    let userValue = localStorage.getItem('user');
-
-    if (userValue) {
-      this.userSubject = new BehaviorSubject(JSON.parse(decrypt(userValue)));
-    } else {
-      this.userSubject = new BehaviorSubject(null);
-    }
-
+    this.userSubject = new BehaviorSubject(this.userStorage || null);
     this.user = this.userSubject.asObservable();
   }
 
@@ -73,19 +73,14 @@ export class AuthService {
       })
       .pipe(
         map((result) => {
-          const encryptedAccessToken = encrypt(result.data.login.accessToken);
-          const encryptedRefreshToken = encrypt(result.data.login.refreshToken);
-
           const user = {
             ...result.data.login.user,
             role: result.data.login.role,
           };
 
-          let encryptedUser = encrypt(JSON.stringify(user));
-
-          localStorage.setItem('accesstoken', encryptedAccessToken);
-          localStorage.setItem('refreshtoken', encryptedRefreshToken);
-          localStorage.setItem('user', encryptedUser);
+          this.accessToken = result.data.login.accessToken;
+          this.refreshToken = result.data.login.refreshToken;
+          this.userStorage = user;
 
           this.userSubject.next(user);
         })
