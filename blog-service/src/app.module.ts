@@ -4,23 +4,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
-import * as Joi from '@hapi/joi';
 import { DateScalar } from './shared/date.scalar';
 import { GraphQLFederationModule } from '@nestjs/graphql';
-import { join } from 'path';
 import { CategoriesModule } from './categories/categories.module';
-import { RedisDbModule } from './redis-db/redis-db.module';
 import databaseConfig from './config/database.config';
 import redisConfig from './config/redis.config';
 import { RedisModule } from 'nestjs-redis';
 import { GqlConfigService } from './config/gql.config';
-import { AuthModule } from './auth/auth.module';
+import jwtConfig from './config/jwt.config';
+import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, redisConfig],
+      load: [databaseConfig, redisConfig, jwtConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigService],
@@ -37,8 +35,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     PostsModule,
     CategoriesModule,
-    RedisDbModule,
-    AuthModule,
+    AuthGqlRedisModule,
   ],
   controllers: [AppController],
   providers: [AppService, DateScalar],

@@ -7,10 +7,12 @@ import {
   Mutation,
   Args,
 } from '@nestjs/graphql';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { userRole } from 'src/auth/enums/userRole.enum';
-import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import {
+  GqlAuthGuard,
+  RolesGuard,
+  Roles,
+} from '@tomasztrebacz/nest-auth-graphql-redis';
+import { userRole } from 'src/shared/userRole.enum';
 import {
   CreatePostInput,
   EditPostInput,
@@ -24,7 +26,7 @@ export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
   @Query('posts')
-  findAll() {
+  async findAll() {
     return this.postsService.findAll();
   }
 

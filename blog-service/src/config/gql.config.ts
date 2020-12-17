@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GqlModuleOptions, GqlOptionsFactory } from '@nestjs/graphql';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { join } from 'path';
 
 @Injectable()
@@ -11,6 +12,12 @@ export class GqlConfigService implements GqlOptionsFactory {
       definitions: {
         path: join(process.cwd(), 'src/graphql.ts'),
         outputAs: 'class',
+      },
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError: GraphQLFormattedError = {
+          message: error.extensions.exception.response.message || error.message,
+        };
+        return graphQLFormattedError;
       },
     };
   }

@@ -1,9 +1,11 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { userRole } from 'src/auth/enums/userRole.enum';
-import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import {
+  GqlAuthGuard,
+  RolesGuard,
+  Roles,
+} from '@tomasztrebacz/nest-auth-graphql-redis';
+import { userRole } from 'src/shared/userRole.enum';
 import { Category } from 'src/entities/category.entity';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -14,6 +16,8 @@ export class CategoriesResolver {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Query('categories')
+  @Roles(userRole.USER)
+  @UseGuards(GqlAuthGuard, RolesGuard)
   findAll() {
     return this.categoriesService.findAll();
   }
