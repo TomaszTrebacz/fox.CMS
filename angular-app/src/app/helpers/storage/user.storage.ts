@@ -6,11 +6,17 @@ export function UserStorage() {
 
     Object.defineProperty(target, key, {
       get: () => {
-        return JSON.parse(decrypt(localStorage.getItem(itemKey)));
+        const user = localStorage.getItem(itemKey);
+
+        if (user) {
+          return JSON.parse(decrypt(user));
+        }
+
+        return null;
       },
       set: (token: string) => {
         localStorage.setItem(itemKey, encrypt(JSON.stringify(token)));
-      },
+      }
     });
   };
 }

@@ -6,11 +6,17 @@ export function AccessToken() {
 
     Object.defineProperty(target, key, {
       get: () => {
-        return decrypt(localStorage.getItem(tokenKey));
+        const accesstoken = localStorage.getItem(tokenKey);
+
+        if (accesstoken) {
+          return JSON.parse(decrypt(accesstoken));
+        }
+
+        return null;
       },
       set: (token: string) => {
         localStorage.setItem(tokenKey, encrypt(token));
-      },
+      }
     });
   };
 }

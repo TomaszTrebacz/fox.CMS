@@ -6,11 +6,17 @@ export function RefreshToken() {
 
     Object.defineProperty(target, key, {
       get: () => {
-        return decrypt(localStorage.getItem(tokenKey));
+        const refreshtoken = localStorage.getItem(tokenKey);
+
+        if (refreshtoken) {
+          return JSON.parse(decrypt(refreshtoken));
+        }
+
+        return null;
       },
       set: (token: string) => {
         localStorage.setItem(tokenKey, encrypt(token));
-      },
+      }
     });
   };
 }
