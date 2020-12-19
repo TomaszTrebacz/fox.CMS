@@ -1,10 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import {
-  GqlAuthGuard,
-  RolesGuard,
-  Roles,
-} from '@tomasztrebacz/nest-auth-graphql-redis';
+import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { userRole } from 'src/shared/userRole.enum';
 import { Category } from 'src/entities/category.entity';
 import { CategoriesService } from './categories.service';
@@ -16,8 +12,6 @@ export class CategoriesResolver {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Query('categories')
-  @Roles(userRole.USER)
-  @UseGuards(GqlAuthGuard, RolesGuard)
   findAll() {
     return this.categoriesService.findAll();
   }
@@ -28,8 +22,7 @@ export class CategoriesResolver {
   }
 
   @Mutation('createCategory')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async createCategory(
     @Args('createCategoryInput') createData: CreateCategoryDto,
   ): Promise<Category> {
@@ -41,8 +34,7 @@ export class CategoriesResolver {
   }
 
   @Mutation('editCategory')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async editCategory(
     @Args('editCategoryInput') editData: EditCategoryDto,
   ): Promise<Boolean> {
@@ -56,8 +48,7 @@ export class CategoriesResolver {
   }
 
   @Mutation('deleteCategory')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async deleteCategory(@Args('id') id: number): Promise<Boolean> {
     await this.categoriesService.deleteCategory(id);
 

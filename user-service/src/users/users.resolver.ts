@@ -18,6 +18,7 @@ import {
   GqlAuthGuard,
   RolesGuard,
   Roles,
+  Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { SmsService } from 'src/sms/sms.service';
 import { userRole } from '../shared/userRole.enum';
@@ -35,8 +36,7 @@ export class UsersResolver {
   ) {}
 
   @Query('users')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   findAll() {
     return this.usersService.findAll();
   }
@@ -47,7 +47,7 @@ export class UsersResolver {
   }
 
   @Query('currentUser')
-  @UseGuards(GqlAuthGuard)
+  @Auth()
   async currentUser(@CurrentUser() user: User) {
     return await this.usersService.findOneById(user.id);
   }
@@ -120,7 +120,7 @@ export class UsersResolver {
   }
 
   @Mutation()
-  @UseGuards(GqlAuthGuard)
+  @Auth()
   async updateUser(
     @CurrentUser() user: User,
     @Args('updateUserInput') updateData: UpdateUserDto,
@@ -134,6 +134,7 @@ export class UsersResolver {
   }
 
   @Mutation()
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async deleteUser(@Args('id') id: string): Promise<Boolean> {
     try {
       await this.usersService.deleteUser(id);

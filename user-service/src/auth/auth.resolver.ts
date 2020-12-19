@@ -5,7 +5,7 @@ import { AuthenticationError } from 'apollo-server-core';
 import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
 import { ResetPasswordDto } from 'src/auth/dto/reset-password.dto';
 import { UsersService } from 'src/users/users.service';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { MailService } from 'src/mail/mail.service';
 import * as generator from 'generate-password';
 import { SmsService } from 'src/sms/sms.service';
@@ -17,6 +17,7 @@ import {
   Roles,
   RedisHandlerService,
   CurrentUser,
+  Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { User } from 'src/graphql';
 import { userRole } from 'src/shared/userRole.enum';
@@ -94,7 +95,7 @@ export class AuthResolver {
 
       if (
         refreshToken === user.refreshtoken &&
-        decodedJWT.count === user.count // count mechanism is an alternative to blackmailing tokens
+        decodedJWT.count == user.count // count mechanism is an alternative to blackmailing tokens
       ) {
         const newAccessToken = await this.authGqlRedisService.createDefaultJWT(
           decodedJWT.id,
@@ -130,8 +131,7 @@ export class AuthResolver {
   }
 
   @Mutation()
-  @Roles(userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ROOT)
   async changeRole(
     @Args('changeRoleInput') changeRoleData: ChangeRoleDto,
   ): Promise<Boolean> {
@@ -375,15 +375,14 @@ export class AuthResolver {
   }
 
   @Mutation()
-  @UseGuards(GqlAuthGuard)
+  @Auth()
   async changePassword(
     @CurrentUser() user: User,
     @Args('password') password: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       await this.usersService.changePasswordByUser(user.id, password);
-
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }

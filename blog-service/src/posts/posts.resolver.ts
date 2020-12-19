@@ -7,11 +7,7 @@ import {
   Mutation,
   Args,
 } from '@nestjs/graphql';
-import {
-  GqlAuthGuard,
-  RolesGuard,
-  Roles,
-} from '@tomasztrebacz/nest-auth-graphql-redis';
+import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { userRole } from 'src/shared/userRole.enum';
 import {
   CreatePostInput,
@@ -36,8 +32,7 @@ export class PostsResolver {
   }
 
   @Mutation('createPost')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async createPost(
     @Args('createPostInput') createData: CreatePostInput,
   ): Promise<Post> {
@@ -47,8 +42,7 @@ export class PostsResolver {
   }
 
   @Mutation('editPost')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async editPost(
     @Args('editPostInput') editData: EditPostInput,
   ): Promise<Boolean> {
@@ -62,8 +56,7 @@ export class PostsResolver {
   }
 
   @Mutation('changeCategoryPost')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async changeCategoryPost(
     @Args('changeCategoryPostInput') changeData: ChangeCategoryPostInput,
   ): Promise<Post> {
@@ -73,8 +66,7 @@ export class PostsResolver {
   }
 
   @Mutation('deletePost')
-  @Roles(userRole.ADMIN, userRole.ROOT)
-  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Auth(userRole.ADMIN, userRole.ROOT)
   async deletePost(@Args('id') id: number): Promise<Boolean> {
     await this.postsService.deletePost(id);
 
