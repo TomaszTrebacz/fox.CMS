@@ -6,6 +6,7 @@ import { useContainer, ValidationError } from 'class-validator';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // format errors from class-validator
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (errors: ValidationError[]) => {
