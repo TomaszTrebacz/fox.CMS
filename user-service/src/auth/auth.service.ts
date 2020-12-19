@@ -23,7 +23,7 @@ export class AuthService {
     const user = await this.usersService.findOneByEmail(loginCredentials.email);
 
     if (user == undefined) {
-      throw new Error('Wrong email or password!');
+      throw new UnauthorizedException('Wrong email or password!');
     }
 
     const passwordMatch = await this.comparePassword(
@@ -33,12 +33,6 @@ export class AuthService {
 
     if (!passwordMatch) {
       throw new Error('Wrong email or password!');
-    }
-
-    const isConfirmed = await this.redisHandler.getValue(user.id, 'confirmed');
-
-    if (isConfirmed === 'false') {
-      throw new Error('User is not confirmed. Please confirm accout');
     }
 
     return user;

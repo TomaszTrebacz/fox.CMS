@@ -1,9 +1,15 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
+import { AuthenticationError } from 'apollo-server-express';
 
 @Injectable()
 export class UsersService {
@@ -74,43 +80,40 @@ export class UsersService {
     }
   }
 
-  async changePasswordByUser(id: string, password: string): Promise<Boolean> {
-    try {
-      await this.updatePassword(id, password);
-
-      const value = await this.redisHandler.getValue(id, 'count');
-
-      // all values in redis are stored as strings
-      let count = parseInt(value, 10);
-      count++;
-
-      const countField = new Map<string, string>([['count', count.toString()]]);
-
-      await this.redisHandler.setUser(id, countField);
-
-      return new Boolean(true);
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
-
-  async updatePassword(id: string, password: string): Promise<Boolean> {
-    const hashedPassword = await this.authService.hashPassword(password);
-
+  async changePasswordByUser(id: string, password: string): Promise<boolean> {
     const user = await this.findOneById(id);
 
-    if (hashedPassword === user.password) {
-      throw new Error('Passwords are the same');
+    const passwordMatch = await this.authService.comparePassword(
+      password,
+      user.password,
+    );
+
+    if (passwordMatch) {
+      throw new Error(
+        'This is the same password as you currently use! Choose another!',
+      );
     }
+
+    const hashedPassword = await this.authService.hashPassword(password);
 
     const changed = await this.usersRepository.update(id, {
       password: hashedPassword,
     });
 
-    if (changed.affected == 1) {
-      return new Boolean(true);
-    } else {
+    if (changed.affected !== 1) {
       throw new Error('The password has not been updated.');
     }
+
+    const value = await this.redisHandler.getValue(id, 'count');
+
+    // all values in redis are stored as strings
+    let count = parseInt(value, 10);
+    count++;
+
+    const countField = new Map<string, string>([['count', count.toString()]]);
+
+    await this.redisHandler.setUser(id, countField);
+
+    return true;
   }
 }
