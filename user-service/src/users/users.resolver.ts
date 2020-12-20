@@ -7,7 +7,7 @@ import {
 } from '@nestjs/graphql';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User } from '../database/entities/user.entity';
 import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
 import { UseGuards } from '@nestjs/common';
@@ -36,7 +36,6 @@ export class UsersResolver {
   ) {}
 
   @Query('users')
-  @Auth(userRole.ADMIN, userRole.ROOT)
   findAll() {
     return this.usersService.findAll();
   }

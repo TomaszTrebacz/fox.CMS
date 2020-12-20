@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import { MailmanOptions } from '@squareboat/nest-mailman';
 
-export default registerAs('mailman', () => {
+export const mailConfig = registerAs('mailman', () => {
   return {
     host: process.env.MAIL_HOST,
     port: +process.env.MAIL_PORT,

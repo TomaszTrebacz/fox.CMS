@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.input';
 import { UsersService } from 'src/users/users.service';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { ChangeRoleDto } from './dto/change-role.dto';
 import * as argon2 from 'argon2';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
@@ -36,18 +35,6 @@ export class AuthService {
     }
 
     return user;
-  }
-
-  async validateJWT(payload: JwtPayload): Promise<boolean> {
-    const userExists = await this.redisHandler.userExists(payload.id);
-
-    if (userExists === false) {
-      throw new UnauthorizedException(
-        'Wrong JWT & User does not exist in database',
-      );
-    }
-
-    return true;
   }
 
   async changeRole({ id, role }: ChangeRoleDto): Promise<Boolean> {

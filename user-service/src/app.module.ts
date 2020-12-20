@@ -12,16 +12,22 @@ import { TwilioModule } from 'nestjs-twilio';
 import { SmsModule } from './sms/sms.module';
 import { MailmanModule } from '@squareboat/nest-mailman';
 
-import { GqlConfigService } from './config/gql.config';
-import mailConfig from './config/mail.config';
-import twilioConfig from './config/twilio.config';
-import databaseConfig from './config/database.config';
-import redisConfig from './config/redis.config';
-import jwtConfig from './config/jwt.config';
+import {
+  GqlConfigService,
+  databaseConfig,
+  jwtConfig,
+  mailConfig,
+  redisConfig,
+  twilioConfig,
+} from './config';
+
+// for testing purposes app can manage different env files
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       isGlobal: true,
       load: [mailConfig, twilioConfig, databaseConfig, redisConfig, jwtConfig],
     }),
@@ -49,6 +55,6 @@ import jwtConfig from './config/jwt.config';
     SmsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DateScalar],
+  providers: [AppService, DateScalar, ConfigService],
 })
 export class AppModule {}

@@ -5,9 +5,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User } from '../database/entities/user.entity';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { AuthenticationError } from 'apollo-server-express';
 

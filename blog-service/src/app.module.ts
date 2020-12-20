@@ -7,16 +7,23 @@ import { PostsModule } from './posts/posts.module';
 import { DateScalar } from './shared/date.scalar';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { CategoriesModule } from './categories/categories.module';
-import databaseConfig from './config/database.config';
-import redisConfig from './config/redis.config';
 import { RedisModule } from 'nestjs-redis';
-import { GqlConfigService } from './config/gql.config';
-import jwtConfig from './config/jwt.config';
 import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
+
+import {
+  GqlConfigService,
+  databaseConfig,
+  jwtConfig,
+  redisConfig,
+} from './config';
+
+// for testing purposes app can manage different env files
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       isGlobal: true,
       load: [databaseConfig, redisConfig, jwtConfig],
     }),
