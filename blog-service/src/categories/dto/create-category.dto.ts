@@ -1,5 +1,5 @@
 import { MinLength, MaxLength, IsEmpty } from 'class-validator';
-import { Post } from 'src/entities/post.entity';
+import { Post } from '../../entities/post.entity';
 import { CreateCategoryInput } from '../../graphql';
 
 export class CreateCategoryDto extends CreateCategoryInput {

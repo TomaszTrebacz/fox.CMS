@@ -1,4 +1,4 @@
-import { IsEmail, IsEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import { LoginInput } from '../../graphql';
 
 export class LoginDto extends LoginInput {

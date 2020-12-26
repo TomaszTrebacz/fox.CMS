@@ -1,4 +1,3 @@
-import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -8,12 +7,12 @@ import {
   Args,
 } from '@nestjs/graphql';
 import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { userRole } from 'src/shared/userRole.enum';
+import { userRole } from '../shared/userRole.enum';
 import {
   CreatePostInput,
   EditPostInput,
   ChangeCategoryPostInput,
-} from 'src/graphql';
+} from '../graphql';
 import { Post } from '../entities/post.entity';
 import { PostsService } from './posts.service';
 
@@ -45,14 +44,14 @@ export class PostsResolver {
   @Auth(userRole.ADMIN, userRole.ROOT)
   async editPost(
     @Args('editPostInput') editData: EditPostInput,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       await this.postsService.editPost(editData);
     } catch (err) {
       throw new Error(`Can not edit post: ${err.message}`);
     }
 
-    return new Boolean(true);
+    return true;
   }
 
   @Mutation('changeCategoryPost')
@@ -67,9 +66,9 @@ export class PostsResolver {
 
   @Mutation('deletePost')
   @Auth(userRole.ADMIN, userRole.ROOT)
-  async deletePost(@Args('id') id: number): Promise<Boolean> {
+  async deletePost(@Args('id') id: number): Promise<boolean> {
     await this.postsService.deletePost(id);
 
-    return new Boolean(true);
+    return true;
   }
 }

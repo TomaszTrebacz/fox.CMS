@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.input';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { ChangeRoleDto } from './dto/change-role.dto';
 import * as argon2 from 'argon2';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
@@ -37,7 +37,7 @@ export class AuthService {
     return user;
   }
 
-  async changeRole({ id, role }: ChangeRoleDto): Promise<Boolean> {
+  async changeRole({ id, role }: ChangeRoleDto): Promise<boolean> {
     const user = await this.usersService.findOneById(id);
 
     if (user == undefined) throw new Error('No user with given id');
@@ -67,7 +67,7 @@ export class AuthService {
   async comparePassword(
     rawPassword: string,
     hashPassword: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       return await argon2.verify(hashPassword, rawPassword);
     } catch (err) {
@@ -75,7 +75,7 @@ export class AuthService {
     }
   }
 
-  lowercaseField(field: String) {
+  lowercaseField(field: string) {
     return field.toLowerCase();
   }
 }

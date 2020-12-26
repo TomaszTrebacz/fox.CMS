@@ -10,20 +10,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '../database/entities/user.entity';
 import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
-import { UseGuards } from '@nestjs/common';
 import {
   AuthGqlRedisService,
   CurrentUser,
   RedisHandlerService,
-  GqlAuthGuard,
-  RolesGuard,
-  Roles,
   Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { SmsService } from 'src/sms/sms.service';
+import { SmsService } from '../sms/sms.service';
 import { userRole } from '../shared/userRole.enum';
-import { AuthService } from 'src/auth/auth.service';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 
 @Resolver('User')
 export class UsersResolver {
@@ -123,10 +118,10 @@ export class UsersResolver {
   async updateUser(
     @CurrentUser() user: User,
     @Args('updateUserInput') updateData: UpdateUserDto,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       await this.usersService.updateUser(updateData, user);
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new UserInputError(`Cannot update user: ${err.message}`);
     }
@@ -134,11 +129,11 @@ export class UsersResolver {
 
   @Mutation()
   @Auth(userRole.ADMIN, userRole.ROOT)
-  async deleteUser(@Args('id') id: string): Promise<Boolean> {
+  async deleteUser(@Args('id') id: string): Promise<boolean> {
     try {
       await this.usersService.deleteUser(id);
       await this.redisHandler.deleteUser(id);
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(
         `Can not delete user data from databases: ${err.message}`,

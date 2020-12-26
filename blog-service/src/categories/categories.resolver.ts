@@ -1,8 +1,7 @@
-import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { userRole } from 'src/shared/userRole.enum';
-import { Category } from 'src/entities/category.entity';
+import { userRole } from '../shared/userRole.enum';
+import { Category } from '../entities/category.entity';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { EditCategoryDto } from './dto/edit-category.dto';
@@ -37,21 +36,21 @@ export class CategoriesResolver {
   @Auth(userRole.ADMIN, userRole.ROOT)
   async editCategory(
     @Args('editCategoryInput') editData: EditCategoryDto,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       await this.categoriesService.editCategory(editData);
     } catch (err) {
       throw new Error(`Can not edit category: ${err.message}`);
     }
 
-    return new Boolean(true);
+    return true;
   }
 
   @Mutation('deleteCategory')
   @Auth(userRole.ADMIN, userRole.ROOT)
-  async deleteCategory(@Args('id') id: number): Promise<Boolean> {
+  async deleteCategory(@Args('id') id: number): Promise<boolean> {
     await this.categoriesService.deleteCategory(id);
 
-    return new Boolean(true);
+    return true;
   }
 }

@@ -2,25 +2,21 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.input';
 import { AuthenticationError } from 'apollo-server-core';
-import { ChangeRoleDto } from 'src/auth/dto/change-role.dto';
-import { ResetPasswordDto } from 'src/auth/dto/reset-password.dto';
-import { UsersService } from 'src/users/users.service';
-import { UnauthorizedException, UseGuards } from '@nestjs/common';
-import { MailService } from 'src/mail/mail.service';
+import { ChangeRoleDto } from '../auth/dto/change-role.dto';
+import { ResetPasswordDto } from '../auth/dto/reset-password.dto';
+import { UsersService } from '../users/users.service';
+import { MailService } from '../mail/mail.service';
 import * as generator from 'generate-password';
-import { SmsService } from 'src/sms/sms.service';
+import { SmsService } from '../sms/sms.service';
 import { ChangePassByTokenDto } from './dto/changePassByToken.dto';
 import {
   AuthGqlRedisService,
-  GqlAuthGuard,
-  RolesGuard,
-  Roles,
   RedisHandlerService,
   CurrentUser,
   Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { User } from 'src/graphql';
-import { userRole } from 'src/shared/userRole.enum';
+import { User } from '../graphql';
+import { userRole } from '../shared/userRole.enum';
 import { ExtendedUserData } from './interfaces/extended-user-data.interface';
 import { RedisUser } from './interfaces/redis-user.interface';
 
@@ -134,7 +130,7 @@ export class AuthResolver {
   @Auth(userRole.ROOT)
   async changeRole(
     @Args('changeRoleInput') changeRoleData: ChangeRoleDto,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     await this.authService.changeRole(changeRoleData);
 
     return true;
@@ -143,7 +139,7 @@ export class AuthResolver {
   @Mutation()
   async confirmUser(
     @Args('confirmToken') confirmToken: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       const { id } = await this.authGqlRedisService.verifyToken(
         confirmToken,
@@ -169,7 +165,7 @@ export class AuthResolver {
   }
 
   @Mutation()
-  async changeConfirmToken(@Args('email') email: string): Promise<Boolean> {
+  async changeConfirmToken(@Args('email') email: string): Promise<boolean> {
     try {
       const user = await this.usersService.findOneByEmail(email);
 
@@ -213,7 +209,7 @@ export class AuthResolver {
 
       this.mailService.sendMail(mail);
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(`Can not resend confirmation link: ${err.message}`);
     }
@@ -222,7 +218,7 @@ export class AuthResolver {
   @Mutation()
   async sendCodePhone(
     @Args('phoneNumber') phoneNumber: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
 
@@ -253,7 +249,7 @@ export class AuthResolver {
 
       await this.smsService.sendSMS(smsData);
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(`Can not send confirmation code: ${err.message}`);
     }
@@ -262,7 +258,7 @@ export class AuthResolver {
   @Mutation()
   async resetPassword(
     @Args('resetPasswordInput') { phoneNumber, code }: ResetPasswordDto,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
 
@@ -297,14 +293,14 @@ export class AuthResolver {
 
       await this.smsService.sendSMS(smsData);
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(`Can not reset password: ${err.message}`);
     }
   }
 
   @Mutation()
-  async sendChangePassEmail(@Args('email') email: string): Promise<Boolean> {
+  async sendChangePassEmail(@Args('email') email: string): Promise<boolean> {
     try {
       const user = await this.usersService.findOneByEmail(email);
 
@@ -340,7 +336,7 @@ export class AuthResolver {
 
       this.mailService.sendMail(mail);
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }
@@ -349,7 +345,7 @@ export class AuthResolver {
   @Mutation()
   async changePassByToken(
     @Args('changePassByTokenInput') { token, password }: ChangePassByTokenDto,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     try {
       const { id } = await this.authGqlRedisService.verifyToken(
         token,
@@ -365,7 +361,7 @@ export class AuthResolver {
         await this.usersService.changePasswordByUser(id, password);
 
         await this.redisHandler.deleteField(id, 'changepasstoken');
-        return new Boolean(true);
+        return true;
       } else {
         throw new Error('Link is not valid.');
       }
@@ -389,11 +385,11 @@ export class AuthResolver {
   }
 
   @Mutation()
-  async logout(@Args('id') id: string): Promise<Boolean> {
+  async logout(@Args('id') id: string): Promise<boolean> {
     try {
       await this.redisHandler.deleteField(id, 'refreshtoken');
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(err);
     }

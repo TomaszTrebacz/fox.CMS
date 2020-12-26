@@ -1,15 +1,9 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
 import { User } from '../database/entities/user.entity';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { AuthenticationError } from 'apollo-server-express';
 
 @Injectable()
 export class UsersService {
@@ -44,7 +38,7 @@ export class UsersService {
   }
 
   async createUser(createData: User): Promise<User> {
-    let user = new User();
+    const user = new User();
 
     user.firstName = createData.firstName;
     user.lastName = createData.lastName;
@@ -58,16 +52,16 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(updateData: User, user: User): Promise<Boolean> {
+  async updateUser(updateData: User, user: User): Promise<boolean> {
     const currentData = await this.findOneById(user.id);
 
     delete currentData.email;
     delete currentData.password;
 
-    let finalData = Object.assign(currentData, updateData);
+    const finalData = Object.assign(currentData, updateData);
     await this.usersRepository.save(finalData);
 
-    return new Boolean(true);
+    return true;
   }
 
   async deleteUser(id: string) {

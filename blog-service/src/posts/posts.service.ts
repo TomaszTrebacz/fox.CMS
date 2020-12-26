@@ -14,7 +14,7 @@ export class PostsService {
     return this.PostsRepository.find({ relations: ['category'] });
   }
 
-  async createPost(createData: object): Promise<Post> {
+  async createPost(createData): Promise<Post> {
     const post = await this.PostsRepository.save(createData);
 
     const productWithCategory = await this.PostsRepository.findOne({
@@ -25,7 +25,7 @@ export class PostsService {
     return productWithCategory;
   }
 
-  async editPost(updateData): Promise<Boolean> {
+  async editPost(updateData): Promise<boolean> {
     try {
       await this.PostsRepository.update(updateData.id, {
         title: updateData.title,
@@ -55,7 +55,7 @@ export class PostsService {
     }
   }
 
-  async deletePost(id: number): Promise<Boolean> {
+  async deletePost(id: number): Promise<boolean> {
     try {
       const post = await this.PostsRepository.findOne(id);
 
@@ -65,7 +65,7 @@ export class PostsService {
 
       await this.PostsRepository.delete(id);
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }

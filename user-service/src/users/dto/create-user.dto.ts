@@ -1,13 +1,4 @@
-import {
-  IsEmpty,
-  MinLength,
-  MaxLength,
-  IsEmail,
-  IsMobilePhone,
-  IsNotEmpty,
-  IsString,
-  Validate,
-} from 'class-validator';
+import { IsEmpty, IsEmail, IsMobilePhone, Validate } from 'class-validator';
 import { CreateUserInput } from '../../graphql';
 import { emailExists } from '../validators/emailExists';
 import { FieldLength } from '../validators/FieldLength';

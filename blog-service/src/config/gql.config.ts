@@ -10,7 +10,7 @@ export class GqlConfigService implements GqlOptionsFactory {
       typePaths: ['./**/*.graphql'],
       context: ({ req }: any) => ({ req }),
       definitions: {
-        path: join(process.cwd(), 'src/graphql.ts'),
+        path: join(process.cwd(), '../graphql.ts'),
         outputAs: 'class',
       },
       formatError: (error: GraphQLError) => {

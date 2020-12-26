@@ -27,7 +27,7 @@ export class CategoriesService {
     }
   }
 
-  async editCategory(editData: Category): Promise<Boolean> {
+  async editCategory(editData: Category): Promise<boolean> {
     try {
       await this.CategoriesService.update(editData.id, {
         name: editData.name,
@@ -38,7 +38,7 @@ export class CategoriesService {
     }
   }
 
-  async deleteCategory(id: number): Promise<Boolean> {
+  async deleteCategory(id: number): Promise<boolean> {
     try {
       const category = await this.CategoriesService.findOne(id);
 
@@ -48,7 +48,7 @@ export class CategoriesService {
 
       await this.CategoriesService.delete(id);
 
-      return new Boolean(true);
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }

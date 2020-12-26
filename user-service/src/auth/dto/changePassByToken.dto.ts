@@ -1,5 +1,5 @@
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
-import { ChangePassByTokenInput } from 'src/graphql';
+import { IsString, MaxLength, MinLength } from 'class-validator';
+import { ChangePassByTokenInput } from '../../graphql';
 
 export class ChangePassByTokenDto extends ChangePassByTokenInput {
   @IsString()
