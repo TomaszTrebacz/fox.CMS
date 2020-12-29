@@ -1,4 +1,4 @@
-import { decrypt, encrypt } from '../crypto';
+import { decrypt, encrypt } from '../helpers/crypto';
 
 export function UserStorage() {
   return (target: any, key: string) => {

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AllPostsGQL } from 'src/app/graphql/allPostsGQL.query';
+import { AllPostsGQL } from 'src/app/graphql/query/post/allPosts.query';
 import { Category } from 'src/app/models/category.interface';
 import { Post } from 'src/app/models/post.interface';
-import { CategoriesService } from 'src/app/services/blog/categories/categories.service';
-import { PostsService } from 'src/app/services/blog/posts/posts.service';
+import { CategoriesService } from 'src/app/services/categories/categories.service';
+import { PostsService } from 'src/app/services/posts/posts.service';
 
 @Component({
   selector: 'app-blog',
   templateUrl: './blog.component.html',
-  styleUrls: ['./blog.component.css'],
+  styleUrls: ['./blog.component.css']
 })
 export class BlogComponent implements OnInit {
   posts: Observable<Post[]>;
@@ -22,9 +22,9 @@ export class BlogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.posts = this.postsservice.findAll().pipe(map((result) => result));
+    this.posts = this.postsservice.findAll().pipe(map(result => result));
     this.categories = this.categoriesService
       .findAll()
-      .pipe(map((result) => result));
+      .pipe(map(result => result));
   }
 }

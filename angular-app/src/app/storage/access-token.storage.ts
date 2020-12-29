@@ -1,4 +1,4 @@
-import { decrypt, encrypt } from '../crypto';
+import { decrypt, encrypt } from '../helpers/crypto';
 
 export function AccessToken() {
   return (target: any, key: string) => {

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
-import { Post } from '../models/post.interface';
-import { User } from '../models/user.interface';
+import { Post } from '../../../models/post.interface';
+import { User } from '../../../models/user.interface';
 
-export interface Response {
+export interface CurrentUser {
   currentUser: User;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class CurrentUserSQL extends Query<Response> {
+export class CurrentUserSQL extends Query<CurrentUser> {
   document = gql`
     query {
       currentUser {

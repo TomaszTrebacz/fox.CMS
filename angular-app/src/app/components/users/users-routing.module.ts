@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from 'src/app/helpers/auth.guard';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 import { userRole } from 'src/app/models/userRole.interface';
 import { AccountComponent } from './account/account.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AllPostsGQL, Response } from 'src/app/graphql/allPostsGQL.query';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Post } from 'src/app/models/post.interface';
+import { AllPostsGQL } from 'src/app/graphql';
+import { Post } from 'src/app/models';
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PostsService {
   constructor(private allPostsGQL: AllPostsGQL) {}
@@ -12,6 +13,6 @@ export class PostsService {
   findAll(): Observable<Post[]> {
     return this.allPostsGQL
       .watch()
-      .valueChanges.pipe(map((result) => result.data.posts));
+      .valueChanges.pipe(map(result => result.data.posts));
   }
 }

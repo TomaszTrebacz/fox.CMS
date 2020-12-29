@@ -1,20 +1,18 @@
 import { Injectable, Input, ɵConsole } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeConfirmTokenGQL } from 'src/app/graphql/changeConfirmToken.mutation';
-import { ChangePassByTokenGQL } from 'src/app/graphql/changePassByToken.mutation';
-import { SendChangePassEmailGQL } from 'src/app/graphql/sendChangePassEmail.mutation';
-import { ConfirmUserGQL } from 'src/app/graphql/confirmUser.mutation';
-import { ResetPasswordGQL } from 'src/app/graphql/resetPassword.mutation';
-import { LoginGQL } from 'src/app/graphql/login.query';
-import { LogoutGQL } from 'src/app/graphql/logout.mutation';
-import { SendCodePhoneGQL } from 'src/app/graphql/sendCodePhone.mutation';
-
-import { decrypt, encrypt } from 'src/app/helpers/crypto';
-import { ChangePasswordGQL } from 'src/app/graphql/changePassword.mutation';
-import { AccessToken } from 'src/app/helpers/storage/access-token.storage';
-import { RefreshToken } from 'src/app/helpers/storage/refresh-token.storage';
-import { UserStorage } from 'src/app/helpers/storage/user.storage';
+import {
+  ChangeConfirmTokenGQL,
+  ChangePassByTokenGQL,
+  ChangePasswordGQL,
+  ConfirmUserGQL,
+  LoginGQL,
+  LogoutGQL,
+  ResetPasswordGQL,
+  SendChangePassEmailGQL,
+  SendCodePhoneGQL
+} from 'src/app/graphql';
+import { AccessToken, RefreshToken, UserStorage } from 'src/app/storage';
 
 export interface LoginForm {
   email: string;

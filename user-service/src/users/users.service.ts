@@ -53,8 +53,6 @@ export class UsersService {
   }
 
   async updateUser(updateData: User, user: User): Promise<boolean> {
-    console.log(updateData);
-    console.log(user);
     const currentData = await this.findOneById(user.id);
 
     const finalData = Object.assign(currentData, updateData);

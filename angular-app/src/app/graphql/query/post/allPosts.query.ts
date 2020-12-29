@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
-import { Post } from '../models/post.interface';
+import { Post } from '../../../models/post.interface';
 
-export interface Response {
+export interface ResponseInterface {
   posts: Post[];
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class AllPostsGQL extends Query<Response> {
+export class AllPostsGQL extends Query<ResponseInterface> {
   document = gql`
     query {
       posts {
