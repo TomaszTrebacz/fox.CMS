@@ -8,7 +8,7 @@ import {
 export class FieldLength implements ValidatorConstraintInterface {
   validate(text: string, args: ValidationArguments) {
     return (
-      text.length > args.constraints[0] && text.length < args.constraints[1]
+      text.length >= args.constraints[0] && text.length <= args.constraints[1]
     );
   }
 

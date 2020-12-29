@@ -55,10 +55,8 @@ input CreateUserInput {
 }
 
 input UpdateUserInput {
-  id: String!
   firstName: String!
   lastName: String!
-  phoneNumber: String!
 }
 
 input LoginInput {

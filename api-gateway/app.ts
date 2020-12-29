@@ -1,19 +1,16 @@
 require("dotenv").config();
 const { ApolloServer } = require("apollo-server");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
-import CryptoJS from "crypto-js";
-
-const secretKey = process.env.AES_KEY;
 
 const gateway = new ApolloGateway({
   serviceList: [
     {
       name: "user",
-      url: `http://localhost:${process.env.USER_PORT}/graphql`,
+      url: process.env.USER_URL,
     },
     {
       name: "blog",
-      url: `http://localhost:${process.env.BLOG_PORT}/graphql`,
+      url: process.env.BLOG_URL,
     },
   ],
   buildService({ url }) {

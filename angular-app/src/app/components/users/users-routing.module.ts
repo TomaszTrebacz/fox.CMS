@@ -10,6 +10,7 @@ import { ResendConfirmLinkComponent } from './confirm-account/resend-confirm-lin
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ChangePassComponent } from './reset-password/by-email/change-pass/change-pass.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { EditAccountComponent } from './edit-account/edit-account.component';
 
 const userRoutes: Routes = [
   {
@@ -17,32 +18,32 @@ const userRoutes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginComponent,
+        component: LoginComponent
       },
       {
         path: 'register',
-        component: RegisterComponent,
+        component: RegisterComponent
       },
       {
         path: 'confirm-account',
-        component: ConfirmAccountComponent,
+        component: ConfirmAccountComponent
       },
       {
         path: 'resend-confirmLink',
-        component: ResendConfirmLinkComponent,
+        component: ResendConfirmLinkComponent
       },
       {
         path: 'reset-password',
         children: [
           {
             path: '',
-            component: ResetPasswordComponent,
+            component: ResetPasswordComponent
           },
           {
             path: 'changePass',
-            component: ChangePassComponent,
-          },
-        ],
+            component: ChangePassComponent
+          }
+        ]
       },
       {
         path: 'account',
@@ -50,20 +51,24 @@ const userRoutes: Routes = [
         children: [
           {
             path: '',
-            component: AccountComponent,
+            component: AccountComponent
           },
           {
             path: 'change-password',
-            component: ChangePasswordComponent,
+            component: ChangePasswordComponent
           },
-        ],
-      },
-    ],
-  },
+          {
+            path: 'edit-account',
+            component: EditAccountComponent
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(userRoutes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class UsersRoutingModule {}

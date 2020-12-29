@@ -53,10 +53,9 @@ export class UsersService {
   }
 
   async updateUser(updateData: User, user: User): Promise<boolean> {
+    console.log(updateData);
+    console.log(user);
     const currentData = await this.findOneById(user.id);
-
-    delete currentData.email;
-    delete currentData.password;
 
     const finalData = Object.assign(currentData, updateData);
     await this.usersRepository.save(finalData);

@@ -4,6 +4,7 @@ import { User } from 'src/app/models/user.interface';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RegisterGQL } from 'src/app/graphql/register.mutation';
+import { UpdateUserGQL } from 'src/app/graphql/updateUser.mutation';
 
 export interface RegisterForm {
   email: string;
@@ -13,24 +14,34 @@ export interface RegisterForm {
   phoneNumber: string;
 }
 
+export interface UpdateUserForm {
+  firstName: string;
+  lastName: string;
+}
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserService {
   constructor(
     private currentUserSQL: CurrentUserSQL,
-    private registerGQL: RegisterGQL
+    private registerGQL: RegisterGQL,
+    private updateUserGQL: UpdateUserGQL
   ) {}
 
   getCurrentUser(): Observable<User> {
     return this.currentUserSQL
       .fetch()
-      .pipe(map((result) => result.data.currentUser));
+      .pipe(map(result => result.data.currentUser));
   }
 
   register(credentials: RegisterForm): Observable<any> {
     return this.registerGQL.mutate({
-      input: credentials,
+      input: credentials
     });
+  }
+
+  updateUser(input: UpdateUserForm): Observable<any> {
+    return this.updateUserGQL.mutate({ input: input });
   }
 }

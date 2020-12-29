@@ -51,6 +51,7 @@ import { ByPhoneComponent } from './components/users/reset-password/by-phone/by-
 import { ByEmailComponent } from './components/users/reset-password/by-email/by-email.component';
 import { ChangePassComponent } from './components/users/reset-password/by-email/change-pass/change-pass.component';
 import { ChangePasswordComponent } from './components/users/change-password/change-password.component';
+import { EditAccountComponent } from './components/users/edit-account/edit-account.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { ChangePasswordComponent } from './components/users/change-password/chan
     ByEmailComponent,
     ChangePassComponent,
     ChangePasswordComponent,
+    EditAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -101,7 +103,7 @@ import { ChangePasswordComponent } from './components/users/change-password/chan
     ToastModule,
     InputMaskModule,
     ProgressSpinnerModule,
-    ProgressBarModule,
+    ProgressBarModule
   ],
   providers: [
     MessageService,
@@ -109,9 +111,9 @@ import { ChangePasswordComponent } from './components/users/change-password/chan
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ProgressBarInterceptor,
-      multi: true,
-    },
+      multi: true
+    }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

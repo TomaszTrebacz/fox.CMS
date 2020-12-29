@@ -1,7 +1,6 @@
 import { IsEmpty, IsOptional, IsMobilePhone, Validate } from 'class-validator';
 import { UpdateUserInput } from '../../graphql';
 import { FieldLength } from '../validators/FieldLength';
-import { phoneNumberExists } from '../validators/phoneNumberExists';
 
 export class UpdateUserDto extends UpdateUserInput {
   @IsEmpty()
@@ -11,7 +10,7 @@ export class UpdateUserDto extends UpdateUserInput {
   email: string;
 
   @IsOptional()
-  @Validate(FieldLength, [6, 62])
+  @Validate(FieldLength, [3, 62])
   firstName: string;
 
   @IsOptional()
@@ -21,8 +20,7 @@ export class UpdateUserDto extends UpdateUserInput {
   @IsEmpty()
   password: string;
 
-  @IsMobilePhone()
-  @Validate(phoneNumberExists)
+  @IsEmpty()
   phoneNumber: string;
 
   @IsEmpty()
