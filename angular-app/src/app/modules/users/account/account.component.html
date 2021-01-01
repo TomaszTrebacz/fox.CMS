@@ -1,0 +1,8 @@
+<p *ngIf="(user | async) as user">
+Hi {{ user.firstName }} {{ user.lastName }}!
+</p>
+
+<div class="ui-g">
+    <a routerLink="/users/account/change-password">Change password</a><br />
+    <a routerLink="/users/account/edit-account">Edit account</a>
+</div>

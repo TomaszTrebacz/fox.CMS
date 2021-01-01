@@ -1,0 +1,28 @@
+<form [formGroup]="loginForm" class="ui-g">
+    <p-panel header="Log in" class="ui-g-12">
+        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div class="ui-g">
+            <label for="email" class="ui-g-12 ui-md-2">E-mail</label>
+            <input pInputText id="email" formControlName="email" placeholder="Enter your email" class="ui-g-12 ui-md-5"/>
+            <div class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="loginForm" field="email" nicename="email"></app-fielderrors>
+            </div>
+        </div>
+        <div class="ui-g">
+            <label for="password" class="ui-g-12 ui-md-2">Password</label>
+            <input pInputText id="password" formControlName="password" placeholder="Enter your password" class="ui-g-12 ui-md-5"/>
+            <div class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="loginForm" field="password" nicename="password"></app-fielderrors>
+            </div>
+        </div>
+
+        <button pButton type="button" label="Click" [disabled]="!loginForm.valid" (click)="onSubmit()"></button>
+        <div class="ui-g">
+            <a routerLink="/users/resend-confirmLink">Click to resend confirmation link to your email</a>
+        </div>
+           <div class="ui-g">
+            <a routerLink="/users/reset-password">Click to reset password by email or phone number</a>
+        </div>
+    </p-panel>
+    
+</form>

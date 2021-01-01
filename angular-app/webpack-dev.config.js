@@ -5,6 +5,6 @@ module.exports = {
     new Dotenv(),
   ],
   node: {
-    fs: "empty"
-  }
+    fs: "empty",
+  },
 };
