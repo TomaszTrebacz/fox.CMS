@@ -52,8 +52,8 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(updateData: User, user: User): Promise<boolean> {
-    const currentData = await this.findOneById(user.id);
+  async updateUser(updateData: Partial<User>, id: string): Promise<boolean> {
+    const currentData = await this.findOneById(id);
 
     const finalData = Object.assign(currentData, updateData);
     await this.usersRepository.save(finalData);

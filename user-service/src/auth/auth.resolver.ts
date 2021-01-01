@@ -19,6 +19,7 @@ import { User } from '../graphql';
 import { userRole } from '../shared/userRole.enum';
 import { ExtendedUserData } from './interfaces/extended-user-data.interface';
 import { RedisUser } from './interfaces/redis-user.interface';
+import { phoneNumberExists } from 'src/users/validators/phoneNumberExists';
 
 @Resolver('Auth')
 export class AuthResolver {

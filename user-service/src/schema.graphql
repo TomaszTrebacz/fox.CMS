@@ -44,6 +44,8 @@ type Mutation {
   sendChangePassEmail(email: String): Boolean
   changePassByToken(changePassByTokenInput: ChangePassByTokenInput): Boolean
   changePassword(password: String): Boolean
+  sendChangePhoneEmail(phoneNumber: String): Boolean
+  changePhoneNumber(token: String): Boolean
 }
 
 input CreateUserInput {

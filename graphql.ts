@@ -6,74 +6,100 @@
 
 /* tslint:disable */
 /* eslint-disable */
-export class ChangeCategoryPostInput {
+export class ChangePassByTokenInput {
+    token?: string;
+    password?: string;
+}
+
+export class ChangeRoleInput {
     id: string;
-    category: string;
+    role: string;
 }
 
-export class CreateCategoryInput {
-    name: string;
+export class CreateUserInput {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    phoneNumber: string;
 }
 
-export class CreatePostInput {
-    title: string;
-    text: string;
-    category: string;
-    userId: string;
+export class LoginInput {
+    email: string;
+    password: string;
 }
 
-export class EditCategoryInput {
-    id: number;
-    name: string;
+export class ResetPasswordInput {
+    phoneNumber?: string;
+    code?: number;
 }
 
-export class EditPostInput {
-    id: string;
-    title: string;
-    text: string;
+export class UpdateUserInput {
+    firstName: string;
+    lastName: string;
 }
 
-export class Category {
-    id: number;
-    name: string;
-    posts?: Post[];
-}
-
-export class Post {
-    id: number;
-    title: string;
-    text: string;
-    user?: User;
-    created: Date;
-    updated: Date;
-    category?: Category;
+export class LoginResponse {
+    user: User;
+    accessToken: string;
+    refreshToken: string;
+    role: string;
 }
 
 export abstract class IMutation {
-    abstract createCategory(createCategoryInput?: CreateCategoryInput): Category | Promise<Category>;
+    abstract registerUser(createUserInput?: CreateUserInput): User | Promise<User>;
 
-    abstract editCategory(editCategoryInput?: EditCategoryInput): boolean | Promise<boolean>;
+    abstract updateUser(updateUserInput?: UpdateUserInput): boolean | Promise<boolean>;
 
-    abstract createPost(createPostInput?: CreatePostInput): Post | Promise<Post>;
+    abstract deleteUser(id?: string): boolean | Promise<boolean>;
 
-    abstract editPost(editPostInput?: EditPostInput): boolean | Promise<boolean>;
+    abstract changeRole(changeRoleInput?: ChangeRoleInput): boolean | Promise<boolean>;
 
-    abstract changeCategoryPost(changeCategoryPostInput?: ChangeCategoryPostInput): Post | Promise<Post>;
+    abstract resetPassword(resetPasswordInput?: ResetPasswordInput): boolean | Promise<boolean>;
 
-    abstract deleteCategory(id: number): boolean | Promise<boolean>;
+    abstract refreshToken(refreshToken?: string): TokenResponse | Promise<TokenResponse>;
 
-    abstract deletePost(id: number): boolean | Promise<boolean>;
+    abstract logout(id?: string): boolean | Promise<boolean>;
+
+    abstract confirmUser(confirmToken?: string): boolean | Promise<boolean>;
+
+    abstract changeConfirmToken(email?: string): boolean | Promise<boolean>;
+
+    abstract sendCodePhone(phoneNumber?: string): boolean | Promise<boolean>;
+
+    abstract sendChangePassEmail(email?: string): boolean | Promise<boolean>;
+
+    abstract changePassByToken(changePassByTokenInput?: ChangePassByTokenInput): boolean | Promise<boolean>;
+
+    abstract changePassword(password?: string): boolean | Promise<boolean>;
+
+    abstract sendChangePhoneEmail(phoneNumber?: string): boolean | Promise<boolean>;
+
+    abstract changePhoneNumber(token?: string): boolean | Promise<boolean>;
 }
 
-export abstract class IQuery {
-    abstract posts(): Post[] | Promise<Post[]>;
-
-    abstract categories(): Category[] | Promise<Category[]>;
-
-    abstract category(id?: number): Category | Promise<Category>;
+export class TokenResponse {
+    accessToken?: string;
+    refreshToken?: string;
 }
 
 export class User {
     id: string;
-    posts?: Post[];
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    phoneNumber: string;
+    created: Date;
+    updated: Date;
+}
+
+export abstract class IQuery {
+    abstract users(): User[] | Promise<User[]>;
+
+    abstract currentUser(): User | Promise<User>;
+
+    abstract user(id: string): User | Promise<User>;
+
+    abstract login(loginCredentials?: LoginInput): LoginResponse | Promise<LoginResponse>;
 }

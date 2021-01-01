@@ -19,6 +19,7 @@ import {
 import { SmsService } from '../sms/sms.service';
 import { userRole } from '../shared/userRole.enum';
 import { MailService } from '../mail/mail.service';
+import { phoneNumberExists } from './validators/phoneNumberExists';
 
 @Resolver('User')
 export class UsersResolver {
@@ -120,10 +121,83 @@ export class UsersResolver {
     @Args('updateUserInput') updateData: UpdateUserDto,
   ): Promise<boolean> {
     try {
-      await this.usersService.updateUser(updateData, user);
+      await this.usersService.updateUser(updateData, user.id);
       return true;
     } catch (err) {
       throw new UserInputError(`Cannot update user: ${err.message}`);
+    }
+  }
+
+  @Mutation()
+  @Auth()
+  async sendChangePhoneEmail(
+    @CurrentUser() user: User,
+    @Args('phoneNumber') phoneNumber: phoneNumberExists,
+  ): Promise<boolean> {
+    try {
+      const JWTpayload = {
+        id: user.id,
+        code: phoneNumber,
+      };
+
+      const changePhoneToken = await this.authGqlRedisService.createJWT(
+        JWTpayload,
+        process.env.PHONECHANGE_JWT_SECRET,
+        process.env.PHONECHANGE_JWT_EXP,
+      );
+
+      const changePhoneField = new Map<string, string>([
+        ['changephonetoken', changePhoneToken],
+      ]);
+
+      await this.redisHandler.setUser(user.id, changePhoneField);
+
+      const changePhoneLink = `${process.env.FRONTEND_URL}/users/change-phone/changePhone?token=${changePhoneToken}`;
+
+      const mail = {
+        greeting: `Hi ${user.firstName} ${user.lastName}!`,
+        content: `We've heard that you want change your phone number.
+                Please click in this link: ${changePhoneLink}. 
+                Make sure you don't share this link publicly, because it's unique!`,
+        subject: `Forget password`,
+        mailAddress: user.email,
+      };
+
+      this.mailService.sendMail(mail);
+
+      return true;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  @Mutation()
+  async changePhoneNumber(@Args('token') token: string): Promise<boolean> {
+    try {
+      const { id, data } = await this.authGqlRedisService.verifyToken(
+        token,
+        process.env.PHONECHANGE_JWT_SECRET,
+      );
+
+      const actualToken = await this.redisHandler.getValue(
+        id,
+        'changephonetoken',
+      );
+
+      if (token === actualToken) {
+        const updateData: Partial<User> = {
+          phoneNumber: data,
+        };
+
+        await this.usersService.updateUser(updateData, id);
+
+        await this.redisHandler.deleteField(id, 'changephonetoken');
+        return true;
+      } else {
+        throw new Error('Link is not valid.');
+      }
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 
