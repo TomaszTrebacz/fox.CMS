@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
+  ChangePhoneNumberGQL,
   CurrentUserSQL,
   RegisterGQL,
+  SendChangePhoneEmailGQL,
   UpdateUserGQL
 } from 'src/app/core/graphql';
 import { User } from 'src/app/core/models';
@@ -28,7 +30,9 @@ export class UserService {
   constructor(
     private currentUserSQL: CurrentUserSQL,
     private registerGQL: RegisterGQL,
-    private updateUserGQL: UpdateUserGQL
+    private updateUserGQL: UpdateUserGQL,
+    private sendChangePhoneEmailGQL: SendChangePhoneEmailGQL,
+    private changePhoneNumberGQL: ChangePhoneNumberGQL
   ) {}
 
   getCurrentUser(): Observable<User> {
@@ -45,5 +49,17 @@ export class UserService {
 
   updateUser(input: UpdateUserForm): Observable<any> {
     return this.updateUserGQL.mutate({ input: input });
+  }
+
+  sendChangePhoneEmail(phoneNumber: string): Observable<any> {
+    return this.sendChangePhoneEmailGQL.mutate({
+      phoneNumber: phoneNumber
+    });
+  }
+
+  changePhoneNumber(token: string): Observable<any> {
+    return this.changePhoneNumberGQL.mutate({
+      token: token
+    });
   }
 }

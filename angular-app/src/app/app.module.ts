@@ -25,6 +25,8 @@ import { ChangePasswordComponent } from './modules/users/change-password/change-
 import { EditAccountComponent } from './modules/users/edit-account/edit-account.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import { ChangePhoneComponent } from './modules/users/change-phone/change-phone.component';
+import { ChangePhoneTokenComponent } from './modules/users/change-phone/change-phone-token/change-phone-token.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { SharedModule } from './shared/shared.module';
     ByEmailComponent,
     ChangePassComponent,
     ChangePasswordComponent,
-    EditAccountComponent
+    EditAccountComponent,
+    ChangePhoneComponent,
+    ChangePhoneTokenComponent
   ],
   imports: [
     AppRoutingModule,

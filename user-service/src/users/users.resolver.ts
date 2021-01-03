@@ -132,13 +132,17 @@ export class UsersResolver {
   @Auth()
   async sendChangePhoneEmail(
     @CurrentUser() user: User,
-    @Args('phoneNumber') phoneNumber: phoneNumberExists,
+    @Args('phoneNumber') phoneNumber: string,
   ): Promise<boolean> {
     try {
       const JWTpayload = {
         id: user.id,
-        code: phoneNumber,
+        data: phoneNumber,
       };
+
+      const { email } = await this.usersService.findOneById(user.id);
+
+      user = { ...user, email };
 
       const changePhoneToken = await this.authGqlRedisService.createJWT(
         JWTpayload,
@@ -152,18 +156,18 @@ export class UsersResolver {
 
       await this.redisHandler.setUser(user.id, changePhoneField);
 
-      const changePhoneLink = `${process.env.FRONTEND_URL}/users/change-phone/changePhone?token=${changePhoneToken}`;
+      const changePhoneLink = `${process.env.FRONTEND_URL}/users/account/change-phone/token?token=${changePhoneToken}`;
 
       const mail = {
+        mailAddress: email,
+        subject: `Change phone number`,
         greeting: `Hi ${user.firstName} ${user.lastName}!`,
         content: `We've heard that you want change your phone number.
                 Please click in this link: ${changePhoneLink}. 
                 Make sure you don't share this link publicly, because it's unique!`,
-        subject: `Forget password`,
-        mailAddress: user.email,
       };
 
-      this.mailService.sendMail(mail);
+      await this.mailService.sendMail(mail);
 
       return true;
     } catch (err) {

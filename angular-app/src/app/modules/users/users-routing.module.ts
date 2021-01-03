@@ -10,6 +10,8 @@ import { ChangePassComponent } from './reset-password/by-email/change-pass/chang
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { AuthGuard } from 'src/app/core/guards';
+import { ChangePhoneComponent } from './change-phone/change-phone.component';
+import { ChangePhoneTokenComponent } from './change-phone/change-phone-token/change-phone-token.component';
 
 const userRoutes: Routes = [
   {
@@ -59,6 +61,19 @@ const userRoutes: Routes = [
           {
             path: 'edit-account',
             component: EditAccountComponent
+          },
+          {
+            path: 'change-phone',
+            children: [
+              {
+                path: '',
+                component: ChangePhoneComponent
+              },
+              {
+                path: 'token',
+                component: ChangePhoneTokenComponent
+              }
+            ]
           }
         ]
       }
