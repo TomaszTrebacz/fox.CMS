@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { GraphQLFederationModule } from '@nestjs/graphql';
-import { DateScalar } from './shared/date.scalar';
+import { DateScalar } from './shared';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { TwilioModule } from 'nestjs-twilio';

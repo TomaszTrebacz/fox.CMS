@@ -5,8 +5,7 @@ import {
   ResolveReference,
   Mutation,
 } from '@nestjs/graphql';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from '../database/entities/user.entity';
 import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
@@ -17,9 +16,8 @@ import {
   Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { SmsService } from '../sms/sms.service';
-import { userRole } from '../shared/userRole.enum';
+import { userRole } from '../enums';
 import { MailService } from '../mail/mail.service';
-import { phoneNumberExists } from './validators/phoneNumberExists';
 
 @Resolver('User')
 export class UsersResolver {

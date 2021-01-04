@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
-import { DateScalar } from './shared/date.scalar';
+import { DateScalar } from './shared';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { CategoriesModule } from './categories/categories.module';
 import { RedisModule } from 'nestjs-redis';

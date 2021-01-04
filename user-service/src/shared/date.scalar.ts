@@ -3,14 +3,14 @@ import { Kind, ValueNode } from 'graphql';
 
 @Scalar('Date')
 export class DateScalar implements CustomScalar<string, Date> {
-  description = 'Date custom scalar type';
+  description = 'Date scalar type';
 
   parseValue(value: string): Date {
     return new Date(value);
   }
 
   serialize(value: Date): string {
-    return value.toISOString().split('T')[0];
+    return value.toISOString().split('T')[0]; // YYYY-MM-DD
   }
 
   parseLiteral(ast: ValueNode): Date {

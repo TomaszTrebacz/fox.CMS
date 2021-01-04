@@ -5,8 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
 import { MailModule } from '../mail/mail.module';
 import { SmsModule } from '../sms/sms.module';
-import { phoneNumberExists } from './validators/phoneNumberExists';
-import { emailExists } from './validators/emailExists';
+import { phoneNumberExists, emailExists } from '../validators';
 import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { User } from '../database/entities/user.entity';
 

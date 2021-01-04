@@ -4,11 +4,10 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginDto } from './dto/login.input';
 import { UsersService } from '../users/users.service';
-import { ChangeRoleDto } from './dto/change-role.dto';
-import * as argon2 from 'argon2';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
+import { comparePassword } from 'src/utils';
+import { LoginDto, ChangeRoleDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +24,7 @@ export class AuthService {
       throw new UnauthorizedException('Wrong email or password!');
     }
 
-    const passwordMatch = await this.comparePassword(
+    const passwordMatch = await comparePassword(
       loginCredentials.password,
       user.password,
     );
@@ -51,28 +50,6 @@ export class AuthService {
     }
 
     return true;
-  }
-
-  async hashPassword(password: string): Promise<string> {
-    try {
-      return await argon2.hash(password, {
-        type: argon2.argon2i,
-        hashLength: 40,
-      });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
-
-  async comparePassword(
-    rawPassword: string,
-    hashPassword: string,
-  ): Promise<boolean> {
-    try {
-      return await argon2.verify(hashPassword, rawPassword);
-    } catch (err) {
-      throw new Error(err);
-    }
   }
 
   lowercaseField(field: string) {

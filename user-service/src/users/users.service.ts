@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
 import { User } from '../database/entities/user.entity';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
+import { comparePassword, hashPassword } from 'src/utils';
 
 @Injectable()
 export class UsersService {
@@ -45,7 +46,7 @@ export class UsersService {
     user.phoneNumber = createData.phoneNumber;
 
     user.email = this.authService.lowercaseField(createData.email);
-    user.password = await this.authService.hashPassword(createData.password);
+    user.password = await hashPassword(createData.password);
 
     await this.usersRepository.save(user);
 
@@ -74,10 +75,7 @@ export class UsersService {
   async changePasswordByUser(id: string, password: string): Promise<boolean> {
     const user = await this.findOneById(id);
 
-    const passwordMatch = await this.authService.comparePassword(
-      password,
-      user.password,
-    );
+    const passwordMatch = await comparePassword(password, user.password);
 
     if (passwordMatch) {
       throw new Error(
@@ -85,7 +83,7 @@ export class UsersService {
       );
     }
 
-    const hashedPassword = await this.authService.hashPassword(password);
+    const hashedPassword = await hashPassword(password);
 
     const changed = await this.usersRepository.update(id, {
       password: hashedPassword,

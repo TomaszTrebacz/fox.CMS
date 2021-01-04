@@ -1,14 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.input';
 import { AuthenticationError } from 'apollo-server-core';
-import { ChangeRoleDto } from '../auth/dto/change-role.dto';
-import { ResetPasswordDto } from '../auth/dto/reset-password.dto';
 import { UsersService } from '../users/users.service';
 import { MailService } from '../mail/mail.service';
 import * as generator from 'generate-password';
 import { SmsService } from '../sms/sms.service';
-import { ChangePassByTokenDto } from './dto/changePassByToken.dto';
 import {
   AuthGqlRedisService,
   RedisHandlerService,
@@ -16,10 +12,14 @@ import {
   Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { User } from '../graphql';
-import { userRole } from '../shared/userRole.enum';
-import { ExtendedUserData } from './interfaces/extended-user-data.interface';
-import { RedisUser } from './interfaces/redis-user.interface';
-import { phoneNumberExists } from 'src/users/validators/phoneNumberExists';
+import { userRole } from '../enums';
+import { ExtendedUserData, RedisUser } from '../interfaces';
+import {
+  ChangePassByTokenDto,
+  ChangeRoleDto,
+  LoginDto,
+  ResetPasswordDto,
+} from './dto';
 
 @Resolver('Auth')
 export class AuthResolver {

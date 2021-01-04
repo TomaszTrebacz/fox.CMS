@@ -1,6 +1,6 @@
 import { IsEmpty, IsOptional, IsMobilePhone, Validate } from 'class-validator';
 import { UpdateUserInput } from '../../graphql';
-import { FieldLength } from '../validators/FieldLength';
+import { FieldLength } from '../../validators';
 
 export class UpdateUserDto extends UpdateUserInput {
   @IsEmpty()

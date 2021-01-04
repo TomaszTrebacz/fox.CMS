@@ -4,7 +4,7 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
-import { UsersService } from '../users.service';
+import { UsersService } from '../users/users.service';
 
 @ValidatorConstraint({ name: 'phoneNumberExists', async: true })
 @Injectable()

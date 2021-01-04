@@ -7,7 +7,7 @@ import {
   Args,
 } from '@nestjs/graphql';
 import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { userRole } from '../shared/userRole.enum';
+import { userRole } from '../enums';
 import {
   CreatePostInput,
   EditPostInput,

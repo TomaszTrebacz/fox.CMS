@@ -1,8 +1,6 @@
 import { IsEmpty, IsEmail, IsMobilePhone, Validate } from 'class-validator';
+import { emailExists, FieldLength, phoneNumberExists } from 'src/validators';
 import { CreateUserInput } from '../../graphql';
-import { emailExists } from '../validators/emailExists';
-import { FieldLength } from '../validators/FieldLength';
-import { phoneNumberExists } from '../validators/phoneNumberExists';
 
 export class CreateUserDto extends CreateUserInput {
   @IsEmpty()
