@@ -13,7 +13,7 @@ import {
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { User } from '../graphql';
 import { userRole } from '../enums';
-import { ExtendedUserData, RedisUser } from '../interfaces';
+import { ExtendedUser, RedisUser } from '../interfaces';
 import {
   ChangePassByTokenDto,
   ChangeRoleDto,
@@ -39,7 +39,7 @@ export class AuthResolver {
     const keys: string[] = ['role', 'count'];
     const redisUser = await this.redisHandler.getFields(partialUser.id, keys);
 
-    const user: ExtendedUserData = {
+    const user: ExtendedUser = {
       ...partialUser,
       ...redisUser,
       count: parseInt(redisUser.count),

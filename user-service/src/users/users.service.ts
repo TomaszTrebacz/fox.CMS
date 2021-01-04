@@ -2,16 +2,17 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
-import { User } from '../database/entities/user.entity';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { comparePassword, hashPassword } from 'src/utils';
+import { comparePassword, hashPassword, lowercase } from 'src/utils';
+import { User } from 'src/interfaces';
+import { UserEntity } from 'src/database/entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
-    @InjectRepository(User)
+    @InjectRepository(UserEntity)
     private usersRepository: Repository<User>,
     private redisHandler: RedisHandlerService,
   ) {}
@@ -25,10 +26,8 @@ export class UsersService {
   }
 
   findOneByEmail(email: string) {
-    const lowercaseEmail = this.authService.lowercaseField(email);
-
     return this.usersRepository.findOne({
-      where: { email: lowercaseEmail },
+      where: { email: lowercase(email) },
     });
   }
 
@@ -39,18 +38,15 @@ export class UsersService {
   }
 
   async createUser(createData: User): Promise<User> {
-    const user = new User();
+    const validatedUser = {
+      ...createData,
+      email: lowercase(createData.email),
+      password: await hashPassword(createData.password),
+    };
 
-    user.firstName = createData.firstName;
-    user.lastName = createData.lastName;
-    user.phoneNumber = createData.phoneNumber;
+    await this.usersRepository.save(validatedUser);
 
-    user.email = this.authService.lowercaseField(createData.email);
-    user.password = await hashPassword(createData.password);
-
-    await this.usersRepository.save(user);
-
-    return user;
+    return validatedUser;
   }
 
   async updateUser(updateData: Partial<User>, id: string): Promise<boolean> {

@@ -7,11 +7,11 @@ import { MailModule } from '../mail/mail.module';
 import { SmsModule } from '../sms/sms.module';
 import { phoneNumberExists, emailExists } from '../validators';
 import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { User } from '../database/entities/user.entity';
+import { UserEntity } from '../database/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([UserEntity]),
     forwardRef(() => AuthModule),
     MailModule,
     SmsModule,

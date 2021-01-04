@@ -6,7 +6,6 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { User } from '../database/entities/user.entity';
 import { UsersService } from './users.service';
 import { UserInputError } from 'apollo-server-core';
 import {
@@ -18,6 +17,7 @@ import {
 import { SmsService } from '../sms/sms.service';
 import { userRole } from '../enums';
 import { MailService } from '../mail/mail.service';
+import { User } from 'src/interfaces';
 
 @Resolver('User')
 export class UsersResolver {

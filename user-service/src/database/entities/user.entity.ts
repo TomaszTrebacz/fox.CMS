@@ -1,41 +1,48 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { User } from 'src/interfaces/user.interface';
+import { EntitySchema } from 'typeorm';
 
-@Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  firstName: string;
-
-  @Column()
-  lastName: string;
-
-  @Column()
-  password: string;
-
-  @Column({ unique: true })
-  phoneNumber: string;
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  created: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  updated: Date;
-}
+export const UserEntity = new EntitySchema<User>({
+  name: 'users',
+  columns: {
+    id: {
+      type: String,
+      primary: true,
+      generated: 'uuid',
+    },
+    email: {
+      type: String,
+      length: 50,
+      unique: true,
+    },
+    firstName: {
+      type: String,
+      nullable: false,
+      length: 50,
+    },
+    lastName: {
+      type: String,
+      nullable: false,
+      length: 50,
+    },
+    password: {
+      type: String,
+      nullable: false,
+      length: 128,
+    },
+    phoneNumber: {
+      type: String,
+      nullable: false,
+      length: 50,
+    },
+    created: {
+      type: Date,
+      createDate: true,
+      nullable: false,
+    },
+    updated: {
+      type: Date,
+      updateDate: true,
+      nullable: true,
+    },
+  },
+});

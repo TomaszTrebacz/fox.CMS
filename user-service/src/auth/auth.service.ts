@@ -51,8 +51,4 @@ export class AuthService {
 
     return true;
   }
-
-  lowercaseField(field: string) {
-    return field.toLowerCase();
-  }
 }
