@@ -9,24 +9,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { PanelModule } from 'primeng/panel';
 import { AdminModule } from '../modules/admin/admin.module';
-import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MenuModule } from 'primeng/menu';
-import { MenubarModule } from 'primeng/menubar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { FielderrorsComponent } from './fielderrors/fielderrors.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [FielderrorsComponent],
   imports: [
     CommonModule,
     MessageModule,
     BrowserAnimationsModule,
     MessagesModule,
     PanelModule,
-    MenuModule,
-    MenubarModule,
     InputTextModule,
     ButtonModule,
     AccordionModule,
@@ -34,17 +30,15 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ReactiveFormsModule,
     PasswordModule,
     PanelModule,
-    ToastModule,
     InputMaskModule,
     ProgressSpinnerModule,
-    ProgressBarModule
+    ProgressBarModule,
   ],
   exports: [
+    FielderrorsComponent,
     MessageModule,
     MessagesModule,
     InputTextModule,
-    MenuModule,
-    MenubarModule,
     BrowserAnimationsModule,
     ButtonModule,
     AccordionModule,
@@ -52,11 +46,10 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ReactiveFormsModule,
     PasswordModule,
     PanelModule,
-    ToastModule,
     InputMaskModule,
     PanelModule,
     ProgressSpinnerModule,
-    ProgressBarModule
-  ]
+    ProgressBarModule,
+  ],
 })
 export class SharedModule {}

@@ -7,15 +7,18 @@ import { GraphQLModule } from './graphql/config/graphql.module';
 import { ProgressBarService } from './services/progress-bar/progress-bar.service';
 import { MessageService } from 'primeng/api';
 import { ProgressBarInterceptor } from 'src/app/core/interceptors';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
-  declarations: [],
+  declarations: [ProgressBarComponent],
   imports: [
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    GraphQLModule
+    GraphQLModule,
+    ToastModule,
   ],
   providers: [
     MessageService,
@@ -23,8 +26,9 @@ import { ProgressBarInterceptor } from 'src/app/core/interceptors';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ProgressBarInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
+  exports: [ProgressBarComponent, ToastModule],
 })
 export class CoreModule {}
