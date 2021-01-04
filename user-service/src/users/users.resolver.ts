@@ -18,6 +18,7 @@ import { SmsService } from '../sms/sms.service';
 import { userRole } from '../enums';
 import { MailService } from '../mail/mail.service';
 import { User } from 'src/interfaces';
+import { Fragment } from 'src/utils';
 
 @Resolver('User')
 export class UsersResolver {
@@ -41,7 +42,7 @@ export class UsersResolver {
 
   @Query('currentUser')
   @Auth()
-  async currentUser(@CurrentUser() user: User) {
+  async currentUser(@CurrentUser() user: User): Promise<User> {
     return await this.usersService.findOneById(user.id);
   }
 
@@ -130,7 +131,7 @@ export class UsersResolver {
   @Auth()
   async sendChangePhoneEmail(
     @CurrentUser() user: User,
-    @Args('phoneNumber') phoneNumber: string,
+    @Args('phoneNumber') phoneNumber: Fragment<User, 'phoneNumber'>,
   ): Promise<boolean> {
     try {
       const JWTpayload = {

@@ -11,7 +11,7 @@ import {
   CurrentUser,
   Auth,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { User } from '../graphql';
+import { LoginResponse, TokenResponse, User } from '../graphql';
 import { userRole } from '../enums';
 import { ExtendedUser, RedisUser } from '../interfaces';
 import {
@@ -33,7 +33,9 @@ export class AuthResolver {
   ) {}
 
   @Query('login')
-  async login(@Args('loginCredentials') loginCredentials: LoginDto) {
+  async login(
+    @Args('loginCredentials') loginCredentials: LoginDto,
+  ): Promise<LoginResponse> {
     const partialUser = await this.authService.validateUser(loginCredentials);
 
     const keys: string[] = ['role', 'count'];
@@ -77,7 +79,9 @@ export class AuthResolver {
   }
 
   @Mutation('refreshToken')
-  async refreshToken(@Args('refreshToken') refreshToken: string): Promise<any> {
+  async refreshToken(
+    @Args('refreshToken') refreshToken: string,
+  ): Promise<TokenResponse> {
     try {
       const decodedJWT = await this.authGqlRedisService.verifyToken(
         refreshToken,

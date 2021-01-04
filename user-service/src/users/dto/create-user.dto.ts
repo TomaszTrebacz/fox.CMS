@@ -3,9 +3,6 @@ import { emailExists, FieldLength, phoneNumberExists } from 'src/validators';
 import { CreateUserInput } from '../../graphql';
 
 export class CreateUserDto extends CreateUserInput {
-  @IsEmpty()
-  id: string;
-
   @IsEmail()
   @Validate(FieldLength, [6, 62])
   @Validate(emailExists)
@@ -23,10 +20,4 @@ export class CreateUserDto extends CreateUserInput {
   @IsMobilePhone()
   @Validate(phoneNumberExists)
   phoneNumber: string;
-
-  @IsEmpty()
-  created: Date;
-
-  @IsEmpty()
-  updated: Date;
 }

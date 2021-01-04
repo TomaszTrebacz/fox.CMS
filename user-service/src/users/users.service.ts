@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { comparePassword, hashPassword, lowercase } from 'src/utils';
+import { comparePassword, Fragment, hashPassword, lowercase } from 'src/utils';
 import { User } from 'src/interfaces';
 import { UserEntity } from 'src/database/entities/user.entity';
 
@@ -21,32 +21,37 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  findOneById(id: string): Promise<User> {
-    return this.usersRepository.findOne(id);
+  async findOneById(id: string): Promise<User> {
+    return await this.usersRepository.findOne(id);
   }
 
-  findOneByEmail(email: string) {
-    return this.usersRepository.findOne({
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOne({
       where: { email: lowercase(email) },
     });
   }
 
-  findOneByPhoneNumber(phoneNumber: string) {
-    return this.usersRepository.findOne({
+  async findOneByPhoneNumber(phoneNumber: string): Promise<User> {
+    return await this.usersRepository.findOne({
       where: { phoneNumber: phoneNumber },
     });
   }
 
-  async createUser(createData: User): Promise<User> {
+  async createUser(
+    createData: Fragment<
+      User,
+      'email' | 'firstName' | 'lastName' | 'password' | 'phoneNumber'
+    >,
+  ): Promise<User> {
     const validatedUser = {
       ...createData,
       email: lowercase(createData.email),
       password: await hashPassword(createData.password),
     };
 
-    await this.usersRepository.save(validatedUser);
+    const createdUser = await this.usersRepository.save(validatedUser);
 
-    return validatedUser;
+    return createdUser;
   }
 
   async updateUser(updateData: Partial<User>, id: string): Promise<boolean> {
@@ -58,7 +63,7 @@ export class UsersService {
     return true;
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<boolean> {
     const deleted = await this.usersRepository.delete(id);
 
     if (deleted.affected == 1) {
