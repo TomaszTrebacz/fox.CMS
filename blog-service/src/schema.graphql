@@ -49,17 +49,17 @@ input EditCategoryInput {
 input CreatePostInput {
   title: String!
   text: String!
-  category: ID!
-  userId: String!
+  category: Int!
+  userId: ID!
 }
 
 input EditPostInput {
-  id: ID!
+  id: Int!
   title: String!
   text: String!
 }
 
 input ChangeCategoryPostInput {
-  id: ID!
-  category: ID!
+  id: Int!
+  category: Int!
 }

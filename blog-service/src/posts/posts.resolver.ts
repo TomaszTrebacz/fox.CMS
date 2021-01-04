@@ -8,13 +8,11 @@ import {
 } from '@nestjs/graphql';
 import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { userRole } from '../enums';
-import {
-  CreatePostInput,
-  EditPostInput,
-  ChangeCategoryPostInput,
-} from '../graphql';
+import { ChangeCategoryPostInput } from '../graphql';
 import { Post } from '../entities/post.entity';
 import { PostsService } from './posts.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { EditPostDto } from './dto/edit-post.dto';
 
 @Resolver('Post')
 export class PostsResolver {
@@ -31,9 +29,8 @@ export class PostsResolver {
   }
 
   @Mutation('createPost')
-  @Auth(userRole.ADMIN, userRole.ROOT)
   async createPost(
-    @Args('createPostInput') createData: CreatePostInput,
+    @Args('createPostInput') createData: CreatePostDto,
   ): Promise<Post> {
     const createdPost = await this.postsService.createPost(createData);
 
@@ -43,7 +40,7 @@ export class PostsResolver {
   @Mutation('editPost')
   @Auth(userRole.ADMIN, userRole.ROOT)
   async editPost(
-    @Args('editPostInput') editData: EditPostInput,
+    @Args('editPostInput') editData: EditPostDto,
   ): Promise<boolean> {
     try {
       await this.postsService.editPost(editData);

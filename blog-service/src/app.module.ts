@@ -16,6 +16,7 @@ import {
   jwtConfig,
   redisConfig,
 } from './config';
+import { categoryExists, FieldLength } from './validators';
 
 // for testing purposes app can manage different env files
 const ENV = process.env.NODE_ENV;
@@ -45,6 +46,6 @@ const ENV = process.env.NODE_ENV;
     AuthGqlRedisModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DateScalar],
+  providers: [AppService, DateScalar, FieldLength],
 })
 export class AppModule {}

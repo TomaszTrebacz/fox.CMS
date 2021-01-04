@@ -1,7 +1,6 @@
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { ValidationError } from 'class-validator';
-import { useContainer } from 'typeorm';
+import { useContainer, ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -22,7 +21,7 @@ async function bootstrap() {
     }),
   );
 
-  // using service container allow inject dependencies in my custom validators
+  // using service container allow inject dependencies into validators
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(process.env.APP_PORT);

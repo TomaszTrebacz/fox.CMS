@@ -1,5 +1,4 @@
 import { MinLength, MaxLength, IsEmpty, IsNumber } from 'class-validator';
-import { Post } from '../../entities/post.entity';
 import { EditCategoryInput } from '../../graphql';
 
 export class EditCategoryDto extends EditCategoryInput {
@@ -9,7 +8,4 @@ export class EditCategoryDto extends EditCategoryInput {
   @MinLength(3)
   @MaxLength(20)
   name: string;
-
-  @IsEmpty()
-  posts: Post[];
 }

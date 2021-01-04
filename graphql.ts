@@ -7,8 +7,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export class ChangeCategoryPostInput {
-    id: string;
-    category: string;
+    id: number;
+    category: number;
 }
 
 export class CreateCategoryInput {
@@ -18,7 +18,7 @@ export class CreateCategoryInput {
 export class CreatePostInput {
     title: string;
     text: string;
-    category: string;
+    category: number;
     userId: string;
 }
 
@@ -28,7 +28,7 @@ export class EditCategoryInput {
 }
 
 export class EditPostInput {
-    id: string;
+    id: number;
     title: string;
     text: string;
 }

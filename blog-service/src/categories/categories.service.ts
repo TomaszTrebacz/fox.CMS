@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../entities/category.entity';
 import { Repository } from 'typeorm';
+import { Fragment } from 'src/utils/fragment.type';
 
 @Injectable()
 export class CategoriesService {
@@ -10,15 +11,17 @@ export class CategoriesService {
     private CategoriesService: Repository<Category>,
   ) {}
 
-  findAll(): Promise<Category[]> {
-    return this.CategoriesService.find({ relations: ['posts'] });
+  async findAll(): Promise<Category[]> {
+    return await this.CategoriesService.find({ relations: ['posts'] });
   }
 
-  findOne(id: number) {
-    return this.CategoriesService.findOne(id, { relations: ['posts'] });
+  async findOne(id: number): Promise<Category> {
+    return await this.CategoriesService.findOne(id, { relations: ['posts'] });
   }
 
-  async createCategory(createData: Category): Promise<Category> {
+  async createCategory(
+    createData: Fragment<Category, 'name'>,
+  ): Promise<Category> {
     try {
       const category = await this.CategoriesService.save(createData);
       return category;
@@ -27,7 +30,9 @@ export class CategoriesService {
     }
   }
 
-  async editCategory(editData: Category): Promise<boolean> {
+  async editCategory(
+    editData: Fragment<Category, 'id' | 'name'>,
+  ): Promise<boolean> {
     try {
       await this.CategoriesService.update(editData.id, {
         name: editData.name,

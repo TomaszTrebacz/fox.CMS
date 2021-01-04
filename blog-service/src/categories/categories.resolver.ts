@@ -11,13 +11,13 @@ export class CategoriesResolver {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Query('categories')
-  findAll() {
-    return this.categoriesService.findAll();
+  async findAll(): Promise<Category[]> {
+    return await this.categoriesService.findAll();
   }
 
   @Query('category')
-  findOne(@Args('id') id: number) {
-    return this.categoriesService.findOne(id);
+  async findOne(@Args('id') id: number): Promise<Category> {
+    return await this.categoriesService.findOne(id);
   }
 
   @Mutation('createCategory')

@@ -20,6 +20,7 @@ import {
   redisConfig,
   twilioConfig,
 } from './config';
+import { FieldLength } from './validators';
 
 // for testing purposes app can manage different env files
 const ENV = process.env.NODE_ENV;
@@ -55,6 +56,6 @@ const ENV = process.env.NODE_ENV;
     SmsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DateScalar, ConfigService],
+  providers: [AppService, DateScalar, ConfigService, FieldLength],
 })
 export class AppModule {}
