@@ -21,8 +21,17 @@ export class FieldLength implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `${args.property.toUpperCase()} should be from ${
-      args.constraints[0]
-    } to ${args.constraints[1]} long!;`;
+    switch (args.constraints.length) {
+      case 1:
+        return `${args.property.toUpperCase()} should be minimal ${
+          args.constraints[0]
+        } long!;`;
+        break;
+      case 2:
+        return `${args.property.toUpperCase()} should be from ${
+          args.constraints[0]
+        } to ${args.constraints[1]} long!;`;
+        break;
+    }
   }
 }
