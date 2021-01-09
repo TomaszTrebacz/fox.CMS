@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
-import { Post } from '../../../models/post.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -1,0 +1,10 @@
+<div *ngIf="(category | async) as category">
+    {{ category.name }}
+
+   <div *ngFor="let post of category.posts">
+       <p>{{ post.title }}</p>
+           <p>{{ post.text }} </p>
+      
+    </div>
+</div>
+

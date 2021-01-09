@@ -9,9 +9,10 @@ import { PostComponent } from './post/post.component';
 import { BlogRoutingModule } from './blog-routing.module';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
+import { CategoryComponent } from './category/category.component';
 
 @NgModule({
-  declarations: [BlogComponent, PostComponent],
+  declarations: [BlogComponent, PostComponent, CategoryComponent],
   imports: [
     CommonModule,
     BlogRoutingModule,
@@ -21,6 +22,6 @@ import { ButtonModule } from 'primeng/button';
     PanelModule,
     ButtonModule,
   ],
-  exports: [BlogComponent, PostComponent],
+  exports: [BlogComponent, PostComponent, CategoryComponent],
 })
 export class BlogModule {}
