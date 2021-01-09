@@ -16,9 +16,6 @@ export class AllPostsGQL extends Query<ResponseInterface> {
         id
         title
         text
-        category {
-          name
-        }
         user {
           firstName
           lastName

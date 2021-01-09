@@ -13,6 +13,11 @@ export class CategoryGQL extends Query<any> {
           id
           title
           text
+          user {
+            id
+            firstName
+            lastName
+          }
         }
       }
     }

@@ -14,9 +14,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { FielderrorsComponent } from './fielderrors/fielderrors.component';
+import { DisplayPostsComponent } from './display-posts/display-posts.component';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
-  declarations: [FielderrorsComponent],
+  declarations: [FielderrorsComponent, DisplayPostsComponent],
   imports: [
     CommonModule,
     MessageModule,
@@ -29,10 +31,10 @@ import { FielderrorsComponent } from './fielderrors/fielderrors.component';
     FormsModule,
     ReactiveFormsModule,
     PasswordModule,
-    PanelModule,
     InputMaskModule,
     ProgressSpinnerModule,
     ProgressBarModule,
+    CardModule,
   ],
   exports: [
     FielderrorsComponent,
@@ -45,11 +47,12 @@ import { FielderrorsComponent } from './fielderrors/fielderrors.component';
     FormsModule,
     ReactiveFormsModule,
     PasswordModule,
-    PanelModule,
     InputMaskModule,
-    PanelModule,
     ProgressSpinnerModule,
     ProgressBarModule,
+    CardModule,
+    PanelModule,
+    DisplayPostsComponent,
   ],
 })
 export class SharedModule {}

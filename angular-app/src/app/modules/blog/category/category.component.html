@@ -1,10 +1,10 @@
 <div *ngIf="(category | async) as category">
-    {{ category.name }}
+<div style="padding-bottom: 20px;">
+    <button pButton pRipple type="button" label="Category: {{ category.name }}" icon="pi pi-tag" class="p-button-rounded p-button-info p-button-outlined"></button> 
+</div>
+    <div class="p-grid">
 
-   <div *ngFor="let post of category.posts">
-       <p>{{ post.title }}</p>
-           <p>{{ post.text }} </p>
-      
-    </div>
+    <app-display-posts *ngFor="let post of category.posts" [post]="post"></app-display-posts>
+
 </div>
 

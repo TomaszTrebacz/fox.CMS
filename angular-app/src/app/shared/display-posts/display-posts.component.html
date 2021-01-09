@@ -1,0 +1,14 @@
+    <div class="p-col">
+      <p-card 
+      header="{{ post.title }}" 
+      subheader="by {{ post.user.firstName }} {{ post.user.lastName }}" 
+      [style]="{width: '360px'}" 
+      styleClass="p-card-shadow"
+    >
+      <p-header>
+          <img alt="Card" src="https://www.primefaces.org/primeng/showcase/assets/showcase/images/usercard.png">
+      </p-header>
+      <p>{{ post.text }}</p>
+    </p-card>
+    </div>
+
