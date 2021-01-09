@@ -1,3 +1,12 @@
 <p-menubar [model]="items">
-    <button pButton type="button" label="Log out"  (click)="logout()"></button>
+    <div *ngIf="user; else notLogged">
+        <button pButton pRipple type="button" label="Account" icon="pi pi-user" class="p-button-rounded p-button-secondary p-button-text" (click)="toAccount()"></button>
+        <button *ngIf="user.role !== 'user'"pButton pRipple type="button" label="Worboard" icon="pi pi-bookmark" class="p-button-rounded p-button-text p-button-text" (click)="toWorkboard()"></button>
+        <button pButton pRipple type="button" label="Log out" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="logout()"></button>
+    </div>
+      
+    <ng-template #notLogged>
+        <button pButton pRipple style="margin-right: 10px;" label="Sign in" icon="pi pi-sign-in" (click)="logout()"></button>
+        <button pButton pRipple label="Sign up" icon="pi pi-user-plus" (click)="logout()"></button>
+    </ng-template>
 </p-menubar>

@@ -1,0 +1,14 @@
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.header img {
+  margin-bottom: 4px;
+  margin-right: 3px;
+}
+
+.logo {
+  font-family: "Advent Pro", sans-serif;
+  font-size: 24px;
+}

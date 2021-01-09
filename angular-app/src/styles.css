@@ -9,34 +9,3 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-
-.header {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  font-family: "Advent Pro", sans-serif;
-  font-size: 24px;
-}
-
-/*
-.ui-menubar {
-  border: 1px solid #aed0ea !important;
-  background: #d25627 50% 50% repeat-x !important;
-  font-weight: bolder !important;
-  color: pink;
-}
-
-.p-menuitem {
-  color: pink;
-}
-
-.p-menu-list {
-  color: pink;
-}
-
-.p-menuitem-text {
-  color: pink;
-}
-*/

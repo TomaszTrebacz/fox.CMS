@@ -10,7 +10,7 @@ import {
   LogoutGQL,
   ResetPasswordGQL,
   SendChangePassEmailGQL,
-  SendCodePhoneGQL
+  SendCodePhoneGQL,
 } from 'src/app/core/graphql';
 import { AccessToken, RefreshToken, UserStorage } from 'src/app/core/storage';
 
@@ -35,7 +35,7 @@ export interface changePassByTokenForm {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private userSubject: BehaviorSubject<any>;
@@ -67,13 +67,13 @@ export class AuthService {
   login(credentials: LoginForm) {
     return this.loginGQL
       .fetch({
-        input: credentials
+        input: credentials,
       })
       .pipe(
-        map(result => {
+        map((result) => {
           const user = {
             ...result.data.login.user,
-            role: result.data.login.role
+            role: result.data.login.role,
           };
 
           this.accessToken = result.data.login.accessToken;
@@ -87,7 +87,7 @@ export class AuthService {
 
   logout() {
     const user = this.userValue;
-    this.logoutGQL.mutate({ id: user.id }).subscribe();
+    this.logoutGQL.mutate({ id: user.id });
 
     localStorage.removeItem('accesstoken');
     localStorage.removeItem('refreshtoken');

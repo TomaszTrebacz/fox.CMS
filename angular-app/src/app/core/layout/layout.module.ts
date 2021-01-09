@@ -8,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TopComponent } from './top/top.component';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [FooterComponent, MenuComponent, TopComponent],
@@ -18,6 +20,8 @@ import { TopComponent } from './top/top.component';
     ButtonModule,
     RippleModule,
     TabMenuModule,
+    SplitButtonModule,
+    SharedModule,
   ],
   exports: [FooterComponent, MenuComponent, TopComponent],
 })

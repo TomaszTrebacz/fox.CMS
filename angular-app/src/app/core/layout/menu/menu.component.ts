@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { Location } from '@angular/common';
+import { userRole } from '../../enums';
+import { User } from '../../models';
 
 @Component({
   selector: 'app-menu',
@@ -12,50 +14,34 @@ import { Location } from '@angular/common';
 export class MenuComponent implements OnInit {
   items: MenuItem[];
   activeItem: MenuItem;
+  user: User | any;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private location: Location
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
+    this.user = this.authService.userValue;
+
     this.items = [
       {
         label: 'Home',
         icon: 'pi pi-fw pi-home',
         url: '/',
       },
-      {
-        label: 'Blog',
-        icon: 'pi pi-fw pi-pencil',
-        url: 'blog',
-      },
-      {
-        label: 'Login',
-        icon: 'pi pi-fw pi-key',
-        url: '/users/login',
-      },
-      {
-        label: 'Register',
-        icon: 'pi pi-fw pi-key',
-        url: '/users/register',
-      },
     ];
-
-    // highlight menu item
-    const route = this.items.find((x) => x.url === this.location.path());
-
-    if (route === undefined) {
-      this.activeItem = this.items[0];
-    } else {
-      this.activeItem = route;
-    }
   }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/users/login']);
+  }
+
+  toAccount() {
+    this.router.navigate(['users/account']);
+  }
+
+  toWorkboard() {
+    if (this.user.role === userRole.ADMIN || this.user.role === userRole.ROOT) {
+      this.router.navigate(['admin/workboard']);
+    }
   }
 }
