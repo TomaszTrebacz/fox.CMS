@@ -8,7 +8,7 @@ import { PostsService } from 'src/app/core/services/posts/posts.service';
 @Component({
   selector: 'app-blog',
   templateUrl: './blog.component.html',
-  styleUrls: ['./blog.component.css']
+  styleUrls: ['./blog.component.css'],
 })
 export class BlogComponent implements OnInit {
   posts: Observable<Post[]>;
@@ -20,9 +20,7 @@ export class BlogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.posts = this.postsservice.findAll().pipe(map(result => result));
-    this.categories = this.categoriesService
-      .findAll()
-      .pipe(map(result => result));
+    this.posts = this.postsservice.findAll();
+    this.categories = this.categoriesService.findAll();
   }
 }
