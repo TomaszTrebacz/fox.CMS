@@ -2,24 +2,22 @@ import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
 import { Post } from '../../../models/post.interface';
 
-export interface ResponseInterface {
-  posts: Post[];
-}
-
 @Injectable({
   providedIn: 'root',
 })
-export class AllPostsGQL extends Query<ResponseInterface> {
+export class PostGQL extends Query<any> {
   document = gql`
-    query {
-      posts {
+    query($id: Int!) {
+      post(id: $id) {
         id
         title
         text
+        created
         category {
           name
         }
         user {
+          id
           firstName
           lastName
         }

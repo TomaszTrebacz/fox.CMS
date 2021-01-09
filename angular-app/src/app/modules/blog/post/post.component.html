@@ -1,0 +1,9 @@
+    <p-panel *ngIf="(post | async) as post">
+        <p-header>
+            {{ post.title }}
+        </p-header>
+        {{ post.text }}
+        <p-footer>
+            Author: {{ post.user.firstName }} {{ post.user.lastName }} | Category: {{ post.category.name}} | Date: {{ post.created }}
+        </p-footer>
+    </p-panel>

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BlogModule } from './modules/blog/blog/blog.module';
 import { UsersModule } from './modules/users/users.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { CoreModule } from './core/core.module';
@@ -9,6 +8,7 @@ import { LayoutModule } from './core/layout/layout.module';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
+import { BlogModule } from './modules/blog/blog.module';
 
 @NgModule({
   declarations: [AppComponent],

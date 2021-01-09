@@ -23,6 +23,11 @@ export class PostsResolver {
     return this.postsService.findAll();
   }
 
+  @Query('post')
+  async findOne(@Args('id') id: number): Promise<Post> {
+    return this.postsService.findOne(id);
+  }
+
   @ResolveProperty('user')
   getUser(@Parent() post: Post) {
     return { __typename: 'User', id: post.userId };
