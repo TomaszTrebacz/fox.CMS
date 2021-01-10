@@ -18,6 +18,10 @@ export class PostsService {
     return this.PostsRepository.findOneOrFail(id, { relations: ['category'] });
   }
 
+  findUserPosts(id: string): Promise<Post[]> {
+    return this.PostsRepository.find({ where: { userId: id } });
+  }
+
   async createPost(createData): Promise<Post> {
     const post = await this.PostsRepository.save(createData);
 

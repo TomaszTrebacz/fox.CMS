@@ -6,7 +6,7 @@
     </div>
       
     <ng-template #notLogged>
-        <button pButton pRipple style="margin-right: 10px;" label="Sign in" icon="pi pi-sign-in" (click)="logout()"></button>
-        <button pButton pRipple label="Sign up" icon="pi pi-user-plus" (click)="logout()"></button>
+        <button pButton pRipple style="margin-right: 10px;" label="Sign in" icon="pi pi-sign-in" routerLink='/users/login'></button>
+        <button pButton pRipple label="Sign up" icon="pi pi-user-plus" routerLink='/users/register'></button>
     </ng-template>
 </p-menubar>

@@ -5,6 +5,7 @@ import {
   Parent,
   Mutation,
   Args,
+  ResolveReference,
 } from '@nestjs/graphql';
 import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { userRole } from '../enums';
@@ -26,6 +27,11 @@ export class PostsResolver {
   @Query('post')
   async findOne(@Args('id') id: number): Promise<Post> {
     return this.postsService.findOne(id);
+  }
+
+  @Query('userPosts')
+  async findUserPosts(@Args('id') id: string): Promise<Post[]> {
+    return this.postsService.findUserPosts(id);
   }
 
   @ResolveProperty('user')

@@ -12,6 +12,7 @@ import { EditAccountComponent } from './edit-account/edit-account.component';
 import { AuthGuard } from 'src/app/core/guards';
 import { ChangePhoneComponent } from './change-phone/change-phone.component';
 import { ChangePhoneTokenComponent } from './change-phone/change-phone-token/change-phone-token.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const userRoutes: Routes = [
   {
@@ -19,32 +20,36 @@ const userRoutes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
       },
       {
         path: 'register',
-        component: RegisterComponent
+        component: RegisterComponent,
       },
       {
         path: 'confirm-account',
-        component: ConfirmAccountComponent
+        component: ConfirmAccountComponent,
       },
       {
         path: 'resend-confirmLink',
-        component: ResendConfirmLinkComponent
+        component: ResendConfirmLinkComponent,
       },
       {
         path: 'reset-password',
         children: [
           {
             path: '',
-            component: ResetPasswordComponent
+            component: ResetPasswordComponent,
           },
           {
             path: 'changePass',
-            component: ChangePassComponent
-          }
-        ]
+            component: ChangePassComponent,
+          },
+        ],
+      },
+      {
+        path: 'profile/:id',
+        component: ProfileComponent,
       },
       {
         path: 'account',
@@ -52,37 +57,37 @@ const userRoutes: Routes = [
         children: [
           {
             path: '',
-            component: AccountComponent
+            component: AccountComponent,
           },
           {
             path: 'change-password',
-            component: ChangePasswordComponent
+            component: ChangePasswordComponent,
           },
           {
             path: 'edit-account',
-            component: EditAccountComponent
+            component: EditAccountComponent,
           },
           {
             path: 'change-phone',
             children: [
               {
                 path: '',
-                component: ChangePhoneComponent
+                component: ChangePhoneComponent,
               },
               {
                 path: 'token',
-                component: ChangePhoneTokenComponent
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
+                component: ChangePhoneTokenComponent,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(userRoutes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class UsersRoutingModule {}

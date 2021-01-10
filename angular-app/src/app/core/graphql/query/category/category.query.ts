@@ -8,6 +8,7 @@ export class CategoryGQL extends Query<any> {
   document = gql`
     query($id: Int!) {
       category(id: $id) {
+        id
         name
         posts {
           id

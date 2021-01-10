@@ -23,6 +23,7 @@ extend type User @key(fields: "id") {
 
 extend type Query {
   post(id: Int!): Post
+  userPosts(id: String!): [Post]
   posts: [Post]
   categories: [Category]
   category(id: Int): Category

@@ -18,6 +18,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { ChangePhoneComponent } from './change-phone/change-phone.component';
 import { ChangePhoneTokenComponent } from './change-phone/change-phone-token/change-phone-token.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ChangePhoneTokenComponent } from './change-phone/change-phone-token/cha
     EditAccountComponent,
     ChangePhoneComponent,
     ChangePhoneTokenComponent,
+    ProfileComponent,
   ],
   imports: [CommonModule, UsersRoutingModule, SharedModule],
   exports: [

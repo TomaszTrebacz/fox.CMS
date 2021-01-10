@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class DisplayPostsComponent implements OnInit {
   @Input() post;
+
   constructor() {}
 
   ngOnInit(): void {}

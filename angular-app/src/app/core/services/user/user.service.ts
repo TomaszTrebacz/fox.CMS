@@ -6,7 +6,8 @@ import {
   CurrentUserSQL,
   RegisterGQL,
   SendChangePhoneEmailGQL,
-  UpdateUserGQL
+  UpdateUserGQL,
+  UserGQL,
 } from 'src/app/core/graphql';
 import { User } from 'src/app/core/models';
 
@@ -24,10 +25,11 @@ export interface UpdateUserForm {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   constructor(
+    private userGQL: UserGQL,
     private currentUserSQL: CurrentUserSQL,
     private registerGQL: RegisterGQL,
     private updateUserGQL: UpdateUserGQL,
@@ -35,15 +37,21 @@ export class UserService {
     private changePhoneNumberGQL: ChangePhoneNumberGQL
   ) {}
 
+  getUser(id: string): Observable<User> {
+    return this.userGQL
+      .fetch({ id: id })
+      .pipe(map((result) => result.data.user));
+  }
+
   getCurrentUser(): Observable<User> {
     return this.currentUserSQL
       .fetch()
-      .pipe(map(result => result.data.currentUser));
+      .pipe(map((result) => result.data.currentUser));
   }
 
   register(credentials: RegisterForm): Observable<any> {
     return this.registerGQL.mutate({
-      input: credentials
+      input: credentials,
     });
   }
 
@@ -53,13 +61,13 @@ export class UserService {
 
   sendChangePhoneEmail(phoneNumber: string): Observable<any> {
     return this.sendChangePhoneEmailGQL.mutate({
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
     });
   }
 
   changePhoneNumber(token: string): Observable<any> {
     return this.changePhoneNumberGQL.mutate({
-      token: token
+      token: token,
     });
   }
 }

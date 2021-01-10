@@ -36,7 +36,7 @@ export class UsersResolver {
   }
 
   @Query('user')
-  getUser(@Args('id') id: string) {
+  async getUser(@Args('id') id: string) {
     return this.usersService.findOneById(id);
   }
 

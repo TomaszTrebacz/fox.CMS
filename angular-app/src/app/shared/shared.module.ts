@@ -16,6 +16,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { FielderrorsComponent } from './fielderrors/fielderrors.component';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
 import { CardModule } from 'primeng/card';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [FielderrorsComponent, DisplayPostsComponent],
@@ -35,6 +36,7 @@ import { CardModule } from 'primeng/card';
     ProgressSpinnerModule,
     ProgressBarModule,
     CardModule,
+    RouterModule,
   ],
   exports: [
     FielderrorsComponent,
@@ -53,6 +55,7 @@ import { CardModule } from 'primeng/card';
     CardModule,
     PanelModule,
     DisplayPostsComponent,
+    RouterModule,
   ],
 })
 export class SharedModule {}
