@@ -4,9 +4,7 @@
         <div class="ui-g">
             <label for="phoneNumber" class="ui-g-12 ui-md-2">Phone Number</label>
             <p-inputMask pInputMask id="phoneNumber" formControlName="phoneNumber" mask="+99999999999" placeholder="+99999999999"></p-inputMask>
-            <div class="ui-g-12 ui-md-5">
-                <app-fielderrors [form]="phoneForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
-            </div>
+            <app-fielderrors [form]="phoneForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
         </div>
         <button pButton type="button" label="Click" [disabled]="!phoneForm.valid" (click)="onPhoneFormSubmit()"></button>
         <div class="ui-g">
