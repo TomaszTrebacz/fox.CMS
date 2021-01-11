@@ -36,7 +36,7 @@ export class MenuComponent implements OnInit {
   }
 
   toAccount() {
-    this.router.navigate(['users/account']);
+    this.router.navigate(['account']);
   }
 
   toWorkboard() {

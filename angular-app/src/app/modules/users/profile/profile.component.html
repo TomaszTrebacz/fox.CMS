@@ -1,4 +1,4 @@
-<div *ngIf="(user | async) as user">
+<div *ngIf="(user | async) as user" style="padding-bottom: 10px;">
 <button pButton pRipple type="button" label="User: {{ user.firstName }} {{ user.lastName }}"icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined"></button>
 </div>
 <app-display-posts *ngFor="let post of posts | async" [post]="post"></app-display-posts>

@@ -1,18 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AccountComponent } from './account/account.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ResendConfirmLinkComponent } from './confirm-account/resend-confirm-link/resend-confirm-link.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ChangePassComponent } from './reset-password/by-email/change-pass/change-pass.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
-import { EditAccountComponent } from './edit-account/edit-account.component';
-import { AuthGuard } from 'src/app/core/guards';
-import { ChangePhoneComponent } from './change-phone/change-phone.component';
-import { ChangePhoneTokenComponent } from './change-phone/change-phone-token/change-phone-token.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ConfirmationCodeComponent } from './reset-password/by-phone/confirmation-code/confirmation-code.component';
 
 const userRoutes: Routes = [
   {
@@ -42,6 +37,10 @@ const userRoutes: Routes = [
             component: ResetPasswordComponent,
           },
           {
+            path: 'code',
+            component: ConfirmationCodeComponent,
+          },
+          {
             path: 'changePass',
             component: ChangePassComponent,
           },
@@ -50,37 +49,6 @@ const userRoutes: Routes = [
       {
         path: 'profile/:id',
         component: ProfileComponent,
-      },
-      {
-        path: 'account',
-        canActivate: [AuthGuard],
-        children: [
-          {
-            path: '',
-            component: AccountComponent,
-          },
-          {
-            path: 'change-password',
-            component: ChangePasswordComponent,
-          },
-          {
-            path: 'edit-account',
-            component: EditAccountComponent,
-          },
-          {
-            path: 'change-phone',
-            children: [
-              {
-                path: '',
-                component: ChangePhoneComponent,
-              },
-              {
-                path: 'token',
-                component: ChangePhoneTokenComponent,
-              },
-            ],
-          },
-        ],
       },
     ],
   },

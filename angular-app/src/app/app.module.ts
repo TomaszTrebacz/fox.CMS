@@ -9,6 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { BlogModule } from './modules/blog/blog.module';
+import { AccountModule } from './modules/account/account.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,6 +19,7 @@ import { BlogModule } from './modules/blog/blog.module';
     CoreModule,
     BlogModule,
     UsersModule,
+    AccountModule,
     AdminModule,
     MessageModule,
     MessagesModule,
