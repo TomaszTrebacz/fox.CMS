@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { userRole } from 'src/app/core/enums';
 import { AuthGuard } from 'src/app/core/guards';
+import { CreatePostComponent } from './create-post/create-post.component';
 import { WorkboardComponent } from './workboard/workboard.component';
 
 const adminRoutes: Routes = [
@@ -12,14 +13,20 @@ const adminRoutes: Routes = [
         path: 'workboard',
         component: WorkboardComponent,
         canActivate: [AuthGuard],
-        data: { roles: [userRole.ADMIN, userRole.ROOT] }
-      }
-    ]
-  }
+        data: { roles: [userRole.ADMIN, userRole.ROOT] },
+      },
+      {
+        path: 'create-post',
+        component: CreatePostComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [userRole.ADMIN, userRole.ROOT] },
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AdminRoutingModule {}

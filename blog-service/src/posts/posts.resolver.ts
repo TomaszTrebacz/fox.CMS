@@ -7,9 +7,9 @@ import {
   Args,
   ResolveReference,
 } from '@nestjs/graphql';
-import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
+import { Auth, CurrentUser } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { userRole } from '../enums';
-import { ChangeCategoryPostInput } from '../graphql';
+import { ChangeCategoryPostInput, User } from '../graphql';
 import { Post } from '../entities/post.entity';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -39,11 +39,18 @@ export class PostsResolver {
     return { __typename: 'User', id: post.userId };
   }
 
+  @Auth(userRole.ADMIN, userRole.ROOT)
   @Mutation('createPost')
   async createPost(
+    @CurrentUser() user: User,
     @Args('createPostInput') createData: CreatePostDto,
   ): Promise<Post> {
-    const createdPost = await this.postsService.createPost(createData);
+    const data = {
+      ...createData,
+      userId: user.id,
+    };
+
+    const createdPost = await this.postsService.createPost(data);
 
     return createdPost;
   }

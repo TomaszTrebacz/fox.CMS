@@ -8,6 +8,7 @@ import { EditAccountComponent } from './edit-account/edit-account.component';
 import { ChangePhoneComponent } from './change-phone/change-phone.component';
 import { ChangePhoneTokenComponent } from './change-phone-token/change-phone-token.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ChangePhoneComponent,
     ChangePhoneTokenComponent,
   ],
-  imports: [CommonModule, AccountRoutingModule, SharedModule],
+  imports: [CommonModule, AccountRoutingModule, FieldsetModule, SharedModule],
   exports: [
     AccountComponent,
     ChangePasswordComponent,

@@ -18,7 +18,6 @@ export class CreatePostInput {
   title: string;
   text: string;
   category: number;
-  userId: string;
 }
 
 export class EditCategoryInput {

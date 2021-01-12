@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -30,9 +30,9 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.fb.group({
       email: [
         '',
-        [Validators.required, Validators.email, Validators.minLength(6)]
+        [Validators.required, Validators.email, Validators.minLength(6)],
       ],
-      password: ['', [Validators.required, Validators.minLength(3)]]
+      password: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
 
@@ -50,16 +50,16 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
-          this.router.navigateByUrl('/users/account');
+          this.router.navigateByUrl('/account');
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
             summary: 'Can not log in',
-            detail: error
+            detail: error,
           });
-        }
+        },
       });
   }
 }

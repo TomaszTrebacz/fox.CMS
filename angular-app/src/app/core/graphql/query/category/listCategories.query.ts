@@ -7,12 +7,13 @@ export interface Response {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ListCategoriesGQL extends Query<Response> {
   document = gql`
     query {
       categories {
+        id
         name
       }
     }

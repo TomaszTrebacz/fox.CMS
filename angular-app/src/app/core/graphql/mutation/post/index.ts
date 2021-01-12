@@ -1,1 +1,1 @@
-// export * from './[...]'
+export * from './create-post.mutation';

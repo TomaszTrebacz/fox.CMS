@@ -1,9 +1,11 @@
-<p *ngIf="(user | async) as user">
-Hi {{ user.firstName }} {{ user.lastName }}!
-</p>
-
-<div class="ui-g">
-    <a routerLink="/account/edit-account">Edit account</a><br />
-    <a routerLink="/account/change-password">Change password</a><br />
-    <a routerLink="/account/change-phone">Change phone number</a>
-</div>
+<p-fieldset *ngIf="(user | async) as user">    
+    <p-header class="main">
+        <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined" style="margin-right: 10px;"></button>
+        {{ user.firstName }} {{ user.lastName }}
+    </p-header>
+    <div class="ui-g">
+        <a routerLink="/account/edit-account">Edit account</a><br />
+        <a routerLink="/account/change-password">Change password</a><br />
+        <a routerLink="/account/change-phone">Change phone number</a>
+    </div>
+</p-fieldset>

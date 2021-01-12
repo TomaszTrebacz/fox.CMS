@@ -72,7 +72,7 @@ export class AuthResolver {
       user: user,
       accessToken: accessToken,
       refreshToken: refreshToken,
-      role: 'user',
+      role: user.role,
     };
 
     return loginResponse;

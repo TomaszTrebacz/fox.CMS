@@ -52,7 +52,6 @@ input CreatePostInput {
   title: String!
   text: String!
   category: Int!
-  userId: ID!
 }
 
 input EditPostInput {

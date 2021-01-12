@@ -12,7 +12,4 @@ export class CreatePostDto extends CreatePostInput {
 
   @Validate(categoryExists)
   category: number;
-
-  @IsUUID()
-  userId: string;
 }
