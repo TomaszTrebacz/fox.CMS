@@ -10,9 +10,10 @@ import { DividerModule } from 'primeng/divider';
 import { EditorModule } from 'primeng/editor';
 import { TabViewModule } from 'primeng/tabview';
 import { DropdownModule } from 'primeng/dropdown';
+import { CreateCategoryComponent } from './create-category/create-category.component';
 
 @NgModule({
-  declarations: [WorkboardComponent, CreatePostComponent],
+  declarations: [WorkboardComponent, CreatePostComponent, CreateCategoryComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,

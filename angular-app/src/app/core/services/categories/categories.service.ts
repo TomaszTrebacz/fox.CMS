@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ListCategoriesGQL, CategoryGQL } from 'src/app/core/graphql';
 import { Category } from 'src/app/core/models';
+import { CreateCategoryGQL } from '../../graphql/mutation/category';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,8 @@ import { Category } from 'src/app/core/models';
 export class CategoriesService {
   constructor(
     private listCategoriesGQL: ListCategoriesGQL,
-    private categoryGQL: CategoryGQL
+    private categoryGQL: CategoryGQL,
+    private createCategoryGQL: CreateCategoryGQL
   ) {}
 
   findAll(): Observable<Category[]> {
@@ -23,5 +25,11 @@ export class CategoriesService {
     return this.categoryGQL
       .fetch({ id: id })
       .pipe(map((result) => result.data.category));
+  }
+
+  createCategory(input: any): Observable<any> {
+    return this.createCategoryGQL
+      .mutate({ input: input })
+      .pipe(map((result) => result.data));
   }
 }
