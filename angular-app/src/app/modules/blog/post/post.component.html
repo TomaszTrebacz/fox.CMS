@@ -1,4 +1,5 @@
-    <p-panel *ngIf="(post | async) as post">
+    <div *ngIf="(post | async) as post">
+    <p-panel>
         <p-header style="font-size: 30px;">
             <b>{{ post.title }}</b>
         </p-header>
@@ -9,10 +10,9 @@
             <button pButton pRipple type="button" label="Date: {{ post.created }}" icon="pi pi-calendar-times" class="p-button-rounded p-button-help p-button-outlined"></button>
         </p-footer>
     </p-panel>
-    <p-panel header="Settings" class="settings">
-        <p *access="'admin', 'root'">
-            Start editing to see some magic happen :)
-          </p>
-  
+    <p-panel *access="'admin', 'root'" header="Settings" class="settings">
+        <button pButton pRipple type="button" label="Edit Post" icon="pi pi-pencil" class="p-button-rounded p-button-help p-button-text"  [routerLink]="['/admin/edit-post/', post.id]"></button>
+        <button pButton pRipple type="button" label="Delete Post" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="deletePost()"></button> 
     </p-panel>
    
+</div>

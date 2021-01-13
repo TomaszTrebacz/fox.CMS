@@ -7,6 +7,7 @@ import {
   UserPostsGQL,
   CreatePostGQL,
   EditPostGQL,
+  DeletePostGQL,
 } from 'src/app/core/graphql';
 import { Post } from 'src/app/core/models';
 
@@ -19,7 +20,8 @@ export class PostsService {
     private postGQL: PostGQL,
     private userPostsGQL: UserPostsGQL,
     private createPostGQL: CreatePostGQL,
-    private editPostGQL: EditPostGQL
+    private editPostGQL: EditPostGQL,
+    private deletePostGQL: DeletePostGQL
   ) {}
 
   findAll(): Observable<Post[]> {
@@ -50,5 +52,9 @@ export class PostsService {
     return this.editPostGQL
       .mutate({ input: input })
       .pipe(map((result) => result.data));
+  }
+
+  deletePost(id: number): Observable<any> {
+    return this.deletePostGQL.mutate({ id: id });
   }
 }
