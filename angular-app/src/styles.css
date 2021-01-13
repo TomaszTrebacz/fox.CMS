@@ -9,3 +9,8 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+a {
+  color: black;
+  text-decoration: none;
+} /* Globally */

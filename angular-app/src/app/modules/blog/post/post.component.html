@@ -9,4 +9,10 @@
             <button pButton pRipple type="button" label="Date: {{ post.created }}" icon="pi pi-calendar-times" class="p-button-rounded p-button-help p-button-outlined"></button>
         </p-footer>
     </p-panel>
+    <p-panel header="Settings" class="settings">
+        <p *access="'admin', 'root'">
+            Start editing to see some magic happen :)
+          </p>
+  
+    </p-panel>
    

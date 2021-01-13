@@ -64,6 +64,10 @@ export class AuthService {
     return this.userSubject.value;
   }
 
+  public get userRole() {
+    return this.userSubject.value.role;
+  }
+
   login(credentials: LoginForm) {
     return this.loginGQL
       .fetch({

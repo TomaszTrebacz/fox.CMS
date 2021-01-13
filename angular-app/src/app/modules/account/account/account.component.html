@@ -3,9 +3,19 @@
         <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined" style="margin-right: 10px;"></button>
         {{ user.firstName }} {{ user.lastName }}
     </p-header>
-    <div class="ui-g">
-        <a routerLink="/account/edit-account">Edit account</a><br />
-        <a routerLink="/account/change-password">Change password</a><br />
-        <a routerLink="/account/change-phone">Change phone number</a>
-    </div>
+     <ul>
+       <li>
+           <button pButton pRipple type="button" icon="pi pi-user-edit" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
+            <b><a routerLink="/account/edit-account">Edit Account</a></b>
+        </li> 
+        <li>
+            <button pButton pRipple type="button" icon="pi pi-key" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
+            <b><a routerLink="/account/change-password">Change Password</a></b>
+        </li> 
+        <li>
+            <button pButton pRipple type="button" icon="pi pi-phone" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
+            <b><a routerLink="/account/change-phone">Change Phone Number</a></b>
+        </li> 
+    </ul>
 </p-fieldset>
+

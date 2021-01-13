@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FooterComponent } from '../../modules/footer/footer.component';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuComponent } from './menu/menu.component';
@@ -10,6 +9,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { TopComponent } from './top/top.component';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [FooterComponent, MenuComponent, TopComponent],

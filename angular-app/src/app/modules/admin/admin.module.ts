@@ -11,9 +11,15 @@ import { EditorModule } from 'primeng/editor';
 import { TabViewModule } from 'primeng/tabview';
 import { DropdownModule } from 'primeng/dropdown';
 import { CreateCategoryComponent } from './create-category/create-category.component';
+import { EditPostComponent } from './edit-post/edit-post.component';
 
 @NgModule({
-  declarations: [WorkboardComponent, CreatePostComponent, CreateCategoryComponent],
+  declarations: [
+    WorkboardComponent,
+    CreatePostComponent,
+    CreateCategoryComponent,
+    EditPostComponent,
+  ],
   imports: [
     CommonModule,
     AdminRoutingModule,

@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AllPostsGQL, PostGQL, UserPostsGQL } from 'src/app/core/graphql';
+import {
+  AllPostsGQL,
+  PostGQL,
+  UserPostsGQL,
+  CreatePostGQL,
+  EditPostGQL,
+} from 'src/app/core/graphql';
 import { Post } from 'src/app/core/models';
-import { CreatePostGQL } from '../../graphql/mutation/post';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +18,8 @@ export class PostsService {
     private allPostsGQL: AllPostsGQL,
     private postGQL: PostGQL,
     private userPostsGQL: UserPostsGQL,
-    private createPostGQL: CreatePostGQL
+    private createPostGQL: CreatePostGQL,
+    private editPostGQL: EditPostGQL
   ) {}
 
   findAll(): Observable<Post[]> {
@@ -36,6 +42,12 @@ export class PostsService {
 
   createPost(input: any): Observable<any> {
     return this.createPostGQL
+      .mutate({ input: input })
+      .pipe(map((result) => result.data));
+  }
+
+  editPost(input: any): Observable<any> {
+    return this.editPostGQL
       .mutate({ input: input })
       .pipe(map((result) => result.data));
   }
