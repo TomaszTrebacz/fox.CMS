@@ -67,6 +67,8 @@ export abstract class IMutation {
   abstract deleteCategory(id: number): boolean | Promise<boolean>;
 
   abstract deletePost(id: number): boolean | Promise<boolean>;
+
+  abstract deleteUserPosts(id: string): boolean | Promise<boolean>;
 }
 
 export abstract class IQuery {

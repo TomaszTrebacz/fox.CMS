@@ -8,12 +8,7 @@ import { CategoryComponent } from './category/category.component';
 import { AccessDirective } from 'src/app/core/directives/access.directive';
 
 @NgModule({
-  declarations: [
-    BlogComponent,
-    PostComponent,
-    CategoryComponent,
-    AccessDirective,
-  ],
+  declarations: [BlogComponent, PostComponent, CategoryComponent],
   imports: [CommonModule, BlogRoutingModule, SharedModule],
   exports: [BlogComponent, PostComponent, CategoryComponent],
 })

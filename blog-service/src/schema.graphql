@@ -37,6 +37,7 @@ extend type Mutation {
   changeCategoryPost(changeCategoryPostInput: ChangeCategoryPostInput): Post
   deleteCategory(id: Int!): Boolean
   deletePost(id: Int!): Boolean
+  deleteUserPosts(id: String!): Boolean
 }
 
 input CreateCategoryInput {

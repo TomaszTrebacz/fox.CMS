@@ -17,9 +17,10 @@ import { FielderrorsComponent } from './fielderrors/fielderrors.component';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
 import { CardModule } from 'primeng/card';
 import { RouterModule } from '@angular/router';
+import { AccessDirective } from '../core/directives';
 
 @NgModule({
-  declarations: [FielderrorsComponent, DisplayPostsComponent],
+  declarations: [FielderrorsComponent, DisplayPostsComponent, AccessDirective],
   imports: [
     CommonModule,
     MessageModule,
@@ -56,6 +57,7 @@ import { RouterModule } from '@angular/router';
     PanelModule,
     DisplayPostsComponent,
     RouterModule,
+    AccessDirective,
   ],
 })
 export class SharedModule {}

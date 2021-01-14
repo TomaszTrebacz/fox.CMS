@@ -78,4 +78,14 @@ export class PostsService {
       throw new Error(err.message);
     }
   }
+
+  async deleteUserPosts(id: string): Promise<boolean> {
+    try {
+      await this.PostsRepository.delete({ userId: id });
+
+      return true;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
 }

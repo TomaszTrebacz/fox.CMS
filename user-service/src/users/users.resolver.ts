@@ -13,6 +13,7 @@ import {
   CurrentUser,
   RedisHandlerService,
   Auth,
+  AccessLevel,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { SmsService } from '../sms/sms.service';
 import { userRole } from '../enums';
@@ -205,7 +206,7 @@ export class UsersResolver {
   }
 
   @Mutation()
-  @Auth(userRole.ADMIN, userRole.ROOT)
+  @AccessLevel()
   async deleteUser(@Args('id') id: string): Promise<boolean> {
     try {
       await this.usersService.deleteUser(id);

@@ -4,6 +4,7 @@ import { map, tap } from 'rxjs/operators';
 import {
   ChangePhoneNumberGQL,
   CurrentUserSQL,
+  DeleteUserGQL,
   RegisterGQL,
   SendChangePhoneEmailGQL,
   UpdateUserGQL,
@@ -34,7 +35,8 @@ export class UserService {
     private registerGQL: RegisterGQL,
     private updateUserGQL: UpdateUserGQL,
     private sendChangePhoneEmailGQL: SendChangePhoneEmailGQL,
-    private changePhoneNumberGQL: ChangePhoneNumberGQL
+    private changePhoneNumberGQL: ChangePhoneNumberGQL,
+    private deleteUserGQL: DeleteUserGQL
   ) {}
 
   getUser(id: string): Observable<User> {
@@ -69,5 +71,9 @@ export class UserService {
     return this.changePhoneNumberGQL.mutate({
       token: token,
     });
+  }
+
+  deleteUser(id: string): Observable<any> {
+    return this.deleteUserGQL.mutate({ id: id });
   }
 }

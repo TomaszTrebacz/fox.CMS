@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { Observable } from 'rxjs';
 import { Post, User } from 'src/app/core/models';
-import { map, tap } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 import { PostsService } from 'src/app/core/services/posts/posts.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,8 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private usersService: UserService,
-    private postsService: PostsService
+    private postsService: PostsService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -36,5 +38,30 @@ export class ProfileComponent implements OnInit {
         tap((result) => console.log(result))
       );
     });
+  }
+
+  deleteUser() {
+    this.usersService
+      .deleteUser(this.id)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl(`/admin/workboard`);
+          this.messageService.add({
+            key: 'defaultToast',
+            severity: 'success',
+            summary: 'Successfully deleted!',
+            detail: `User has been deleted!`,
+          });
+        },
+        error: (error) => {
+          this.messageService.add({
+            key: 'defaultMessage',
+            severity: 'error',
+            summary: 'User has not been deleted',
+            detail: error.message,
+          });
+        },
+      });
   }
 }

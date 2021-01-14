@@ -86,4 +86,11 @@ export class PostsResolver {
 
     return true;
   }
+
+  @Mutation('deleteUserPosts')
+  async deleteUserPosts(@Args('id') id: string): Promise<boolean> {
+    await this.postsService.deleteUserPosts(id);
+
+    return true;
+  }
 }
