@@ -7,6 +7,7 @@ import {
   CreateCategoryGQL,
   DeleteCategoryGQL,
 } from '../../graphql/mutation/category';
+import { EditCategoryGQL } from '../../graphql/mutation/category/edit-category.component';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class CategoriesService {
     private listCategoriesGQL: ListCategoriesGQL,
     private categoryGQL: CategoryGQL,
     private createCategoryGQL: CreateCategoryGQL,
-    private deleteCategoryGQL: DeleteCategoryGQL
+    private deleteCategoryGQL: DeleteCategoryGQL,
+    private editCategoryGQL: EditCategoryGQL
   ) {}
 
   findAll(): Observable<Category[]> {
@@ -39,5 +41,9 @@ export class CategoriesService {
 
   deleteCategory(id: number): Observable<any> {
     return this.deleteCategoryGQL.mutate({ id: id });
+  }
+
+  editCategory(input: any): Observable<any> {
+    return this.editCategoryGQL.mutate({ input: input });
   }
 }

@@ -4,6 +4,7 @@ import { userRole } from 'src/app/core/enums';
 import { AuthGuard } from 'src/app/core/guards';
 import { CreateCategoryComponent } from './create-category/create-category.component';
 import { CreatePostComponent } from './create-post/create-post.component';
+import { EditCategoryComponent } from './edit-category/edit-category.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
 import { WorkboardComponent } from './workboard/workboard.component';
 
@@ -32,6 +33,12 @@ const adminRoutes: Routes = [
       {
         path: 'create-category',
         component: CreateCategoryComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [userRole.ADMIN, userRole.ROOT] },
+      },
+      {
+        path: 'edit-category/:id',
+        component: EditCategoryComponent,
         canActivate: [AuthGuard],
         data: { roles: [userRole.ADMIN, userRole.ROOT] },
       },

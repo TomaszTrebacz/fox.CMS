@@ -1,7 +1,7 @@
 <p-menubar [model]="items">
     <div *ngIf="user; else notLogged">
         <button pButton pRipple type="button" label="Account" icon="pi pi-user" class="p-button-rounded p-button-secondary p-button-text" (click)="toAccount()"></button>
-        <button *ngIf="user.role !== 'user'"pButton pRipple type="button" label="Worboard" icon="pi pi-bookmark" class="p-button-rounded p-button-text p-button-text" (click)="toWorkboard()"></button>
+        <button *ngIf="user.role !== 'user'"pButton pRipple type="button" label="Worboard" icon="pi pi-lock" class="p-button-rounded p-button-text p-button-text" (click)="toWorkboard()"></button>
         <button pButton pRipple type="button" label="Log out" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="logout()"></button>
     </div>
       
