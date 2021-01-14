@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { Category, Post } from 'src/app/core/models';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 
@@ -15,7 +17,9 @@ export class CategoryComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -24,5 +28,30 @@ export class CategoryComponent implements OnInit {
 
       this.category = this.categoriesService.findOne(this.id);
     });
+  }
+
+  deleteCategory() {
+    this.categoriesService
+      .deleteCategory(this.id)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl(`/admin/workboard`);
+          this.messageService.add({
+            key: 'defaultToast',
+            severity: 'success',
+            summary: 'Successfully deleted!',
+            detail: `Your category has been deleted!`,
+          });
+        },
+        error: (error) => {
+          this.messageService.add({
+            key: 'defaultMessage',
+            severity: 'error',
+            summary: 'Category has not been deleted',
+            detail: error.message,
+          });
+        },
+      });
   }
 }
