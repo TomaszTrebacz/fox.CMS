@@ -34,7 +34,7 @@ extend type Mutation {
   editCategory(editCategoryInput: EditCategoryInput): Boolean
   createPost(createPostInput: CreatePostInput): Post
   editPost(editPostInput: EditPostInput): Boolean
-  changeCategoryPost(changeCategoryPostInput: ChangeCategoryPostInput): Post
+  changeCategoryPost(changeCategoryPostInput: ChangeCategoryPostInput): Boolean
   deleteCategory(id: Int!): Boolean
   deletePost(id: Int!): Boolean
   deleteUserPosts(id: String!): Boolean

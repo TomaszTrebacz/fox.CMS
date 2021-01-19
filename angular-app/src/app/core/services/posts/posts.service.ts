@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import {
   AllPostsGQL,
   PostGQL,
@@ -8,6 +8,7 @@ import {
   CreatePostGQL,
   EditPostGQL,
   DeletePostGQL,
+  ChangeCategoryGQL,
 } from 'src/app/core/graphql';
 import { Post } from 'src/app/core/models';
 
@@ -21,7 +22,8 @@ export class PostsService {
     private userPostsGQL: UserPostsGQL,
     private createPostGQL: CreatePostGQL,
     private editPostGQL: EditPostGQL,
-    private deletePostGQL: DeletePostGQL
+    private deletePostGQL: DeletePostGQL,
+    private changeCategoryGQL: ChangeCategoryGQL
   ) {}
 
   findAll(): Promise<Post[]> {
@@ -53,6 +55,13 @@ export class PostsService {
     return this.editPostGQL
       .mutate({ input: input })
       .pipe(map((result) => result.data));
+  }
+
+  changeCategory(input: any): Observable<any> {
+    console.log('eee');
+    console.log(input);
+    console.log('eee');
+    return this.changeCategoryGQL.mutate({ input: input });
   }
 
   deletePost(id: number): Observable<any> {

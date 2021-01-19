@@ -73,10 +73,14 @@ export class PostsResolver {
   @Auth(userRole.ADMIN, userRole.ROOT)
   async changeCategoryPost(
     @Args('changeCategoryPostInput') changeData: ChangeCategoryPostInput,
-  ): Promise<Post> {
-    const changedPost = await this.postsService.changeCategoryPost(changeData);
+  ): Promise<boolean> {
+    try {
+      await this.postsService.changeCategoryPost(changeData);
 
-    return changedPost;
+      return true;
+    } catch (err) {
+      throw new Error(`Can not change category: ${err.message}`);
+    }
   }
 
   @Mutation('deletePost')

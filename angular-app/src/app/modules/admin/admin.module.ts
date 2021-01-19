@@ -13,6 +13,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CreateCategoryComponent } from './create-category/create-category.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
 import { EditCategoryComponent } from './edit-category/edit-category.component';
+import { ChangeCategoryComponent } from './change-category/change-category.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { EditCategoryComponent } from './edit-category/edit-category.component';
     CreateCategoryComponent,
     EditPostComponent,
     EditCategoryComponent,
+    ChangeCategoryComponent,
   ],
   imports: [
     CommonModule,
