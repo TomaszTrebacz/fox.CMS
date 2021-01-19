@@ -6,10 +6,18 @@ import { PostComponent } from './post/post.component';
 import { BlogRoutingModule } from './blog-routing.module';
 import { CategoryComponent } from './category/category.component';
 import { AccessDirective } from 'src/app/core/directives/access.directive';
+import { PaginatorModule } from 'primeng/paginator';
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
   declarations: [BlogComponent, PostComponent, CategoryComponent],
-  imports: [CommonModule, BlogRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    BlogRoutingModule,
+    SharedModule,
+    PaginatorModule,
+    DataViewModule,
+  ],
   exports: [BlogComponent, PostComponent, CategoryComponent],
 })
 export class BlogModule {}

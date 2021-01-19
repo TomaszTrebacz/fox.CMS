@@ -18,6 +18,7 @@ import { DisplayPostsComponent } from './display-posts/display-posts.component';
 import { CardModule } from 'primeng/card';
 import { RouterModule } from '@angular/router';
 import { AccessDirective } from '../core/directives';
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
   declarations: [FielderrorsComponent, DisplayPostsComponent, AccessDirective],
@@ -38,6 +39,7 @@ import { AccessDirective } from '../core/directives';
     ProgressBarModule,
     CardModule,
     RouterModule,
+    DataViewModule,
   ],
   exports: [
     FielderrorsComponent,

@@ -1,4 +1,6 @@
-    <div class="p-col">
+<p-dataView [value]="posts" layout=grid>
+  <ng-template let-post pTemplate="gridItem">
+    <div style="padding:3px" class="ui-g-12 ui-md-3">
       <p-card 
       header="{{ post.title }}" 
       subheader="by {{ post.user.firstName }} {{ post.user.lastName }}" 
@@ -12,3 +14,5 @@
       <p>{{ post.text }}</p>
     </p-card>
     </div>
+  </ng-template>
+</p-dataView>

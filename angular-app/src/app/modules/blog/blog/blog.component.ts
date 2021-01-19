@@ -11,7 +11,7 @@ import { PostsService } from 'src/app/core/services/posts/posts.service';
   styleUrls: ['./blog.component.css'],
 })
 export class BlogComponent implements OnInit {
-  posts: Observable<Post[]>;
+  posts: Post[];
   categories: Observable<Category[]>;
 
   constructor(
@@ -20,7 +20,11 @@ export class BlogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.posts = this.postsservice.findAll();
+    return this.postsservice.findAll().then((posts) => (this.posts = posts));
     this.categories = this.categoriesService.findAll();
+  }
+
+  paginate(event) {
+    event.page = event.page + 1;
   }
 }

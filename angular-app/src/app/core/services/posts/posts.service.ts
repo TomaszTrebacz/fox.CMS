@@ -24,10 +24,11 @@ export class PostsService {
     private deletePostGQL: DeletePostGQL
   ) {}
 
-  findAll(): Observable<Post[]> {
+  findAll(): Promise<Post[]> {
     return this.allPostsGQL
-      .watch()
-      .valueChanges.pipe(map((result) => result.data.posts));
+      .fetch()
+      .toPromise()
+      .then((result) => result.data.posts);
   }
 
   findOne(id: number): Observable<Post> {

@@ -11,7 +11,11 @@ export class PostsService {
   ) {}
 
   findAll(): Promise<Post[]> {
-    return this.PostsRepository.find({ relations: ['category'] });
+    return this.PostsRepository.find({
+      relations: ['category'],
+      skip: 2,
+      take: 5,
+    });
   }
 
   findOne(id: number): Promise<Post> {
