@@ -27,10 +27,11 @@ export class CategoriesService {
       .valueChanges.pipe(map((result) => result.data.categories));
   }
 
-  findOne(id: number): Observable<Category> {
+  findOne(id: number): Promise<Category> {
     return this.categoryGQL
       .fetch({ id: id })
-      .pipe(map((result) => result.data.category));
+      .toPromise()
+      .then((result) => result.data.category);
   }
 
   createCategory(input: any): Observable<any> {

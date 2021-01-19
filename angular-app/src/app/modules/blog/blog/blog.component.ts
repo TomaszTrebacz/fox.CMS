@@ -20,11 +20,7 @@ export class BlogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    return this.postsservice.findAll().then((posts) => (this.posts = posts));
+    this.postsservice.findAll().then((posts) => (this.posts = posts));
     this.categories = this.categoriesService.findAll();
-  }
-
-  paginate(event) {
-    event.page = event.page + 1;
   }
 }

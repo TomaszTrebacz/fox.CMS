@@ -1,4 +1,4 @@
-<p-dataView [value]="posts" layout=grid>
+<p-dataView [value]="posts" layout=grid [paginator]="true" [rows]="6">
   <ng-template let-post pTemplate="gridItem">
     <div style="padding:3px" class="ui-g-12 ui-md-3">
       <p-card 

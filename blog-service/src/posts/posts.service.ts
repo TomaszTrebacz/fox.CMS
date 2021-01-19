@@ -13,8 +13,6 @@ export class PostsService {
   findAll(): Promise<Post[]> {
     return this.PostsRepository.find({
       relations: ['category'],
-      skip: 2,
-      take: 5,
     });
   }
 

@@ -13,7 +13,7 @@ import { CategoriesService } from 'src/app/core/services/categories/categories.s
 })
 export class CategoryComponent implements OnInit {
   id: number;
-  category: Observable<Category>;
+  category: Category;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -26,7 +26,9 @@ export class CategoryComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.id = parseInt(params.get('id'), 10);
 
-      this.category = this.categoriesService.findOne(this.id);
+      this.categoriesService
+        .findOne(this.id)
+        .then((category) => (this.category = category));
     });
   }
 

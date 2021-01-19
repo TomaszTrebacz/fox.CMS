@@ -19,6 +19,7 @@ import { CardModule } from 'primeng/card';
 import { RouterModule } from '@angular/router';
 import { AccessDirective } from '../core/directives';
 import { DataViewModule } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [FielderrorsComponent, DisplayPostsComponent, AccessDirective],
@@ -40,6 +41,7 @@ import { DataViewModule } from 'primeng/dataview';
     CardModule,
     RouterModule,
     DataViewModule,
+    DropdownModule,
   ],
   exports: [
     FielderrorsComponent,

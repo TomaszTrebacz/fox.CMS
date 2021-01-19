@@ -4,4 +4,4 @@
 <p-panel *access="'admin', 'root'" header="Settings" class="settings">
     <button pButton pRipple type="button" label="Delete User" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="deleteUser()"></button> 
 </p-panel>
-<app-display-posts *ngFor="let post of posts | async" [post]="post"></app-display-posts>
+<app-display-posts [posts]="posts | async"></app-display-posts>
