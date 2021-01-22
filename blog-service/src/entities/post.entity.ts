@@ -29,6 +29,9 @@ export class Post {
   category: Category;
 
   @Column()
+  imageUrl: string;
+
+  @Column()
   userId: string;
 
   @CreateDateColumn({

@@ -16,6 +16,7 @@ export class AllPostsGQL extends Query<ResponseInterface> {
         id
         title
         text
+        imageUrl
         user {
           firstName
           lastName

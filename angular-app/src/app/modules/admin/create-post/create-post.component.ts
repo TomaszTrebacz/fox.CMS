@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { Category } from 'src/app/core/models';
 import { PostsService } from 'src/app/core/services/posts/posts.service';
-
+import { ImageService } from 'src/app/core/services/image/image.service';
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
@@ -23,13 +23,16 @@ export class CreatePostComponent implements OnInit {
   error: '';
   cities: any;
   cat: Observable<Category[]>;
+  file: any;
+  imageCloudUrl: string;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private messageService: MessageService,
     private categoriesService: CategoriesService,
-    private postsService: PostsService
+    private postsService: PostsService,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +53,7 @@ export class CreatePostComponent implements OnInit {
         ],
       ],
       text: ['', [Validators.required, Validators.minLength(50)]],
+      imageUrl: ['', [Validators.required]],
       category: ['', [Validators.required]],
     });
   }
@@ -58,11 +62,18 @@ export class CreatePostComponent implements OnInit {
     return !this.createPostForm.valid;
   }
 
+  async onChange(event) {
+    this.file = event.target.files.item(0);
+
+    this.imageCloudUrl = await this.imageService.uploadImage(this.file);
+  }
+
   onSubmit() {
     if (this.createPostForm.invalid) {
       return;
     }
 
+    this.createPostForm.value.imageUrl = this.imageCloudUrl;
     this.createPostForm.value.category = this.createPostForm.value.category.value;
 
     this.postsService

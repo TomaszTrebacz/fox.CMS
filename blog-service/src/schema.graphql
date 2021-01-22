@@ -4,6 +4,7 @@ type Post @key(fields: "id") {
   id: Int!
   title: String!
   text: String!
+  imageUrl: String!
   user: User
   created: Date!
   updated: Date!
@@ -53,6 +54,7 @@ input CreatePostInput {
   title: String!
   text: String!
   category: Int!
+  imageUrl: String!
 }
 
 input EditPostInput {

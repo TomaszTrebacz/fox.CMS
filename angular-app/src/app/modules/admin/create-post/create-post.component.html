@@ -26,7 +26,14 @@
 
         </div>
 
-
+        <div class="ui-g" style="padding-bottom: 15px">
+        <div class="p-inputgroup">
+        <input #Image type="file" id="imageUrl" formControlName="imageUrl" accept="image/*" (change)="onChange($event)"> 
+        <div class="ui-g-12 ui-md-5">
+            <app-fielderrors [form]="createPostForm" field="imageUrl" nicename="imageUrl"></app-fielderrors>
+        </div>
+        </div>
+        </div>
         <div class="ui-g" style="padding-bottom: 15px">
             <div class="p-inputgroup">
                 <span class="p-inputgroup-addon"><i class="pi pi-table"></i></span>

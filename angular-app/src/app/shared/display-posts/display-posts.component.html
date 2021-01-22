@@ -9,7 +9,7 @@
       [routerLink]="['/blog/post/', post.id]"
     >
       <p-header>
-          <img alt="Card" src="https://www.primefaces.org/primeng/showcase/assets/showcase/images/usercard.png">
+          <img alt="Card" src="{{ post.imageUrl }}">
       </p-header>
       <p>{{ post.text }}</p>
     </p-card>
