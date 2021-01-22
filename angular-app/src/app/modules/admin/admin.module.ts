@@ -16,6 +16,8 @@ import { EditCategoryComponent } from './edit-category/edit-category.component';
 import { ChangeCategoryComponent } from './change-category/change-category.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { HttpClientModule } from '@angular/common/http';
+import { TableModule } from 'primeng/table';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
     EditPostComponent,
     EditCategoryComponent,
     ChangeCategoryComponent,
+    ManageUsersComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +40,7 @@ import { HttpClientModule } from '@angular/common/http';
     DropdownModule,
     FileUploadModule,
     HttpClientModule,
+    TableModule,
   ],
   exports: [WorkboardComponent],
 })

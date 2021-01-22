@@ -11,6 +11,7 @@ import {
   UserGQL,
 } from 'src/app/core/graphql';
 import { User } from 'src/app/core/models';
+import { UsersGQL } from '../../graphql/query/user/users.query';
 
 export interface RegisterForm {
   email: string;
@@ -36,13 +37,21 @@ export class UserService {
     private updateUserGQL: UpdateUserGQL,
     private sendChangePhoneEmailGQL: SendChangePhoneEmailGQL,
     private changePhoneNumberGQL: ChangePhoneNumberGQL,
-    private deleteUserGQL: DeleteUserGQL
+    private deleteUserGQL: DeleteUserGQL,
+    private usersGQL: UsersGQL
   ) {}
 
   getUser(id: string): Observable<User> {
     return this.userGQL
       .fetch({ id: id })
       .pipe(map((result) => result.data.user));
+  }
+
+  getUsers(): Promise<User[]> {
+    return this.usersGQL
+      .fetch()
+      .toPromise()
+      .then((res) => res.data.users);
   }
 
   getCurrentUser(): Observable<User> {

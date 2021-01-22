@@ -6,6 +6,7 @@ import { CreateCategoryComponent } from './create-category/create-category.compo
 import { CreatePostComponent } from './create-post/create-post.component';
 import { EditCategoryComponent } from './edit-category/edit-category.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 import { WorkboardComponent } from './workboard/workboard.component';
 
 const adminRoutes: Routes = [
@@ -41,6 +42,12 @@ const adminRoutes: Routes = [
         component: EditCategoryComponent,
         canActivate: [AuthGuard],
         data: { roles: [userRole.ADMIN, userRole.ROOT] },
+      },
+      {
+        path: 'manage-users',
+        component: ManageUsersComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [userRole.ROOT] },
       },
     ],
   },
