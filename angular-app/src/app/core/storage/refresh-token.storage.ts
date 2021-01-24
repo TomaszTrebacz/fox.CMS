@@ -1,4 +1,4 @@
-import { decrypt, encrypt } from '../helpers';
+import { decrypt, encrypt } from '../utils';
 
 export function RefreshToken() {
   return (target: any, key: string) => {
@@ -16,7 +16,7 @@ export function RefreshToken() {
       },
       set: (token: string) => {
         localStorage.setItem(tokenKey, encrypt(token));
-      }
+      },
     });
   };
 }

@@ -11,6 +11,7 @@ export class UserPostsGQL extends Query<any> {
         id
         title
         text
+        imageUrl
         user {
           firstName
           lastName

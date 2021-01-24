@@ -6,3 +6,4 @@ export * from './resetPassword.mutation';
 export * from './sendCodePhone.mutation';
 export * from './confirmUser.mutation';
 export * from './sendChangePassEmail.mutation';
+export * from './changeRole.mutation';

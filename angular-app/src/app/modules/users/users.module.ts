@@ -13,6 +13,8 @@ import { ByPhoneComponent } from './reset-password/by-phone/by-phone.component';
 import { ByEmailComponent } from './reset-password/by-email/by-email.component';
 import { ChangePassComponent } from './reset-password/by-email/change-pass/change-pass.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,13 @@ import { ProfileComponent } from './profile/profile.component';
     ChangePassComponent,
     ProfileComponent,
   ],
-  imports: [CommonModule, UsersRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    UsersRoutingModule,
+    DropdownModule,
+    FormsModule,
+    SharedModule,
+  ],
   exports: [
     LoginComponent,
     RegisterComponent,

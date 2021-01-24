@@ -1,4 +1,4 @@
-import { decrypt, encrypt } from '../helpers';
+import { decrypt, encrypt } from '../utils';
 
 export function UserStorage() {
   return (target: any, key: string) => {
@@ -16,7 +16,7 @@ export function UserStorage() {
       },
       set: (token: string) => {
         localStorage.setItem(itemKey, encrypt(JSON.stringify(token)));
-      }
+      },
     });
   };
 }

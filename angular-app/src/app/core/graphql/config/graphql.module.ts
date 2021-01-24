@@ -5,7 +5,7 @@ import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache, ApolloLink } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { environment } from 'src/environments/environment';
-import { decrypt, encrypt } from '../../helpers';
+import { decrypt, encrypt } from '../../utils';
 import { onError } from '@apollo/client/link/error';
 import { fromPromise } from 'apollo-link';
 
@@ -17,7 +17,7 @@ export function createApollo(httpLink: HttpLink) {
   let pendingRequests = [];
 
   const resolvePendingRequests = () => {
-    pendingRequests.map(callback => callback());
+    pendingRequests.map((callback) => callback());
     pendingRequests = [];
   };
 
@@ -45,14 +45,12 @@ export function createApollo(httpLink: HttpLink) {
                           refreshToken
                         }
                       }`,
-                      variables: { currentRefreshToken: oldRefreshToken }
-                    })
+                      variables: { currentRefreshToken: oldRefreshToken },
+                    }),
                   })
-                    .then(response => response.json())
-                    .then(data => {
-                      const newHeaders = `Bearer ${
-                        data.data.refreshToken.accessToken
-                      }`;
+                    .then((response) => response.json())
+                    .then((data) => {
+                      const newHeaders = `Bearer ${data.data.refreshToken.accessToken}`;
                       const encryptedAccessToken = encrypt(
                         data.data.refreshToken.accessToken
                       );
@@ -68,8 +66,8 @@ export function createApollo(httpLink: HttpLink) {
 
                       operation.setContext({
                         headers: {
-                          Authorization: newHeaders
-                        }
+                          Authorization: newHeaders,
+                        },
                       });
                     })
                     .then(() => {
@@ -89,9 +87,7 @@ export function createApollo(httpLink: HttpLink) {
               return forward$.flatMap(() => forward(operation));
             default:
               console.log(
-                `[GraphQL error]: Message: ${err.message}, Location: ${
-                  err.locations
-                }, Path: ${err.path}`
+                `[GraphQL error]: Message: ${err.message}, Location: ${err.locations}, Path: ${err.path}`
               );
           }
         }
@@ -104,8 +100,8 @@ export function createApollo(httpLink: HttpLink) {
 
   const basic = setContext((operation, context) => ({
     headers: {
-      Accept: 'charset=utf-8'
-    }
+      Accept: 'charset=utf-8',
+    },
   }));
 
   const auth = setContext((operation, context) => {
@@ -115,8 +111,8 @@ export function createApollo(httpLink: HttpLink) {
       const decryptedJWT = decrypt(accesstoken);
       return {
         headers: {
-          Authorization: `Bearer ${decryptedJWT}`
-        }
+          Authorization: `Bearer ${decryptedJWT}`,
+        },
       };
     } else {
       return null;
@@ -127,13 +123,13 @@ export function createApollo(httpLink: HttpLink) {
     errorLink,
     basic,
     auth,
-    httpLink.create({ uri })
+    httpLink.create({ uri }),
   ]);
   const cache = new InMemoryCache();
 
   return {
     link,
-    cache
+    cache,
   };
 }
 
@@ -143,8 +139,8 @@ export function createApollo(httpLink: HttpLink) {
     {
       provide: APOLLO_OPTIONS,
       useFactory: createApollo,
-      deps: [HttpLink]
-    }
-  ]
+      deps: [HttpLink],
+    },
+  ],
 })
 export class GraphQLModule {}

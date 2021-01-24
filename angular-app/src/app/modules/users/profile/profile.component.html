@@ -1,7 +1,29 @@
 <div *ngIf="(user | async) as user" style="padding-bottom: 10px;">
 <button pButton pRipple type="button" label="User: {{ user.firstName }} {{ user.lastName }}"icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined"></button>
 </div>
-<p-panel *access="'admin', 'root'" header="Settings" class="settings">
-    <button pButton pRipple type="button" label="Delete User" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="deleteUser()"></button> 
+
+<p-panel *access="['admin', 'root']" header="Settings" class="settings">
+    <form [formGroup]="changeRoleForm" class="ui-g">
+
+        <div *ngIf="error" class="ui-g">{{error}}</div> 
+    
+        <div class="ui-g" style="padding-bottom: 15px" style="display:inline-block;">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-table"></i></span>
+            <p-dropdown id="role" formControlName="role" [options]="roles" optionLabel="name" value="1"></p-dropdown>
+            <div class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="changeRoleForm" field="role" nicename="role"></app-fielderrors>
+            </div>
+        </div>
+    </div>
+    
+        <button pButton type="button" label="Click" [disabled]="!changeRoleForm.valid" (click)="onSubmit()" style="display:inline-block;"></button>
+        <button pButton pRipple type="button" label="Delete User" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="deleteUser()" style="display:inline-block;"></button> 
+
+    </form>
+    
 </p-panel>
+
 <app-display-posts [posts]="posts | async"></app-display-posts>
+
+

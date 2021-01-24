@@ -1,5 +1,6 @@
 import { Injectable, Input, ɵConsole } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { ObservableQuery } from '@apollo/client/core';
+import { BehaviorSubject, Observable, ObservableInput } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   ChangeConfirmTokenGQL,
@@ -11,6 +12,8 @@ import {
   ResetPasswordGQL,
   SendChangePassEmailGQL,
   SendCodePhoneGQL,
+  ChangeRoleGQL,
+  ChangeRoleI,
 } from 'src/app/core/graphql';
 import { AccessToken, RefreshToken, UserStorage } from 'src/app/core/storage';
 
@@ -54,7 +57,8 @@ export class AuthService {
     private resetPasswordGQL: ResetPasswordGQL,
     private changePassByTokenGQL: ChangePassByTokenGQL,
     private sendChangePassEmailGQL: SendChangePassEmailGQL,
-    private changePasswordGQL: ChangePasswordGQL
+    private changePasswordGQL: ChangePasswordGQL,
+    private changeRoleGQL: ChangeRoleGQL
   ) {
     this.userSubject = new BehaviorSubject(this.userStorage || null);
     this.user = this.userSubject.asObservable();
@@ -125,5 +129,11 @@ export class AuthService {
 
   changePassword(password: string) {
     return this.changePasswordGQL.mutate({ password: password });
+  }
+
+  changeRole(input: ChangeRoleI): Observable<boolean> {
+    return this.changeRoleGQL
+      .mutate({ input: input })
+      .pipe(map((result) => result.data));
   }
 }
