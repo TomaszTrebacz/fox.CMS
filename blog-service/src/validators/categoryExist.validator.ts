@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common';
 import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  ValidationArguments,
 } from 'class-validator';
 import { CategoriesService } from 'src/categories/categories.service';
 
-@ValidatorConstraint({ name: 'categoryExists', async: true })
+@ValidatorConstraint({ name: 'categoryExist', async: true })
 @Injectable()
-export class categoryExists implements ValidatorConstraintInterface {
+export class categoryExist implements ValidatorConstraintInterface {
   constructor(protected readonly categoriesService: CategoriesService) {}
 
   validate(id: number) {
@@ -19,6 +18,6 @@ export class categoryExists implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Category not exists!';
+    return 'Category does not exist!';
   }
 }

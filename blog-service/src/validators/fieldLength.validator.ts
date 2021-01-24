@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 
 @ValidatorConstraint({ name: 'fieldLength', async: false })
-export class FieldLength implements ValidatorConstraintInterface {
+export class fieldLength implements ValidatorConstraintInterface {
   validate(text: string, args: ValidationArguments) {
     switch (args.constraints.length) {
       case 1:
