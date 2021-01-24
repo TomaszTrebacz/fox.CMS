@@ -3,6 +3,8 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
   ValidationArguments,
+  registerDecorator,
+  ValidationOptions,
 } from 'class-validator';
 import { PostsService } from '../posts/posts.service';
 
@@ -21,4 +23,16 @@ export class postExist implements ValidatorConstraintInterface {
   defaultMessage() {
     return 'Post does not exist!';
   }
+}
+
+export function PostExist(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: postExist,
+    });
+  };
 }

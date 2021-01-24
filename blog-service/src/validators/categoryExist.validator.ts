@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
+  registerDecorator,
+  ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
@@ -20,4 +22,16 @@ export class categoryExist implements ValidatorConstraintInterface {
   defaultMessage() {
     return 'Category does not exist!';
   }
+}
+
+export function CategoryExist(validationOptions?: ValidationOptions) {
+  return function(object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: categoryExist,
+    });
+  };
 }
