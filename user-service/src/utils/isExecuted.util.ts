@@ -1,10 +1,10 @@
-import { UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 /* 
-    typeorm would not throw error by default
-    if query didn't actually update or delete row from entity
+    typeorm does not throw error
+    if query does not actually update or delete row from entity
 */
-export const isExecuted = (res: UpdateResult): boolean => {
+export const isExecuted = (res: UpdateResult | DeleteResult): boolean => {
   if (res.affected !== 1) {
     throw new Error(`Database/ORM error.`);
   }
