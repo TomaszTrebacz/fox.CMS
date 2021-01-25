@@ -1,16 +1,32 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Post } from './post.entity';
-@Entity('categories')
-export class Category {
-  @PrimaryGeneratedColumn()
-  id: number;
+import { CategoryI } from 'src/interfaces/category.interface';
+import {
+  Column,
+  Entity,
+  EntitySchema,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-  @Column()
-  name: string;
-
-  @OneToMany(
-    () => Post,
-    post => post.category,
-  )
-  posts: Post[];
-}
+export const CategoryEntity = new EntitySchema<CategoryI>({
+  name: 'categories',
+  columns: {
+    id: {
+      type: Number,
+      primary: true,
+      generated: 'increment',
+    },
+    name: {
+      type: String,
+      length: 50,
+      unique: true,
+      nullable: false,
+    },
+  },
+  relations: {
+    posts: {
+      type: 'one-to-many',
+      target: 'posts',
+      inverseSide: 'category',
+    },
+  },
+});

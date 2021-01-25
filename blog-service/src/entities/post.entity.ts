@@ -1,3 +1,4 @@
+import { PostI } from 'src/interfaces/post.interface';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,45 +6,51 @@ import {
   CreateDateColumn,
   ManyToOne,
   UpdateDateColumn,
+  EntitySchema,
 } from 'typeorm';
-import { Category } from './category.entity';
 
-@Entity('posts')
-export class Post {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  title: string;
-
-  @Column({ type: 'text' })
-  text: string;
-
-  @ManyToOne(
-    () => Category,
-    category => category.posts,
-    {
-      onDelete: 'CASCADE',
+export const PostEntity = new EntitySchema<PostI>({
+  name: 'posts',
+  columns: {
+    id: {
+      type: Number,
+      primary: true,
+      generated: 'increment',
     },
-  )
-  category: Category;
-
-  @Column()
-  imageUrl: string;
-
-  @Column()
-  userId: string;
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
-  created: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
-  })
-  updated: Date;
-}
+    title: {
+      type: String,
+      length: 50,
+      unique: true,
+      nullable: false,
+    },
+    text: {
+      type: String,
+      nullable: false,
+    },
+    imageUrl: {
+      type: String,
+      nullable: false,
+    },
+    userId: {
+      type: String,
+      nullable: false,
+    },
+    created: {
+      type: Date,
+      createDate: true,
+      nullable: false,
+    },
+    updated: {
+      type: Date,
+      updateDate: true,
+      nullable: true,
+    },
+  },
+  relations: {
+    category: {
+      type: 'many-to-one',
+      target: 'categories',
+      joinColumn: true,
+    },
+  },
+});
