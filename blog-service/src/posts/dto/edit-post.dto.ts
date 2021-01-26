@@ -1,14 +1,15 @@
-import { Validate, IsNumber, MinLength } from 'class-validator';
-import { FieldLength } from 'src/validators/FieldLength.validator';
+import { MaxLength, MinLength } from 'class-validator';
+import { PostExist } from '../../validators';
 import { EditPostInput } from '../../graphql';
 
 export class EditPostDto extends EditPostInput {
-  @IsNumber()
+  @PostExist()
   id: number;
 
-  @Validate(FieldLength, [3, 50])
+  @MinLength(10)
+  @MaxLength(50)
   title: string;
 
-  @MinLength(20)
+  @MinLength(10)
   text: string;
 }

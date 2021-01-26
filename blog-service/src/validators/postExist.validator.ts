@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  ValidationArguments,
   registerDecorator,
   ValidationOptions,
 } from 'class-validator';
@@ -26,7 +25,7 @@ export class postExist implements ValidatorConstraintInterface {
 }
 
 export function PostExist(validationOptions?: ValidationOptions) {
-  return function(object: Object, propertyName: string) {
+  return function(object: unknown, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
