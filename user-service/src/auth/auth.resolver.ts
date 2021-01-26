@@ -2,9 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { AuthenticationError } from 'apollo-server-core';
 import { UsersService } from '../users/users.service';
-import { MailService } from '../mail/mail.service';
+import { MailService, SmsService } from '../shared';
 import * as generator from 'generate-password';
-import { SmsService } from '../sms/sms.service';
 import {
   AuthGqlRedisService,
   RedisHandlerService,

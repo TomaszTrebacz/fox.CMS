@@ -15,9 +15,8 @@ import {
   Auth,
   AccessLevel,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { SmsService } from '../sms/sms.service';
+import { SmsService, MailService } from '../shared';
 import { userRole } from '../enums';
-import { MailService } from '../mail/mail.service';
 import { User } from 'src/interfaces';
 import { Fragment } from 'src/utils';
 

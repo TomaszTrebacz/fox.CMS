@@ -5,11 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { GraphQLFederationModule } from '@nestjs/graphql';
-import { DateScalar } from './shared';
+import { DateScalar, MailModule, SmsModule } from './shared';
 import { AuthModule } from './auth/auth.module';
-import { MailModule } from './mail/mail.module';
 import { TwilioModule } from 'nestjs-twilio';
-import { SmsModule } from './sms/sms.module';
 import { MailmanModule } from '@squareboat/nest-mailman';
 
 import {
