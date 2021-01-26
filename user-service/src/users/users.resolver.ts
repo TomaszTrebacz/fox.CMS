@@ -14,10 +14,10 @@ import {
   RedisHandlerService,
   Auth,
   AccessLevel,
+  userRole,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { SmsService, MailService } from '../shared';
-import { userRole } from '../enums';
-import { User } from 'src/interfaces';
+import { UserI } from 'src/models';
 import { Fragment } from 'src/utils';
 
 @Resolver('User')
@@ -42,7 +42,7 @@ export class UsersResolver {
 
   @Query('currentUser')
   @Auth()
-  async currentUser(@CurrentUser() user: User): Promise<User> {
+  async currentUser(@CurrentUser() user: UserI): Promise<UserI> {
     return await this.usersService.findOneById(user.id);
   }
 
@@ -54,7 +54,7 @@ export class UsersResolver {
   @Mutation()
   async registerUser(
     @Args('createUserInput') registerData: CreateUserDto,
-  ): Promise<User> {
+  ): Promise<UserI> {
     try {
       const createdUser = await this.usersService.createUser(registerData);
 
@@ -116,7 +116,7 @@ export class UsersResolver {
   @Mutation()
   @Auth()
   async updateUser(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserI,
     @Args('updateUserInput') updateData: UpdateUserDto,
   ): Promise<boolean> {
     try {
@@ -130,8 +130,8 @@ export class UsersResolver {
   @Mutation()
   @Auth()
   async sendChangePhoneEmail(
-    @CurrentUser() user: User,
-    @Args('phoneNumber') phoneNumber: Fragment<User, 'phoneNumber'>,
+    @CurrentUser() user: UserI,
+    @Args('phoneNumber') phoneNumber: Fragment<UserI, 'phoneNumber'>,
   ): Promise<boolean> {
     try {
       const JWTpayload = {
@@ -188,7 +188,7 @@ export class UsersResolver {
       );
 
       if (token === actualToken) {
-        const updateData: Partial<User> = {
+        const updateData: Partial<UserI> = {
           phoneNumber: data,
         };
 

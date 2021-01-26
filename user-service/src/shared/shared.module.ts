@@ -4,8 +4,10 @@ import { MailmanModule } from '@squareboat/nest-mailman';
 import { TwilioModule } from 'nestjs-twilio';
 import { mailConfig, twilioConfig } from 'src/config';
 import { MailModule } from './mail/mail.module';
+import { MailService } from './mail/mail.service';
 import { DateScalar } from './scalars/date.scalar';
 import { SmsModule } from './sms/sms.module';
+import { SmsService } from './sms/sms.service';
 
 // for testing purposes app can manage different env files
 const ENV = process.env.NODE_ENV;
@@ -31,7 +33,7 @@ const ENV = process.env.NODE_ENV;
     SmsModule,
     SharedModule,
   ],
-  providers: [DateScalar],
-  exports: [SmsModule, MailModule],
+  providers: [DateScalar, MailService, SmsService],
+  exports: [SmsModule, MailModule, MailService, SmsService],
 })
 export class SharedModule {}

@@ -7,8 +7,5 @@
             <app-fielderrors [form]="phoneForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
         </div>
         <button pButton type="button" label="Click" [disabled]="!phoneForm.valid" (click)="onPhoneFormSubmit()"></button>
-        <div class="ui-g">
-            <a routerLink="/account/change-phone/token">Type confirmation code</a>
-        </div>
     </p-panel>    
 </form>

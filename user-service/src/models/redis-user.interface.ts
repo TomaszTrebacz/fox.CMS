@@ -3,7 +3,7 @@
   exists only in redis database
   which is shared between microservices
 */
-export interface RedisUser {
+export interface RedisUserI {
   role?: string;
   confirmed?: string;
   count?: number;

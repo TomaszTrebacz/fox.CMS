@@ -1,7 +1,7 @@
-import { User } from 'src/interfaces/user.interface';
+import { UserI } from 'src/models/user.interface';
 import { EntitySchema } from 'typeorm';
 
-export const UserEntity = new EntitySchema<User>({
+export const UserEntity = new EntitySchema<UserI>({
   name: 'users',
   columns: {
     id: {

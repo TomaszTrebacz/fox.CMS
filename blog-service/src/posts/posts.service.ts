@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostEntity } from '../entities/post.entity';
-import { PostI } from '../interfaces/post.interface';
+import { PostI } from '../models/post.interface';
 import { isExecuted, isFound } from '../utils';
 
 @Injectable()

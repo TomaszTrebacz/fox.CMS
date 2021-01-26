@@ -8,7 +8,7 @@ import { UsersService } from '../users/users.service';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { comparePassword } from 'src/utils';
 import { LoginDto, ChangeRoleDto } from './dto';
-import { User } from 'src/interfaces';
+import { UserI } from 'src/models';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +18,7 @@ export class AuthService {
     private redisHandler: RedisHandlerService,
   ) {}
 
-  async validateUser(loginCredentials: LoginDto): Promise<User> {
+  async validateUser(loginCredentials: LoginDto): Promise<UserI> {
     const user = await this.usersService.findOneByEmail(loginCredentials.email);
 
     if (user == undefined) {

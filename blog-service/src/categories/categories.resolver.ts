@@ -1,7 +1,7 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { CategoriesService } from './categories.service';
 import { Auth, userRole } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { CategoryI } from '../interfaces/category.interface';
+import { CategoryI } from '../models/category.interface';
 import { CreateCategoryDto, EditCategoryDto } from './dto';
 
 @Resolver('Category')

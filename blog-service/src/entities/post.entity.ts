@@ -1,4 +1,4 @@
-import { PostI } from '../interfaces/post.interface';
+import { PostI } from '../models/post.interface';
 import { EntitySchema } from 'typeorm';
 
 export const PostEntity = new EntitySchema<PostI>({

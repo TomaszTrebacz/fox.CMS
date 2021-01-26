@@ -13,7 +13,7 @@ import {
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { User } from '../graphql';
 import { PostsService } from './posts.service';
-import { PostI } from '../interfaces/post.interface';
+import { PostI } from '../models/post.interface';
 import { ChangeCategoryPostDto, CreatePostDto, EditPostDto } from './dto';
 
 @Resolver('Post')

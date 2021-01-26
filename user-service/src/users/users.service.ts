@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { comparePassword, Fragment, hashPassword, lowercase } from 'src/utils';
-import { User } from 'src/interfaces';
+import { UserI } from 'src/models';
 import { UserEntity } from 'src/database/entities/user.entity';
 
 @Injectable()
@@ -13,25 +13,25 @@ export class UsersService {
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
     @InjectRepository(UserEntity)
-    private usersRepository: Repository<User>,
+    private usersRepository: Repository<UserI>,
     private redisHandler: RedisHandlerService,
   ) {}
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<UserI[]> {
     return this.usersRepository.find();
   }
 
-  async findOneById(id: string): Promise<User> {
+  async findOneById(id: string): Promise<UserI> {
     return await this.usersRepository.findOne(id);
   }
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<UserI> {
     return await this.usersRepository.findOne({
       where: { email: lowercase(email) },
     });
   }
 
-  async findOneByPhoneNumber(phoneNumber: string): Promise<User> {
+  async findOneByPhoneNumber(phoneNumber: string): Promise<UserI> {
     return await this.usersRepository.findOne({
       where: { phoneNumber: phoneNumber },
     });
@@ -39,10 +39,10 @@ export class UsersService {
 
   async createUser(
     createData: Fragment<
-      User,
+      UserI,
       'email' | 'firstName' | 'lastName' | 'password' | 'phoneNumber'
     >,
-  ): Promise<User> {
+  ): Promise<UserI> {
     const validatedUser = {
       ...createData,
       email: lowercase(createData.email),
@@ -54,7 +54,7 @@ export class UsersService {
     return createdUser;
   }
 
-  async updateUser(updateData: Partial<User>, id: string): Promise<boolean> {
+  async updateUser(updateData: Partial<UserI>, id: string): Promise<boolean> {
     const currentData = await this.findOneById(id);
 
     const finalData = Object.assign(currentData, updateData);

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoryEntity } from '../entities/category.entity';
-import { CategoryI } from '../interfaces/category.interface';
+import { CategoryI } from '../models/category.interface';
 import { isExecuted, isFound } from '../utils';
 
 @Injectable()

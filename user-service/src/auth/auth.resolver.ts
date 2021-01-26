@@ -9,10 +9,10 @@ import {
   RedisHandlerService,
   CurrentUser,
   Auth,
+  userRole,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { LoginResponse, TokenResponse, User } from '../graphql';
-import { userRole } from '../enums';
-import { ExtendedUser, RedisUser } from '../interfaces';
+import { LoginResponse, TokenResponse } from '../graphql';
+import { ExtendedUserI, RedisUserI, UserI } from '../models';
 import {
   ChangePassByTokenDto,
   ChangeRoleDto,
@@ -40,7 +40,7 @@ export class AuthResolver {
     const keys: string[] = ['role', 'count'];
     const redisUser = await this.redisHandler.getFields(partialUser.id, keys);
 
-    const user: ExtendedUser = {
+    const user: ExtendedUserI = {
       ...partialUser,
       ...redisUser,
       count: parseInt(redisUser.count),
@@ -88,7 +88,7 @@ export class AuthResolver {
       );
 
       const keys: string[] = ['refreshtoken', 'count'];
-      const user: RedisUser = await this.redisHandler.getFields(
+      const user: RedisUserI = await this.redisHandler.getFields(
         decodedJWT.id,
         keys,
       );
@@ -377,7 +377,7 @@ export class AuthResolver {
   @Mutation()
   @Auth()
   async changePassword(
-    @CurrentUser() user: User,
+    @CurrentUser() user: UserI,
     @Args('password') password: string,
   ): Promise<boolean> {
     try {
