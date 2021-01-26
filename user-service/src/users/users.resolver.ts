@@ -155,7 +155,7 @@ export class UsersResolver {
 
       await this.redisHandler.setUser(user.id, changePhoneField);
 
-      const changePhoneLink = `${process.env.FRONTEND_URL}/users/account/change-phone/token?token=${changePhoneToken}`;
+      const changePhoneLink = `${process.env.FRONTEND_URL}/account/change-phone/token?token=${changePhoneToken}`;
 
       const mail = {
         mailAddress: email,
