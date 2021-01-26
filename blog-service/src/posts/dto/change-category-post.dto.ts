@@ -1,10 +1,10 @@
-import { MinLength, MaxLength, IsEmpty, IsNumber } from 'class-validator';
+import { CategoryExist } from '../../validators';
 import { ChangeCategoryPostInput } from '../../graphql';
 
-export class CreatePostDto extends ChangeCategoryPostInput {
-  @IsNumber()
+export class ChangeCategoryPostDto extends ChangeCategoryPostInput {
+  @CategoryExist()
   id: number;
 
-  @IsNumber()
+  @CategoryExist()
   category: number;
 }

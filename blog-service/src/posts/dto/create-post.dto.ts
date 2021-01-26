@@ -1,16 +1,16 @@
-import { IsUrl, IsUUID, Validate } from 'class-validator';
-import { categoryExists } from 'src/validators/categoryExists.validator';
-import { FieldLength } from 'src/validators/FieldLength.validator';
+import { IsUrl, MaxLength, MinLength } from 'class-validator';
+import { CategoryExist } from '../../validators';
 import { CreatePostInput } from '../../graphql';
 
 export class CreatePostDto extends CreatePostInput {
-  @Validate(FieldLength, [3, 50])
+  @MinLength(10)
+  @MaxLength(50)
   title: string;
 
-  @Validate(FieldLength, [10])
+  @MinLength(10)
   text: string;
 
-  @Validate(categoryExists)
+  @CategoryExist()
   category: number;
 
   @IsUrl()

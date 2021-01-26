@@ -1,22 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
 import { DateScalar } from './shared';
 import { GraphQLFederationModule } from '@nestjs/graphql';
 import { CategoriesModule } from './categories/categories.module';
 import { RedisModule } from 'nestjs-redis';
 import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
-
 import {
   GqlConfigService,
   databaseConfig,
   jwtConfig,
   redisConfig,
 } from './config';
-import { categoryExists, FieldLength } from './validators';
 
 // for testing purposes app can manage different env files
 const ENV = process.env.NODE_ENV;
@@ -45,7 +41,6 @@ const ENV = process.env.NODE_ENV;
     CategoriesModule,
     AuthGqlRedisModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, DateScalar, FieldLength],
+  providers: [DateScalar],
 })
 export class AppModule {}

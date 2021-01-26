@@ -5,7 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { CategoriesService } from 'src/categories/categories.service';
+import { CategoriesService } from '../categories/categories.service';
 
 @ValidatorConstraint({ name: 'categoryExist', async: true })
 @Injectable()
@@ -13,7 +13,7 @@ export class categoryExist implements ValidatorConstraintInterface {
   constructor(protected readonly categoriesService: CategoriesService) {}
 
   validate(id: number) {
-    return this.categoriesService.findOne(id).then(category => {
+    return this.categoriesService.findOneById(id).then(category => {
       if (category) return true;
       return false;
     });
@@ -25,7 +25,7 @@ export class categoryExist implements ValidatorConstraintInterface {
 }
 
 export function CategoryExist(validationOptions?: ValidationOptions) {
-  return function(object: Object, propertyName: string) {
+  return function(object: unknown, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,

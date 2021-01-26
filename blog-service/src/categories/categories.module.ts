@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesService } from './categories.service';
 import { CategoriesResolver } from './categories.resolver';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { categoryExist } from 'src/validators';
-import { CategoryEntity } from 'src/entities/category.entity';
+import { CategoryEntity } from '../entities/category.entity';
+import { categoryExist, categoryUnique } from '../validators';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CategoryEntity])],
-  providers: [CategoriesResolver, CategoriesService, categoryExist],
+  providers: [
+    CategoriesResolver,
+    CategoriesService,
+    categoryExist,
+    categoryUnique,
+  ],
 })
 export class CategoriesModule {}

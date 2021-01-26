@@ -1,93 +1,92 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Post } from '../entities/post.entity';
+import { PostEntity } from '../entities/post.entity';
+import { PostI } from '../interfaces/post.interface';
+import { isExecuted, isFound } from '../utils';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Post)
-    private PostsRepository: Repository<Post>,
+    @InjectRepository(PostEntity)
+    private PostsRepository: Repository<PostI>,
   ) {}
 
-  findAll(): Promise<Post[]> {
-    return this.PostsRepository.find({
+  async findAll(): Promise<PostI[]> {
+    const res = await this.PostsRepository.find({
+      relations: ['category'],
+    });
+
+    await isFound(res);
+
+    return res;
+  }
+
+  async findOne(id: number): Promise<PostI> {
+    return await this.PostsRepository.findOneOrFail(id, {
       relations: ['category'],
     });
   }
 
-  findOne(id: number): Promise<Post> {
-    return this.PostsRepository.findOneOrFail(id, { relations: ['category'] });
+  async findUserPosts(id: string): Promise<PostI[]> {
+    const res = await this.PostsRepository.find({ userId: id });
+
+    await isFound(res);
+
+    return res;
   }
 
-  findUserPosts(id: string): Promise<Post[]> {
-    return this.PostsRepository.find({ where: { userId: id } });
-  }
+  async createPost(
+    createData: Pick<PostI, 'title' | 'text' | 'category' | 'imageUrl'>,
+  ): Promise<PostI> {
+    const { id } = await this.PostsRepository.save(createData);
 
-  async createPost(createData): Promise<Post> {
-    const post = await this.PostsRepository.save(createData);
-
-    const productWithCategory = await this.PostsRepository.findOne({
-      where: { id: post.id },
+    const postWithCategory = await this.PostsRepository.findOne({
+      where: { id: id },
       relations: ['category'],
     });
 
-    return productWithCategory;
+    return postWithCategory;
   }
 
-  async editPost(updateData): Promise<boolean> {
-    try {
-      await this.PostsRepository.update(updateData.id, {
-        title: updateData.title,
-        text: updateData.text,
-      });
+  async editPost({
+    id,
+    title,
+    text,
+  }: Pick<PostI, 'id' | 'title' | 'text'>): Promise<boolean> {
+    const res = await this.PostsRepository.update(id, {
+      title: title,
+      text: text,
+    });
 
-      return true;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    await isExecuted(res);
+
+    return true;
   }
 
-  async changeCategoryPost(changeData): Promise<Post> {
-    try {
-      await this.PostsRepository.update(changeData.id, {
-        category: changeData.category,
-      });
-
-      const productWithCategory = await this.PostsRepository.findOne({
-        where: { id: changeData.id },
-        relations: ['category'],
-      });
-
-      return productWithCategory;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+  async changeCategoryPost({
+    id,
+    category,
+  }: Pick<PostI, 'id' | 'category'>): Promise<PostI> {
+    return await this.PostsRepository.save({
+      id: id,
+      category: category,
+    });
   }
 
   async deletePost(id: number): Promise<boolean> {
-    try {
-      const post = await this.PostsRepository.findOne(id);
+    const res = await this.PostsRepository.delete(id);
 
-      if (!post) {
-        throw new Error('There are no post with given id');
-      }
+    await isExecuted(res);
 
-      await this.PostsRepository.delete(id);
-
-      return true;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    return true;
   }
 
   async deleteUserPosts(id: string): Promise<boolean> {
-    try {
-      await this.PostsRepository.delete({ userId: id });
+    const res = await this.PostsRepository.delete({ userId: id });
 
-      return true;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    await isExecuted(res);
+
+    return true;
   }
 }

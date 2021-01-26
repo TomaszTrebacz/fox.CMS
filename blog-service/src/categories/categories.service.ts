@@ -1,61 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from '../entities/category.entity';
 import { Repository } from 'typeorm';
-import { Fragment } from 'src/utils/fragment.type';
+import { CategoryEntity } from '../entities/category.entity';
+import { CategoryI } from '../interfaces/category.interface';
+import { isExecuted, isFound } from '../utils';
 
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectRepository(Category)
-    private CategoriesService: Repository<Category>,
+    @InjectRepository(CategoryEntity)
+    private CategoriesService: Repository<CategoryI>,
   ) {}
 
-  async findAll(): Promise<Category[]> {
-    return await this.CategoriesService.find({ relations: ['posts'] });
+  async findAll(): Promise<CategoryI[]> {
+    const res = await this.CategoriesService.find({ relations: ['posts'] });
+
+    await isFound(res);
+
+    return res;
   }
 
-  async findOne(id: number): Promise<Category> {
-    return await this.CategoriesService.findOne(id, { relations: ['posts'] });
+  async findOneById(id: number): Promise<CategoryI> {
+    return await this.CategoriesService.findOneOrFail(id, {
+      relations: ['posts'],
+    });
+  }
+
+  async findOneByName(name: string): Promise<CategoryI> {
+    return await this.CategoriesService.findOne({ name: name });
   }
 
   async createCategory(
-    createData: Fragment<Category, 'name'>,
-  ): Promise<Category> {
-    try {
-      const category = await this.CategoriesService.save(createData);
-      return category;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    createData: Pick<CategoryI, 'name'>,
+  ): Promise<CategoryI> {
+    return await this.CategoriesService.save(createData);
   }
 
-  async editCategory(
-    editData: Fragment<Category, 'id' | 'name'>,
-  ): Promise<boolean> {
-    try {
-      await this.CategoriesService.update(editData.id, {
-        name: editData.name,
-      });
-      return true;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+  async editCategory({
+    id,
+    name,
+  }: Pick<CategoryI, 'id' | 'name'>): Promise<boolean> {
+    const res = await this.CategoriesService.update(id, {
+      name: name,
+    });
+
+    await isExecuted(res);
+
+    return true;
   }
 
   async deleteCategory(id: number): Promise<boolean> {
-    try {
-      const category = await this.CategoriesService.findOne(id);
+    const res = await this.CategoriesService.delete(id);
 
-      if (!category) {
-        throw new Error('There are no category with given id');
-      }
+    await isExecuted(res);
 
-      await this.CategoriesService.delete(id);
-
-      return true;
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    return true;
   }
 }

@@ -1,41 +1,42 @@
 import {
   Resolver,
   Query,
-  ResolveProperty,
   Parent,
   Mutation,
   Args,
-  ResolveReference,
+  ResolveField,
 } from '@nestjs/graphql';
-import { Auth, CurrentUser } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { userRole } from '../enums';
-import { ChangeCategoryPostInput, User } from '../graphql';
-import { Post } from '../entities/post.entity';
+import {
+  Auth,
+  CurrentUser,
+  userRole,
+} from '@tomasztrebacz/nest-auth-graphql-redis';
+import { User } from '../graphql';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { EditPostDto } from './dto/edit-post.dto';
+import { PostI } from '../interfaces/post.interface';
+import { ChangeCategoryPostDto, CreatePostDto, EditPostDto } from './dto';
 
 @Resolver('Post')
 export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
   @Query('posts')
-  async findAll() {
-    return this.postsService.findAll();
+  async findAll(): Promise<PostI[]> {
+    return await this.postsService.findAll();
   }
 
   @Query('post')
-  async findOne(@Args('id') id: number): Promise<Post> {
-    return this.postsService.findOne(id);
+  async findOne(@Args('id') id: number): Promise<PostI> {
+    return await this.postsService.findOne(id);
   }
 
   @Query('userPosts')
-  async findUserPosts(@Args('id') id: string): Promise<Post[]> {
-    return this.postsService.findUserPosts(id);
+  async findUserPosts(@Args('id') id: string): Promise<PostI[]> {
+    return await this.postsService.findUserPosts(id);
   }
 
-  @ResolveProperty('user')
-  getUser(@Parent() post: Post) {
+  @ResolveField('user')
+  getUser(@Parent() post: PostI) {
     return { __typename: 'User', id: post.userId };
   }
 
@@ -44,15 +45,19 @@ export class PostsResolver {
   async createPost(
     @CurrentUser() user: User,
     @Args('createPostInput') createData: CreatePostDto,
-  ): Promise<Post> {
-    const data = {
-      ...createData,
-      userId: user.id,
-    };
+  ): Promise<PostI> {
+    try {
+      const data = {
+        ...createData,
+        userId: user.id,
+      };
 
-    const createdPost = await this.postsService.createPost(data);
+      const createdPost = await this.postsService.createPost(data);
 
-    return createdPost;
+      return createdPost;
+    } catch (err) {
+      throw new Error(`Can not create post: ${err.message}`);
+    }
   }
 
   @Mutation('editPost')
@@ -72,7 +77,7 @@ export class PostsResolver {
   @Mutation('changeCategoryPost')
   @Auth(userRole.ADMIN, userRole.ROOT)
   async changeCategoryPost(
-    @Args('changeCategoryPostInput') changeData: ChangeCategoryPostInput,
+    @Args('changeCategoryPostInput') changeData: ChangeCategoryPostDto,
   ): Promise<boolean> {
     try {
       await this.postsService.changeCategoryPost(changeData);
@@ -86,15 +91,25 @@ export class PostsResolver {
   @Mutation('deletePost')
   @Auth(userRole.ADMIN, userRole.ROOT)
   async deletePost(@Args('id') id: number): Promise<boolean> {
-    await this.postsService.deletePost(id);
+    try {
+      await this.postsService.deletePost(id);
 
-    return true;
+      return true;
+    } catch (err) {
+      throw new Error(`Can not delete post: ${err.message}`);
+    }
   }
 
   @Mutation('deleteUserPosts')
   async deleteUserPosts(@Args('id') id: string): Promise<boolean> {
-    await this.postsService.deleteUserPosts(id);
+    try {
+      await this.postsService.deleteUserPosts(id);
 
-    return true;
+      return true;
+    } catch (err) {
+      throw new Error(
+        `Can not delete posts related to user with id - ${id}: ${err.message}`,
+      );
+    }
   }
 }

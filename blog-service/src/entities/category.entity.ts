@@ -1,11 +1,5 @@
-import { CategoryI } from 'src/interfaces/category.interface';
-import {
-  Column,
-  Entity,
-  EntitySchema,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { CategoryI } from '../interfaces/category.interface';
+import { EntitySchema } from 'typeorm';
 
 export const CategoryEntity = new EntitySchema<CategoryI>({
   name: 'categories',

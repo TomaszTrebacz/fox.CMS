@@ -1,35 +1,37 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { Auth } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { userRole } from '../enums';
-import { Category } from '../entities/category.entity';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { EditCategoryDto } from './dto/edit-category.dto';
+import { Auth, userRole } from '@tomasztrebacz/nest-auth-graphql-redis';
+import { CategoryI } from '../interfaces/category.interface';
+import { CreateCategoryDto, EditCategoryDto } from './dto';
 
 @Resolver('Category')
 export class CategoriesResolver {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Query('categories')
-  async findAll(): Promise<Category[]> {
+  async findAll(): Promise<CategoryI[]> {
     return await this.categoriesService.findAll();
   }
 
   @Query('category')
-  async findOne(@Args('id') id: number): Promise<Category> {
-    return await this.categoriesService.findOne(id);
+  async findOne(@Args('id') id: number): Promise<CategoryI> {
+    return await this.categoriesService.findOneById(id);
   }
 
   @Mutation('createCategory')
   @Auth(userRole.ADMIN, userRole.ROOT)
   async createCategory(
     @Args('createCategoryInput') createData: CreateCategoryDto,
-  ): Promise<Category> {
-    const createdCategory = await this.categoriesService.createCategory(
-      createData,
-    );
+  ): Promise<CategoryI> {
+    try {
+      const createdCategory = await this.categoriesService.createCategory(
+        createData,
+      );
 
-    return createdCategory;
+      return createdCategory;
+    } catch (err) {
+      throw Error(`Can not create category: ${err.message}`);
+    }
   }
 
   @Mutation('editCategory')
@@ -39,18 +41,22 @@ export class CategoriesResolver {
   ): Promise<boolean> {
     try {
       await this.categoriesService.editCategory(editData);
+
+      return true;
     } catch (err) {
       throw new Error(`Can not edit category: ${err.message}`);
     }
-
-    return true;
   }
 
   @Mutation('deleteCategory')
   @Auth(userRole.ADMIN, userRole.ROOT)
   async deleteCategory(@Args('id') id: number): Promise<boolean> {
-    await this.categoriesService.deleteCategory(id);
+    try {
+      await this.categoriesService.deleteCategory(id);
 
-    return true;
+      return true;
+    } catch (err) {
+      throw new Error(`Can not delete category: ${err.message}`);
+    }
   }
 }

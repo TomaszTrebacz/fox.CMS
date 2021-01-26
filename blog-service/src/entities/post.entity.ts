@@ -1,13 +1,5 @@
-import { PostI } from 'src/interfaces/post.interface';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  UpdateDateColumn,
-  EntitySchema,
-} from 'typeorm';
+import { PostI } from '../interfaces/post.interface';
+import { EntitySchema } from 'typeorm';
 
 export const PostEntity = new EntitySchema<PostI>({
   name: 'posts',
