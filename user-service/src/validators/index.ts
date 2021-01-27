@@ -1,3 +1,2 @@
-export * from './FieldLength.validator';
-export * from './emailExists.validator';
-export * from './phoneNumberExists.validator';
+export * from './emailExist.validator';
+export * from './phoneNumberExist.validator';

@@ -1,23 +1,23 @@
-import { IsEmpty, IsEmail, IsMobilePhone, Validate } from 'class-validator';
-import { emailExists, FieldLength, phoneNumberExists } from 'src/validators';
+import { IsEmail, IsMobilePhone, Length } from 'class-validator';
+import { EmailExist, PhoneNumberExist } from '../../validators';
 import { CreateUserInput } from '../../graphql';
 
 export class CreateUserDto extends CreateUserInput {
   @IsEmail()
-  @Validate(FieldLength, [6, 62])
-  @Validate(emailExists)
+  @Length(3, 62)
+  @EmailExist()
   email: string;
 
-  @Validate(FieldLength, [2, 50])
+  @Length(3, 50)
   firstName: string;
 
-  @Validate(FieldLength, [6, 50])
+  @Length(6, 50)
   lastName: string;
 
-  @Validate(FieldLength, [8, 128])
+  @Length(8, 128)
   password: string;
 
   @IsMobilePhone()
-  @Validate(phoneNumberExists)
+  @PhoneNumberExist()
   phoneNumber: string;
 }

@@ -3,12 +3,14 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
   ValidationArguments,
+  ValidationOptions,
+  registerDecorator,
 } from 'class-validator';
 import { UsersService } from '../users/users.service';
 
-@ValidatorConstraint({ name: 'phoneNumberExists', async: true })
+@ValidatorConstraint({ name: 'phoneNumberExist', async: true })
 @Injectable()
-export class phoneNumberExists implements ValidatorConstraintInterface {
+export class phoneNumberExist implements ValidatorConstraintInterface {
   constructor(protected readonly usersService: UsersService) {}
 
   validate(phone: string) {
@@ -21,4 +23,16 @@ export class phoneNumberExists implements ValidatorConstraintInterface {
   defaultMessage(args: ValidationArguments) {
     return `${args.property.toUpperCase()} is in use!`;
   }
+}
+
+export function PhoneNumberExist(validationOptions?: ValidationOptions) {
+  return function(object: unknown, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: phoneNumberExist,
+    });
+  };
 }
