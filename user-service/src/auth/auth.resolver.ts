@@ -1,9 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { AuthenticationError } from 'apollo-server-core';
 import { UsersService } from '../users/users.service';
-import { MailService, SmsService } from '../shared';
-import * as generator from 'generate-password';
 import {
   AuthGqlRedisService,
   RedisHandlerService,
@@ -12,13 +9,16 @@ import {
   userRole,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { LoginResponse, TokenResponse } from '../graphql';
-import { ExtendedUserI, RedisUserI, UserI } from '../models';
+import { ExtendedUserI, UserI, RedisUserI } from '../models';
 import {
   ChangePassByTokenDto,
   ChangeRoleDto,
   LoginDto,
   ResetPasswordDto,
 } from './dto';
+import { MailService } from '../shared/mail/mail.service';
+import { SmsService } from '../shared/sms/sms.service';
+import { generatePassword, generateRandomCode } from '../utils';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -26,107 +26,117 @@ export class AuthResolver {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly mailService: MailService,
-    private readonly redisHandler: RedisHandlerService,
-    private readonly authGqlRedisService: AuthGqlRedisService,
     private readonly smsService: SmsService,
+    private readonly redisHandler: RedisHandlerService,
+    private readonly authGqlRedis: AuthGqlRedisService,
   ) {}
 
   @Query('login')
   async login(
     @Args('loginCredentials') loginCredentials: LoginDto,
   ): Promise<LoginResponse> {
-    const partialUser = await this.authService.validateUser(loginCredentials);
+    try {
+      const postgresUser = await this.authService.validateUser(
+        loginCredentials,
+      );
 
-    const keys: string[] = ['role', 'count'];
-    const redisUser = await this.redisHandler.getFields(partialUser.id, keys);
+      const keys = ['role', 'count'];
+      const redisUser = await this.redisHandler.getFields(
+        postgresUser.id,
+        keys,
+      );
 
-    const user: ExtendedUserI = {
-      ...partialUser,
-      ...redisUser,
-      count: parseInt(redisUser.count),
-    };
+      const user: ExtendedUserI = {
+        ...postgresUser,
+        ...redisUser,
+        count: parseInt(redisUser.count),
+      };
 
-    const accessToken = await this.authGqlRedisService.createDefaultJWT(
-      user.id,
-    );
+      const accessToken = await this.authGqlRedis.createDefaultJWT(user.id);
 
-    const refreshPayload = {
-      id: user.id,
-      count: user.count,
-    };
+      const refreshPayload = {
+        id: user.id,
+        count: user.count,
+      };
 
-    const refreshToken = await this.authGqlRedisService.createJWT(
-      refreshPayload,
-      process.env.REFRESH_JWT_SECRET,
-      process.env.REFRESH_JWT_EXP,
-    );
+      const refreshToken = await this.authGqlRedis.createJWT(
+        refreshPayload,
+        process.env.REFRESH_JWT_SECRET,
+        process.env.REFRESH_JWT_EXP,
+      );
 
-    const refreshField = new Map<string, string>([
-      ['refreshtoken', refreshToken],
-    ]);
+      const refreshField = new Map<keyof RedisUserI, string>([
+        ['refreshtoken', refreshToken],
+      ]);
 
-    await this.redisHandler.setUser(user.id, refreshField);
+      await this.redisHandler.setUser(user.id, refreshField);
 
-    const loginResponse = {
-      user: user,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      role: user.role,
-    };
+      const loginResponse = {
+        user,
+        accessToken,
+        refreshToken,
+        role: user.role,
+      };
 
-    return loginResponse;
+      return loginResponse;
+    } catch (err) {
+      throw new Error(`Can not sign in: ${err.message}`);
+    }
   }
 
   @Mutation('refreshToken')
   async refreshToken(
-    @Args('refreshToken') refreshToken: string,
+    @Args('refreshToken') refreshToken: Pick<RedisUserI, 'refreshtoken'>,
   ): Promise<TokenResponse> {
     try {
-      const decodedJWT = await this.authGqlRedisService.verifyToken(
+      const decodedJWT = await this.authGqlRedis.verifyToken(
         refreshToken,
         process.env.REFRESH_JWT_SECRET,
       );
 
       const keys: string[] = ['refreshtoken', 'count'];
+
       const user: RedisUserI = await this.redisHandler.getFields(
         decodedJWT.id,
         keys,
       );
 
       if (
-        refreshToken === user.refreshtoken &&
-        decodedJWT.count == user.count // count mechanism is an alternative to blackmailing tokens
+        refreshToken !== user.refreshtoken ||
+        decodedJWT.count != user.count // count mechanism is an alternative to blackmailing tokens
       ) {
-        const newAccessToken = await this.authGqlRedisService.createDefaultJWT(
-          decodedJWT.id,
-        );
-
-        const refreshPayload = {
-          id: decodedJWT.id,
-          count: decodedJWT.count,
-        };
-
-        const newRefreshToken = await this.authGqlRedisService.createJWT(
-          refreshPayload,
-          process.env.REFRESH_JWT_SECRET,
-          process.env.REFRESH_JWT_EXP,
-        );
-
-        const refreshField = new Map<string, string>([
-          ['refreshtoken', newRefreshToken],
-        ]);
-
-        await this.redisHandler.setUser(decodedJWT.id, refreshField);
-
-        const TokenResponse = {
-          accessToken: newAccessToken,
-          refreshToken: newRefreshToken,
-        };
-
-        return TokenResponse;
+        throw new Error('Validation error.');
       }
+
+      const newAccessToken = await this.authGqlRedis.createDefaultJWT(
+        decodedJWT.id,
+      );
+
+      const refreshPayload = {
+        id: decodedJWT.id,
+        count: decodedJWT.count,
+      };
+
+      const newRefreshToken = await this.authGqlRedis.createJWT(
+        refreshPayload,
+        process.env.REFRESH_JWT_SECRET,
+        process.env.REFRESH_JWT_EXP,
+      );
+
+      const refreshField = new Map<keyof RedisUserI, string>([
+        ['refreshtoken', newRefreshToken],
+      ]);
+
+      await this.redisHandler.setUser(decodedJWT.id, refreshField);
+
+      const TokenResponse = {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
+
+      return TokenResponse;
     } catch (err) {
-      throw new AuthenticationError(err);
+      throw new Error(err.message);
     }
   }
 
@@ -135,9 +145,13 @@ export class AuthResolver {
   async changeRole(
     @Args('changeRoleInput') changeRoleData: ChangeRoleDto,
   ): Promise<boolean> {
-    await this.authService.changeRole(changeRoleData);
+    try {
+      await this.authService.changeRole(changeRoleData);
 
-    return true;
+      return true;
+    } catch (err) {
+      throw new Error(`Can not change role: ${err.message}`);
+    }
   }
 
   @Mutation()
@@ -145,22 +159,24 @@ export class AuthResolver {
     @Args('confirmToken') confirmToken: string,
   ): Promise<boolean> {
     try {
-      const { id } = await this.authGqlRedisService.verifyToken(
+      const { id } = await this.authGqlRedis.verifyToken(
         confirmToken,
         process.env.CONFIRM_JWT_SECRET,
       );
 
       const actualToken = await this.redisHandler.getValue(id, 'confirmtoken');
 
-      if (confirmToken == actualToken) {
-        const confirmField = new Map<string, string>([['confirmed', 'true']]);
-
-        await this.redisHandler.setUser(id, confirmField);
-
-        await this.redisHandler.deleteField(id, 'confirmtoken');
-      } else {
-        throw new Error('Please check your email. Token is not valid.');
+      if (confirmToken !== actualToken) {
+        throw new Error('Token is not valid.');
       }
+
+      const confirmField = new Map<keyof RedisUserI, string>([
+        ['confirmed', 'true'],
+      ]);
+
+      await this.redisHandler.setUser(id, confirmField);
+
+      await this.redisHandler.deleteField(id, 'confirmtoken');
 
       return true;
     } catch (err) {
@@ -174,40 +190,39 @@ export class AuthResolver {
       const user = await this.usersService.findOneByEmail(email);
 
       if (user == undefined) {
-        throw new Error('There is no user with given email!');
+        throw new Error('Wrong email or password!');
       }
-      const { id, firstName, lastName } = user;
 
-      const confirmed = await this.redisHandler.getValue(id, 'confirmed');
+      const confirmed = await this.redisHandler.getValue(user.id, 'confirmed');
 
       if (confirmed === 'true') {
         throw new Error('User has been confirmed earlier.');
       }
 
       const JWTpayload = {
-        id: id,
+        id: user.id,
       };
 
-      const newConfirmJWT = await this.authGqlRedisService.createJWT(
+      const newConfirmJWT = await this.authGqlRedis.createJWT(
         JWTpayload,
         process.env.CONFIRM_JWT_SECRET,
         process.env.CONFIRM_JWT_EXP,
       );
 
-      const confirmField = new Map<string, string>([
+      const confirmField = new Map<keyof RedisUserI, string>([
         ['confirmtoken', newConfirmJWT],
       ]);
 
-      await this.redisHandler.setUser(id, confirmField);
+      await this.redisHandler.setUser(user.id, confirmField);
 
       const newConfirmLink = `${process.env.FRONTEND_URL}/users/confirm-account?token=${newConfirmJWT}`;
 
       const mail = {
-        greeting: `Hi ${firstName} ${lastName}!`,
+        greeting: `Hi ${user.firstName} ${user.lastName}!`,
         content: `We've heard that you asked for new confirmation link.
                 Please confirm your mail by clicking in this link: ${newConfirmLink}. 
                 Make sure you don't share this link publicly, because it's unique for you!`,
-        subject: `Resend confirmation link`,
+        subject: 'Resend confirmation link | foxCMS',
         mailAddress: email,
       };
 
@@ -221,33 +236,33 @@ export class AuthResolver {
 
   @Mutation()
   async sendCodePhone(
-    @Args('phoneNumber') phoneNumber: string,
+    @Args('phoneNumber') givenphoneNumber: string,
   ): Promise<boolean> {
     try {
-      const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
+      const { id, phoneNumber } = await this.usersService.findOneByPhoneNumber(
+        givenphoneNumber,
+      );
 
-      if (user == undefined) {
-        throw new Error('Wrong phone number.');
-      }
-
-      const randomNumber = Math.floor(1000 + Math.random() * 9000);
+      const randomNumber = generateRandomCode();
 
       const JWTpayload = {
         code: randomNumber,
       };
 
-      const codeToken = await this.authGqlRedisService.createJWT(
+      const codeToken = await this.authGqlRedis.createJWT(
         JWTpayload,
         process.env.PHONECODE_JWT_SECRET,
         process.env.PHONECODE_JWT_EXP,
       );
 
-      const codeField = new Map<string, string>([['codetoken', codeToken]]);
+      const codeField = new Map<keyof RedisUserI, string>([
+        ['codetoken', codeToken],
+      ]);
 
-      await this.redisHandler.setUser(user.id, codeField);
+      await this.redisHandler.setUser(id, codeField);
 
       const smsData = {
-        phoneNumber: user.phoneNumber,
+        phoneNumber: phoneNumber,
         body: `Your confirmation code for reset password is ${randomNumber}. Please enter it on website within 5 minutes.`,
       };
 
@@ -266,29 +281,22 @@ export class AuthResolver {
     try {
       const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
 
-      if (user == undefined) {
-        throw new Error('Wrong phone number.');
-      }
-
       const codeToken = await this.redisHandler.getValue(user.id, 'codetoken');
 
-      const jwtPayload = await this.authGqlRedisService.verifyToken(
+      const jwtPayload = await this.authGqlRedis.verifyToken(
         codeToken,
         process.env.PHONECODE_JWT_SECRET,
       );
 
-      if (jwtPayload.code !== code) {
+      if (jwtPayload.code != code) {
         throw new Error('Wrong code.');
       }
 
-      const password = generator.generate({
-        length: 8,
-        numbers: true,
-      });
+      const password = generatePassword(8);
 
       await this.redisHandler.deleteField(user.id, 'codetoken');
 
-      await this.usersService.changePasswordByUser(user.id, password);
+      await this.usersService.changePassword(user.id, password);
 
       const smsData = {
         phoneNumber: user.phoneNumber,
@@ -309,19 +317,20 @@ export class AuthResolver {
       const user = await this.usersService.findOneByEmail(email);
 
       if (user == undefined) {
-        throw new Error('Wrong email.');
+        throw new Error('Wrong email or password!');
       }
 
       const JWTpayload = {
         id: user.id,
       };
 
-      const changePassToken = await this.authGqlRedisService.createJWT(
+      const changePassToken = await this.authGqlRedis.createJWT(
         JWTpayload,
         process.env.EMAIL_JWT_SECRET,
         process.env.EMAIL_JWT_EXP,
       );
-      const changePassField = new Map<string, string>([
+
+      const changePassField = new Map<keyof RedisUserI, string>([
         ['changepasstoken', changePassToken],
       ]);
 
@@ -334,7 +343,7 @@ export class AuthResolver {
         content: `We've heard that you forget your password.
                 Please click in this link: ${changePassLink}. 
                 Make sure you don't share this link publicly, because it's unique!`,
-        subject: `Forget password`,
+        subject: 'Forget password | foxCMS',
         mailAddress: user.email,
       };
 
@@ -351,7 +360,7 @@ export class AuthResolver {
     @Args('changePassByTokenInput') { token, password }: ChangePassByTokenDto,
   ): Promise<boolean> {
     try {
-      const { id } = await this.authGqlRedisService.verifyToken(
+      const { id } = await this.authGqlRedis.verifyToken(
         token,
         process.env.EMAIL_JWT_SECRET,
       );
@@ -361,14 +370,14 @@ export class AuthResolver {
         'changepasstoken',
       );
 
-      if (token === actualToken) {
-        await this.usersService.changePasswordByUser(id, password);
-
-        await this.redisHandler.deleteField(id, 'changepasstoken');
-        return true;
-      } else {
+      if (token !== actualToken) {
         throw new Error('Link is not valid.');
       }
+
+      await this.usersService.changePassword(id, password);
+
+      await this.redisHandler.deleteField(id, 'changepasstoken');
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }
@@ -381,7 +390,8 @@ export class AuthResolver {
     @Args('password') password: string,
   ): Promise<boolean> {
     try {
-      await this.usersService.changePasswordByUser(user.id, password);
+      await this.usersService.changePassword(user.id, password);
+
       return true;
     } catch (err) {
       throw new Error(err.message);

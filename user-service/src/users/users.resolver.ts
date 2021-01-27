@@ -16,9 +16,9 @@ import {
   AccessLevel,
   userRole,
 } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { SmsService, MailService } from '../shared';
-import { UserI } from 'src/models';
-import { Fragment } from 'src/utils';
+import { UserI } from '../models';
+import { SmsService } from '../shared/sms/sms.service';
+import { MailService } from '../shared/mail/mail.service';
 
 @Resolver('User')
 export class UsersResolver {
@@ -37,7 +37,7 @@ export class UsersResolver {
 
   @Query('user')
   async getUser(@Args('id') id: string) {
-    return this.usersService.findOneById(id);
+    return await this.usersService.findOneById(id);
   }
 
   @Query('currentUser')
@@ -47,8 +47,8 @@ export class UsersResolver {
   }
 
   @ResolveReference()
-  resolveReference(reference: { __typename: string; id: string }) {
-    return this.usersService.findOneById(reference.id);
+  async resolveReference(reference: { __typename: string; id: string }) {
+    return await this.usersService.findOneById(reference.id);
   }
 
   @Mutation()
@@ -58,16 +58,12 @@ export class UsersResolver {
     try {
       const createdUser = await this.usersService.createUser(registerData);
 
-      const smsEnabled = process.env.SMS_ENABLED;
+      const smsData = {
+        phoneNumber: createdUser.phoneNumber,
+        body: `Hi ${createdUser.firstName}! Welcome in the foxCMS!`,
+      };
 
-      if (smsEnabled === 'TRUE') {
-        const smsData = {
-          phoneNumber: createdUser.phoneNumber,
-          body: `Hi ${createdUser.firstName}! Welcome in the TravelCove!`,
-        };
-
-        await this.smsService.sendSMS(smsData);
-      }
+      await this.smsService.sendSMS(smsData);
 
       const JWTpayload = {
         id: createdUser.id,
@@ -101,11 +97,11 @@ export class UsersResolver {
         content: `I'm so glad you registered in our app! 
                   Please confirm your mail by clicking in this link: ${confirmLink}. 
                   Make sure you don't share this link publicly, because it's unique for you!`,
-        subject: `Registration in TravelCove app | Confirm your email! `,
+        subject: `Registration in foxCMS | Confirm your email! `,
         mailAddress: createdUser.email,
       };
 
-      this.mailService.sendMail(mail);
+      await this.mailService.sendMail(mail);
 
       return createdUser;
     } catch (err) {
@@ -121,6 +117,7 @@ export class UsersResolver {
   ): Promise<boolean> {
     try {
       await this.usersService.updateUser(updateData, user.id);
+
       return true;
     } catch (err) {
       throw new UserInputError(`Cannot update user: ${err.message}`);
@@ -131,17 +128,13 @@ export class UsersResolver {
   @Auth()
   async sendChangePhoneEmail(
     @CurrentUser() user: UserI,
-    @Args('phoneNumber') phoneNumber: Fragment<UserI, 'phoneNumber'>,
+    @Args('phoneNumber') phoneNumber: string,
   ): Promise<boolean> {
     try {
       const JWTpayload = {
         id: user.id,
         data: phoneNumber,
       };
-
-      const { email } = await this.usersService.findOneById(user.id);
-
-      user = { ...user, email };
 
       const changePhoneToken = await this.authGqlRedisService.createJWT(
         JWTpayload,
@@ -158,12 +151,12 @@ export class UsersResolver {
       const changePhoneLink = `${process.env.FRONTEND_URL}/account/change-phone/token?token=${changePhoneToken}`;
 
       const mail = {
-        mailAddress: email,
-        subject: `Change phone number`,
+        mailAddress: user.email,
         greeting: `Hi ${user.firstName} ${user.lastName}!`,
         content: `We've heard that you want change your phone number.
                 Please click in this link: ${changePhoneLink}. 
                 Make sure you don't share this link publicly, because it's unique!`,
+        subject: 'Change phone number | foxCMS',
       };
 
       await this.mailService.sendMail(mail);
@@ -187,18 +180,19 @@ export class UsersResolver {
         'changephonetoken',
       );
 
-      if (token === actualToken) {
-        const updateData: Partial<UserI> = {
-          phoneNumber: data,
-        };
-
-        await this.usersService.updateUser(updateData, id);
-
-        await this.redisHandler.deleteField(id, 'changephonetoken');
-        return true;
-      } else {
+      if (token !== actualToken) {
         throw new Error('Link is not valid.');
       }
+
+      const updateData: Pick<UserI, 'phoneNumber'> = {
+        phoneNumber: data,
+      };
+
+      await this.usersService.updateUser(updateData, id);
+
+      await this.redisHandler.deleteField(id, 'changephonetoken');
+
+      return true;
     } catch (err) {
       throw new Error(err.message);
     }
@@ -210,6 +204,7 @@ export class UsersResolver {
     try {
       await this.usersService.deleteUser(id);
       await this.redisHandler.deleteUser(id);
+
       return true;
     } catch (err) {
       throw new Error(

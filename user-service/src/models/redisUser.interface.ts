@@ -1,8 +1,3 @@
-/*  
-  this fields related to user
-  exists only in redis database
-  which is shared between microservices
-*/
 export interface RedisUserI {
   role?: string;
   confirmed?: string;

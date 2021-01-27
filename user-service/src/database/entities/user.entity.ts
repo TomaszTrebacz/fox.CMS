@@ -1,4 +1,4 @@
-import { UserI } from 'src/models/user.interface';
+import { UserI } from '../../models';
 import { EntitySchema } from 'typeorm';
 
 export const UserEntity = new EntitySchema<UserI>({

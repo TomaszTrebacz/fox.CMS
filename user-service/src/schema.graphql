@@ -11,26 +11,14 @@ type User @key(fields: "id") {
   updated: Date!
 }
 
-type LoginResponse {
-  user: User!
-  accessToken: String!
-  refreshToken: String!
-  role: String!
-}
-
-type TokenResponse {
-  accessToken: String
-  refreshToken: String
-}
-
 extend type Query {
+  user(id: String!): User
   users: [User]!
   currentUser: User!
-  user(id: String!): User
   login(loginCredentials: LoginInput): LoginResponse
 }
 
-type Mutation {
+extend type Mutation {
   registerUser(createUserInput: CreateUserInput): User
   updateUser(updateUserInput: UpdateUserInput): Boolean
   deleteUser(id: String): Boolean
@@ -46,6 +34,18 @@ type Mutation {
   changePassword(password: String): Boolean
   sendChangePhoneEmail(phoneNumber: String): Boolean
   changePhoneNumber(token: String): Boolean
+}
+
+type LoginResponse {
+  user: User!
+  accessToken: String!
+  refreshToken: String!
+  role: String!
+}
+
+type TokenResponse {
+  accessToken: String
+  refreshToken: String
 }
 
 input CreateUserInput {

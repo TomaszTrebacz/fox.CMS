@@ -6,15 +6,15 @@ import { smsInterface } from './sms.interface';
 export class SmsService {
   public constructor(@InjectTwilio() private readonly client: TwilioClient) {}
 
-  async sendSMS(smsData: smsInterface) {
+  async sendSMS(smsData: smsInterface): Promise<void> {
     try {
-      return await this.client.messages.create({
+      await this.client.messages.create({
         body: smsData.body,
         from: process.env.TWILIO_PHONE_NUMBER,
         to: smsData.phoneNumber,
       });
-    } catch (error) {
-      return error;
+    } catch (err) {
+      throw new Error(`Can not send SMS: ${err.message}`);
     }
   }
 }

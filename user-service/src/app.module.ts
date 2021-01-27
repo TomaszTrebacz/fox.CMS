@@ -5,7 +5,6 @@ import { GraphQLFederationModule } from '@nestjs/graphql';
 import { AuthModule } from './auth/auth.module';
 
 import { GqlConfigService, jwtConfig, redisConfig } from './config';
-import { FieldLength } from './validators';
 import { SharedModule } from './shared/shared.module';
 import { DatabaseModule } from './database/database.module';
 
@@ -27,6 +26,6 @@ const ENV = process.env.NODE_ENV;
     SharedModule,
     DatabaseModule,
   ],
-  providers: [ConfigService, FieldLength],
+  providers: [ConfigService],
 })
 export class AppModule {}

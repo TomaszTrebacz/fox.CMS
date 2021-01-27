@@ -1,17 +1,14 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from '../auth/auth.service';
 import { Repository } from 'typeorm';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { comparePassword, Fragment, hashPassword, lowercase } from 'src/utils';
-import { UserI } from 'src/models';
-import { UserEntity } from 'src/database/entities/user.entity';
+import { hashPassword, isExecuted, lowercase } from '../utils';
+import { UserI } from '../models';
+import { UserEntity } from '../database/entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(forwardRef(() => AuthService))
-    private authService: AuthService,
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserI>,
     private redisHandler: RedisHandlerService,
@@ -22,26 +19,35 @@ export class UsersService {
   }
 
   async findOneById(id: string): Promise<UserI> {
-    return await this.usersRepository.findOne(id);
+    try {
+      return await this.usersRepository.findOneOrFail(id);
+    } catch {
+      throw new Error(`Can not find user with id: ${id}`);
+    }
   }
 
   async findOneByEmail(email: string): Promise<UserI> {
-    return await this.usersRepository.findOne({
-      where: { email: lowercase(email) },
-    });
+    try {
+      return await this.usersRepository.findOne({
+        email: lowercase(email),
+      });
+    } catch (err) {
+      throw new Error('Wrong email!');
+    }
   }
 
   async findOneByPhoneNumber(phoneNumber: string): Promise<UserI> {
-    return await this.usersRepository.findOne({
-      where: { phoneNumber: phoneNumber },
-    });
+    try {
+      return await this.usersRepository.findOneOrFail({
+        phoneNumber: phoneNumber,
+      });
+    } catch {
+      throw new Error('Wrong phone number!');
+    }
   }
 
   async createUser(
-    createData: Fragment<
-      UserI,
-      'email' | 'firstName' | 'lastName' | 'password' | 'phoneNumber'
-    >,
+    createData: Omit<UserI, 'id' | 'created' | 'updated'>,
   ): Promise<UserI> {
     const validatedUser = {
       ...createData,
@@ -58,32 +64,21 @@ export class UsersService {
     const currentData = await this.findOneById(id);
 
     const finalData = Object.assign(currentData, updateData);
+
     await this.usersRepository.save(finalData);
 
     return true;
   }
 
   async deleteUser(id: string): Promise<boolean> {
-    const deleted = await this.usersRepository.delete(id);
+    const res = await this.usersRepository.delete(id);
 
-    if (deleted.affected == 1) {
-      return true;
-    } else {
-      throw new Error('The user has not been deleted.');
-    }
+    await isExecuted(res);
+
+    return true;
   }
 
-  async changePasswordByUser(id: string, password: string): Promise<boolean> {
-    const user = await this.findOneById(id);
-
-    const passwordMatch = await comparePassword(password, user.password);
-
-    if (passwordMatch) {
-      throw new Error(
-        'This is the same password as you currently use! Choose another!',
-      );
-    }
-
+  async changePassword(id: string, password: string): Promise<boolean> {
     const hashedPassword = await hashPassword(password);
 
     const changed = await this.usersRepository.update(id, {

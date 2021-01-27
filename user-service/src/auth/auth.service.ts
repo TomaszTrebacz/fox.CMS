@@ -1,54 +1,35 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { RedisHandlerService } from '@tomasztrebacz/nest-auth-graphql-redis';
-import { comparePassword } from 'src/utils';
-import { LoginDto, ChangeRoleDto } from './dto';
-import { UserI } from 'src/models';
+import { comparePassword } from '../utils';
+import { ExtendedUserI, UserI } from '../models';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UsersService))
-    private usersService: UsersService,
-    private redisHandler: RedisHandlerService,
+    private readonly usersService: UsersService,
+    private readonly redisHandler: RedisHandlerService,
   ) {}
 
-  async validateUser(loginCredentials: LoginDto): Promise<UserI> {
-    const user = await this.usersService.findOneByEmail(loginCredentials.email);
+  async validateUser({
+    email,
+    password,
+  }: Pick<UserI, 'email' | 'password'>): Promise<UserI> {
+    const user = await this.usersService.findOneByEmail(email);
 
-    if (user == undefined) {
-      throw new UnauthorizedException('Wrong email or password!');
-    }
-
-    const passwordMatch = await comparePassword(
-      loginCredentials.password,
-      user.password,
-    );
-
-    if (!passwordMatch) {
-      throw new Error('Wrong email or password!');
-    }
+    await comparePassword(password, user.password);
 
     return user;
   }
 
-  async changeRole({ id, role }: ChangeRoleDto): Promise<boolean> {
-    const user = await this.usersService.findOneById(id);
+  async changeRole({
+    id,
+    role,
+  }: Pick<ExtendedUserI, 'id' | 'role'>): Promise<boolean> {
+    const roleField = new Map<string, string>([['role', role]]);
 
-    if (user == undefined) throw new Error('No user with given id');
-
-    try {
-      const roleField = new Map<string, string>([['role', role]]);
-
-      await this.redisHandler.setUser(id, roleField);
-    } catch (err) {
-      throw new Error(`Can not update role in db: ${err.message}`);
-    }
+    await this.redisHandler.setUser(id, roleField);
 
     return true;
   }
