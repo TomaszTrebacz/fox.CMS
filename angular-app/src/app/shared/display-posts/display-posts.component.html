@@ -11,7 +11,7 @@
       <p-header>
           <img alt="Card" src="{{ post.imageUrl }}">
       </p-header>
-      <p>{{ post.text }}</p>
+        {{ post.text | cut : 53 | cutHtmlTags }}
     </p-card>
     </div>
   </ng-template>

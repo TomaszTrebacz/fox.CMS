@@ -20,9 +20,16 @@ import { RouterModule } from '@angular/router';
 import { AccessDirective } from '../core/directives';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
+import { CutPipe, CutHtmlTagsPipe } from '../core/pipes';
 
 @NgModule({
-  declarations: [FielderrorsComponent, DisplayPostsComponent, AccessDirective],
+  declarations: [
+    FielderrorsComponent,
+    CutPipe,
+    CutHtmlTagsPipe,
+    DisplayPostsComponent,
+    AccessDirective,
+  ],
   imports: [
     CommonModule,
     MessageModule,
