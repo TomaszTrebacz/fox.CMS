@@ -3,16 +3,20 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
+import { User } from 'src/app/core/models';
 import { UserService } from 'src/app/core/services/user/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-account',
   templateUrl: './edit-account.component.html',
-  styleUrls: ['./edit-account.component.css']
+  styleUrls: ['./edit-account.component.css'],
 })
 export class EditAccountComponent implements OnInit {
+  user: Observable<User>;
   form: FormGroup;
   error: '';
+
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
@@ -24,13 +28,26 @@ export class EditAccountComponent implements OnInit {
     this.form = this.fb.group({
       firstName: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+        ],
       ],
       lastName: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
-      ]
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+        ],
+      ],
     });
+
+    this.userService
+      .getCurrentUser()
+      .pipe(first())
+      .subscribe((value) => this.form.patchValue(value));
   }
 
   hasFormErrors() {
@@ -53,17 +70,17 @@ export class EditAccountComponent implements OnInit {
             key: 'defaultToast',
             severity: 'success',
             summary: 'Successfully edited!',
-            detail: `Your account data was edited.`
+            detail: `Your account data was edited.`,
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
             summary: 'Can not edit data',
-            detail: error.message
+            detail: error.message,
           });
-        }
+        },
       });
   }
 }

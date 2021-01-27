@@ -3,7 +3,9 @@
         <p-header style="font-size: 30px;">
             <b>{{ post.title }}</b>
         </p-header>
-        {{ post.text }}
+        <div [innerHTML]="post.text">
+            {{ post.text }}
+          </div>  
         <p-footer>
             <button pButton pRipple type="button" label="Author: {{ post.user.firstName }} {{ post.user.lastName }}" icon="pi pi-user" style="margin-right: 10px;" class="p-button-rounded p-button-success p-button-outlined" routerLink='/users/profile/{{ post.user.id }}'></button> 
             <button pButton pRipple type="button" label="Category: {{ post.category.name}}" icon="pi pi-tag" style="margin-right: 10px;" class="p-button-rounded p-button-info p-button-outlined" routerLink='/blog/category/{{ post.category.id }}'></button>

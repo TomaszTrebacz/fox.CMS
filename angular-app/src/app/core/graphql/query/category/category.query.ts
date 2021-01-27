@@ -14,6 +14,7 @@ export class CategoryGQL extends Query<any> {
           id
           title
           text
+          imageUrl
           user {
             id
             firstName

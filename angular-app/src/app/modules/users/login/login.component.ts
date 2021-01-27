@@ -56,8 +56,8 @@ export class LoginComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Can not log in',
-            detail: error,
+            summary: 'Error!',
+            detail: error.message,
           });
         },
       });

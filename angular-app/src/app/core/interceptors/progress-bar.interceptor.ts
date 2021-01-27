@@ -3,10 +3,10 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProgressBarService } from '../services/progress-bar/progress-bar.service';
+import { ProgressBarService } from '../progress-bar/progress-bar.service';
 import { finalize } from 'rxjs/operators';
 
 @Injectable()
