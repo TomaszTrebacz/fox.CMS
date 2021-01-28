@@ -13,9 +13,12 @@
                 style="margin-right: 10px;"></button>
             <a routerLink="/admin/create-category">Add category</a>
         </li>
-        <li *access="'root'"><button pButton pRipple type="button" icon="pi pi-users"
-                class="p-button-rounded p-button-help" style="margin-right: 10px;"></button>
-            <a routerLink="/admin/manage-users">Manage Users</a>
-        </li>
+
+        <a appRoleAccess="['root']" routerLink="admin/workboard">
+            <li><button pButton pRipple type="button" icon="pi pi-users" class="p-button-rounded p-button-help"
+                    style="margin-right: 10px;"></button>
+                Manage Users
+            </li>
+        </a>
     </ul>
 </p-fieldset>

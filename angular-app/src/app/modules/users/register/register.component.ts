@@ -54,11 +54,11 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.registerForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.registerForm.invalid) {
       return;
     }

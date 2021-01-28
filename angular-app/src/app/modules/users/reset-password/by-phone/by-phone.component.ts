@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-by-phone',
   templateUrl: './by-phone.component.html',
-  styleUrls: ['./by-phone.component.css']
+  styleUrls: ['./by-phone.component.css'],
 })
 export class ByPhoneComponent implements OnInit {
   phoneForm: FormGroup;
@@ -30,12 +30,12 @@ export class ByPhoneComponent implements OnInit {
     this.phoneForm = this.fb.group({
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(this.numberPattern)]
-      ]
+        [Validators.required, Validators.pattern(this.numberPattern)],
+      ],
     });
   }
 
-  onPhoneFormSubmit() {
+  onPhoneFormSubmit(): void {
     if (this.phoneForm.invalid) {
       return;
     }
@@ -49,17 +49,17 @@ export class ByPhoneComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Code sent!',
-            detail: 'Please check your phone!'
+            detail: 'Please check your phone!',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
             summary: 'Code was not send',
-            detail: error
+            detail: error,
           });
-        }
+        },
       });
   }
 }

@@ -1,6 +1,6 @@
 import { decrypt, encrypt } from '../utils';
 
-export function UserStorage() {
+export function UserStorage(): any {
   return (target: any, key: string) => {
     const itemKey = 'user';
 

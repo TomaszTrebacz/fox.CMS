@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { UserService } from 'src/app/core/services/user/user.service';
 
 @Component({
-  selector: 'change-phone',
+  selector: 'app-change-phone',
   templateUrl: './change-phone.component.html',
   styleUrls: ['./change-phone.component.css'],
 })
@@ -36,7 +36,7 @@ export class ChangePhoneComponent implements OnInit {
     });
   }
 
-  onPhoneFormSubmit() {
+  onPhoneFormSubmit(): void {
     if (this.phoneForm.invalid) {
       return;
     }

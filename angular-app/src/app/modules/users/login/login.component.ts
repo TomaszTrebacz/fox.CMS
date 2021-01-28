@@ -36,11 +36,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.loginForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.invalid) {
       return;
     }

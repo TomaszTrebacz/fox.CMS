@@ -43,11 +43,11 @@ export class CreateCategoryComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.createCategoryForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.createCategoryForm.invalid) {
       return;
     }

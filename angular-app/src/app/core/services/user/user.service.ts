@@ -30,7 +30,7 @@ export class UserService {
 
   getUser(id: string): Observable<User> {
     return this.userGQL
-      .watch({ id: id })
+      .watch({ id })
       .valueChanges.pipe(map((result) => result.data.user));
   }
 
@@ -48,41 +48,33 @@ export class UserService {
   }
 
   register(
-    credentials: Pick<
+    input: Pick<
       User,
       'email' | 'password' | 'firstName' | 'lastName' | 'phoneNumber'
     >
   ): Observable<User> {
     return this.registerGQL
-      .mutate({
-        input: credentials,
-      })
+      .mutate({ input })
       .pipe(map((result) => result.data));
   }
 
   updateUser(input: Pick<User, 'firstName' | 'lastName'>): Observable<boolean> {
-    return this.updateUserGQL
-      .mutate({ input: input })
-      .pipe(map((res) => res.data));
+    return this.updateUserGQL.mutate({ input }).pipe(map((res) => res.data));
   }
 
   sendChangePhoneEmail(phoneNumber: string): Observable<boolean> {
     return this.sendChangePhoneEmailGQL
-      .mutate({
-        phoneNumber: phoneNumber,
-      })
+      .mutate({ phoneNumber })
       .pipe(map((res) => res.data));
   }
 
   changePhoneNumber(token: string): Observable<boolean> {
     return this.changePhoneNumberGQL
-      .mutate({
-        token: token,
-      })
+      .mutate({ token })
       .pipe(map((res) => res.data));
   }
 
   deleteUser(id: string): Observable<boolean> {
-    return this.deleteUserGQL.mutate({ id: id }).pipe(map((res) => res.data));
+    return this.deleteUserGQL.mutate({ id }).pipe(map((res) => res.data));
   }
 }

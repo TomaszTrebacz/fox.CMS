@@ -30,7 +30,7 @@ export class PostComponent implements OnInit {
     });
   }
 
-  deletePost() {
+  deletePost(): void {
     this.postsService
       .deletePost(this.id)
       .pipe(first())

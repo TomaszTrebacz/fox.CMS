@@ -17,17 +17,17 @@ import { FielderrorsComponent } from './fielderrors/fielderrors.component';
 import { DisplayPostsComponent } from './display-posts/display-posts.component';
 import { CardModule } from 'primeng/card';
 import { RouterModule } from '@angular/router';
-import { AccessDirective } from '../core/directives';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
-import { CutPipe, CutHtmlTagsPipe } from '../core/pipes';
+import { CutHtmlTagsPipe, CutPipe } from '../core/pipes';
+import { AccessDirective } from '../core/directives';
 
 @NgModule({
   declarations: [
     FielderrorsComponent,
+    DisplayPostsComponent,
     CutPipe,
     CutHtmlTagsPipe,
-    DisplayPostsComponent,
     AccessDirective,
   ],
   imports: [
@@ -68,6 +68,8 @@ import { CutPipe, CutHtmlTagsPipe } from '../core/pipes';
     PanelModule,
     DisplayPostsComponent,
     RouterModule,
+    CutPipe,
+    CutHtmlTagsPipe,
     AccessDirective,
   ],
 })

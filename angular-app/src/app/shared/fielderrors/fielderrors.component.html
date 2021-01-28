@@ -1,7 +1,15 @@
-<span *ngIf="fieldErrors(fieldName)" style="margin: 10px;">
-    <p-message *ngIf="fieldErrors(fieldName).required" severity="error" text="{{ name }} is required!" styleClass="p-mr-2"></p-message>  
-    <p-message *ngIf="fieldErrors(fieldName).minlength" severity="error" text="{{ name }} must be min {{ fieldErrors(fieldName).minlength.requiredLength }} characters!" styleClass="p-mr-2"></p-message>    
-    <p-message *ngIf="fieldErrors(fieldName).maxlength" severity="error" text="{{ name }} must be max {{ fieldErrors(fieldName).maxlength.requiredLength }} characters!" styleClass="p-mr-2"></p-message>  
-    <p-message *ngIf="fieldErrors(fieldName).email" severity="error" text="{{ name }} must be email!" styleClass="p-mr-2"></p-message>  
-    <p-message *ngIf="fieldErrors(fieldName).pattern" severity="error" text="{{ name }} should be in valid {{ fieldErrors(fieldName).pattern.requiredPattern }} form!" styleClass="p-mr-2"></p-message>  
+<span *ngIf="fieldErrors(field)" style="margin: 10px;">
+    <p-message *ngIf="fieldErrors(field).required" severity="error" text="{{ name }} is required!" styleClass="p-mr-2">
+    </p-message>
+    <p-message *ngIf="fieldErrors(field).minlength" severity="error"
+        text="{{ name }} must be min {{ fieldErrors(field).minlength.requiredLength }} characters!" styleClass="p-mr-2">
+    </p-message>
+    <p-message *ngIf="fieldErrors(field).maxlength" severity="error"
+        text="{{ name }} must be max {{ fieldErrors(field).maxlength.requiredLength }} characters!" styleClass="p-mr-2">
+    </p-message>
+    <p-message *ngIf="fieldErrors(field).email" severity="error" text="{{ name }} must be email!" styleClass="p-mr-2">
+    </p-message>
+    <p-message *ngIf="fieldErrors(field).pattern" severity="error"
+        text="{{ name }} should be in valid {{ fieldErrors(field).pattern.requiredPattern }} form!" styleClass="p-mr-2">
+    </p-message>
 </span>

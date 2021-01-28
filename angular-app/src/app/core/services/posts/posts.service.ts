@@ -35,13 +35,13 @@ export class PostsService {
 
   findOne(id: number): Observable<Post> {
     return this.postGQL
-      .watch({ id: id })
+      .watch({ id })
       .valueChanges.pipe(map((result) => result.data.post));
   }
 
   findUserPosts(id: string): Observable<Post[]> {
     return this.userPostsGQL
-      .watch({ id: id })
+      .watch({ id })
       .valueChanges.pipe(map((result) => result.data.userPosts));
   }
 
@@ -49,23 +49,23 @@ export class PostsService {
     input: Pick<Post, 'title' | 'text' | 'category' | 'imageUrl'>
   ): Observable<Post> {
     return this.createPostGQL
-      .mutate({ input: input })
+      .mutate({ input })
       .pipe(map((result) => result.data.createPost));
   }
 
   editPost(input: Pick<Post, 'id' | 'title' | 'text'>): Observable<boolean> {
     return this.editPostGQL
-      .mutate({ input: input })
+      .mutate({ input })
       .pipe(map((result) => result.data));
   }
 
   changeCategory(input: any): Observable<boolean> {
     return this.changeCategoryGQL
-      .mutate({ input: input })
+      .mutate({ input })
       .pipe(map((res) => res.data));
   }
 
   deletePost(id: number): Observable<boolean> {
-    return this.deletePostGQL.mutate({ id: id }).pipe(map((res) => res.data));
+    return this.deletePostGQL.mutate({ id }).pipe(map((res) => res.data));
   }
 }

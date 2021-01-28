@@ -50,11 +50,11 @@ export class EditAccountComponent implements OnInit {
       .subscribe((value) => this.form.patchValue(value));
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.form.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.form.invalid) {
       return;
     }

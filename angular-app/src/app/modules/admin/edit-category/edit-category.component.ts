@@ -46,11 +46,11 @@ export class EditCategoryComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.editCategoryForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.editCategoryForm.invalid) {
       return;
     }

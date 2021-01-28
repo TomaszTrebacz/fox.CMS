@@ -15,12 +15,12 @@ export class BlogComponent implements OnInit {
   categories: Observable<Category[]>;
 
   constructor(
-    private postsservice: PostsService,
+    private postsService: PostsService,
     private categoriesService: CategoriesService
   ) {}
 
-  ngOnInit() {
-    this.postsservice.findAll().then((posts) => (this.posts = posts));
+  ngOnInit(): void {
+    this.postsService.findAll().then((posts) => (this.posts = posts));
     this.categories = this.categoriesService.findAll();
   }
 }

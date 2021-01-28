@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.user = this.authService.userValue;
 
     this.items = [
@@ -30,18 +30,8 @@ export class MenuComponent implements OnInit {
     ];
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/users/login']);
-  }
-
-  toAccount() {
-    this.router.navigate(['account']);
-  }
-
-  toWorkboard() {
-    if (this.user.role === userRole.ADMIN || this.user.role === userRole.ROOT) {
-      this.router.navigate(['admin/workboard']);
-    }
   }
 }

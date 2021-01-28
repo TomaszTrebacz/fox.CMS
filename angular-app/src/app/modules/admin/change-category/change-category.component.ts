@@ -47,11 +47,11 @@ export class ChangeCategoryComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.changeCategoryForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.changeCategoryForm.invalid) {
       return;
     }

@@ -50,11 +50,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.changeRoleForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.changeRoleForm.invalid) {
       return;
     }
@@ -84,7 +84,7 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  deleteUser() {
+  deleteUser(): void {
     this.usersService
       .deleteUser(this.id)
       .pipe(first())

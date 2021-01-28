@@ -32,9 +32,9 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     UsersRoutingModule,
+    SharedModule,
     DropdownModule,
     FormsModule,
-    SharedModule,
   ],
   exports: [
     LoginComponent,

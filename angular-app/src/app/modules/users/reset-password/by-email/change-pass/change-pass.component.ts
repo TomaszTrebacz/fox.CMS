@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-change-pass',
   templateUrl: './change-pass.component.html',
-  styleUrls: ['./change-pass.component.css']
+  styleUrls: ['./change-pass.component.css'],
 })
 export class ChangePassComponent implements OnInit {
   form: FormGroup;
@@ -27,18 +27,22 @@ export class ChangePassComponent implements OnInit {
       token: ['', Validators.required],
       password: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
-      ]
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+        ],
+      ],
     });
 
     this.form.patchValue({
-      token: this.route.snapshot.queryParams['token']
+      token: this.route.snapshot.queryParams['token'],
     });
 
     this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.authService
       .changePassByToken(this.form.value)
       .pipe(first())
@@ -49,17 +53,17 @@ export class ChangePassComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Successfully changed!',
-            detail: 'Now you can log in'
+            detail: 'Now you can log in',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
             summary: 'Error! :(',
-            detail: `Password was not changed: ${error}`
+            detail: `Password was not changed: ${error}`,
           });
-        }
+        },
       });
   }
 }

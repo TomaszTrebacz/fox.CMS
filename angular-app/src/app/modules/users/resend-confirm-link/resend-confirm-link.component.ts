@@ -33,11 +33,11 @@ export class ResendConfirmLinkComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.form.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.form.invalid) {
       return;
     }

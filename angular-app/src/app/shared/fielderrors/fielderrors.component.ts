@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'app-fielderrors',
@@ -7,16 +7,19 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./fielderrors.component.css'],
 })
 export class FielderrorsComponent implements OnInit {
+  // tslint:disable-next-line:no-input-rename
   @Input('form') form: FormGroup;
-  @Input('field') fieldName: string;
+  // tslint:disable-next-line:no-input-rename
+  @Input('field') field: string;
+  // tslint:disable-next-line:no-input-rename
   @Input('name') name: string;
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  fieldErrors(field: string) {
-    let controlState = this.form.controls[field];
+  fieldErrors(field: string): ValidationErrors {
+    const controlState = this.form.controls[field];
     return controlState.dirty && controlState.errors
       ? controlState.errors
       : null;

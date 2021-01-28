@@ -1,6 +1,6 @@
 import { decrypt, encrypt } from '../utils';
 
-export function RefreshToken() {
+export function RefreshToken(): any {
   return (target: any, key: string) => {
     const tokenKey = 'refreshtoken';
 

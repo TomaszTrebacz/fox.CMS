@@ -58,17 +58,17 @@ export class CreatePostComponent implements OnInit {
     });
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.createPostForm.valid;
   }
 
-  async onChange(event) {
+  async onChange(event): Promise<void> {
     this.file = event.target.files.item(0);
 
     this.imageCloudUrl = await this.imageService.uploadImage(this.file);
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.createPostForm.invalid) {
       return;
     }

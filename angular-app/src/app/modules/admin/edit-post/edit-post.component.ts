@@ -57,11 +57,11 @@ export class EditPostComponent implements OnInit {
       .subscribe((value) => this.editPostForm.patchValue(value));
   }
 
-  hasFormErrors() {
+  hasFormErrors(): boolean {
     return !this.editPostForm.valid;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.editPostForm.invalid) {
       return;
     }

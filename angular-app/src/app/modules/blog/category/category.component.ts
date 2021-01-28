@@ -32,7 +32,7 @@ export class CategoryComponent implements OnInit {
     });
   }
 
-  deleteCategory() {
+  deleteCategory(): void {
     this.categoriesService
       .deleteCategory(this.id)
       .pipe(first())

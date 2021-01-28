@@ -2,7 +2,12 @@ import { Injector, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Apollo, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache, ApolloLink } from '@apollo/client/core';
+import {
+  InMemoryCache,
+  ApolloLink,
+  ApolloClientOptions,
+  ApolloCache,
+} from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { environment } from 'src/environments/environment';
 import { decrypt, encrypt } from '../../utils';
@@ -12,7 +17,12 @@ import { fromPromise } from 'apollo-link';
 const uri = environment.backendUrl;
 const unAuthenticatedMessage = 'jwt expired';
 
-export function createApollo(httpLink: HttpLink) {
+interface CreateApolloI {
+  link: ApolloLink;
+  cache: ApolloCache<any>;
+}
+
+export function createApollo(httpLink: HttpLink): CreateApolloI {
   let isRefreshing = false;
   let pendingRequests = [];
 
@@ -24,11 +34,11 @@ export function createApollo(httpLink: HttpLink) {
   const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
       if (graphQLErrors) {
-        for (let err of graphQLErrors) {
+        for (const err of graphQLErrors) {
           switch (err.message) {
             case unAuthenticatedMessage:
               let forward$;
-              let oldRefreshToken = decrypt(
+              const oldRefreshToken = decrypt(
                 localStorage.getItem('refreshtoken')
               );
 

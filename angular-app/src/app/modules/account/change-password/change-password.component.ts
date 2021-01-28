@@ -33,7 +33,7 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.authService
       .changePassword(this.form.value.password)
       .pipe(first())

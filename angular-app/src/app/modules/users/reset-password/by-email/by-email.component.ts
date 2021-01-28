@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-by-email',
   templateUrl: './by-email.component.html',
-  styleUrls: ['./by-email.component.css']
+  styleUrls: ['./by-email.component.css'],
 })
 export class ByEmailComponent implements OnInit {
   emailForm: FormGroup;
@@ -29,12 +29,12 @@ export class ByEmailComponent implements OnInit {
     this.emailForm = this.fb.group({
       email: [
         '',
-        [Validators.required, Validators.email, Validators.minLength(6)]
-      ]
+        [Validators.required, Validators.email, Validators.minLength(6)],
+      ],
     });
   }
 
-  onEmailFormSubmit() {
+  onEmailFormSubmit(): void {
     if (this.emailForm.invalid) {
       return;
     }
@@ -48,17 +48,17 @@ export class ByEmailComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Successfully sent!',
-            detail: 'Please check your inbox'
+            detail: 'Please check your inbox',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
             summary: 'Error! :(',
-            detail: `Email was not sent: ${error}`
+            detail: `Email was not sent: ${error}`,
           });
-        }
+        },
       });
   }
 }

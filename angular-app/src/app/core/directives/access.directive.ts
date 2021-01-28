@@ -3,7 +3,7 @@ import { userRole } from '../enums';
 import { AuthService } from '../services/auth/auth.service';
 
 @Directive({
-  selector: '[access]',
+  selector: '[appRoleAccess]',
 })
 export class AccessDirective {
   constructor(
@@ -15,12 +15,10 @@ export class AccessDirective {
   @Input('access') set access(roles: userRole[]) {
     const role = this.authService.userRole;
 
-    if (role) {
-      if (roles.includes(role)) {
-        this.viewCont.createEmbeddedView(this.tempRef);
-      } else {
-        this.viewCont.clear();
-      }
+    if (roles.includes(role)) {
+      this.viewCont.createEmbeddedView(this.tempRef);
+    } else {
+      this.viewCont.clear();
     }
   }
 }

@@ -29,7 +29,7 @@ export class CategoriesService {
 
   findOne(id: number): Promise<Category> {
     return this.categoryGQL
-      .fetch({ id: id })
+      .fetch({ id })
       .toPromise()
       .then((result) => result.data.category);
   }
@@ -41,9 +41,7 @@ export class CategoriesService {
   }
 
   deleteCategory(id: number): Observable<boolean> {
-    return this.deleteCategoryGQL
-      .mutate({ id: id })
-      .pipe(map((res) => res.data));
+    return this.deleteCategoryGQL.mutate({ id }).pipe(map((res) => res.data));
   }
 
   editCategory(name: string): Observable<boolean> {

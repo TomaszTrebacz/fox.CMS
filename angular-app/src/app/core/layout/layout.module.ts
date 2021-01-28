@@ -15,13 +15,13 @@ import { FooterComponent } from './footer/footer.component';
   declarations: [FooterComponent, MenuComponent, TopComponent],
   imports: [
     CommonModule,
+    SharedModule,
     MenuModule,
     MenubarModule,
     ButtonModule,
     RippleModule,
     TabMenuModule,
     SplitButtonModule,
-    SharedModule,
   ],
   exports: [FooterComponent, MenuComponent, TopComponent],
 })

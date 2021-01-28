@@ -9,10 +9,10 @@ export class ProgressBarService {
 
   constructor() {}
 
-  show() {
+  show(): void {
     this.isLoading.next(true);
   }
-  hide() {
+  hide(): void {
     this.isLoading.next(false);
   }
 }

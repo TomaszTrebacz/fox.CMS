@@ -36,7 +36,7 @@ export class ConfirmationCodeComponent implements OnInit {
     });
   }
 
-  onConfirmSubmit() {
+  onConfirmSubmit(): void {
     if (this.codeForm.invalid) {
       return;
     }

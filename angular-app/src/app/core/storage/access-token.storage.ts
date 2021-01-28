@@ -1,6 +1,6 @@
 import { decrypt, encrypt } from '../utils';
 
-export function AccessToken() {
+export function AccessToken(): any {
   return (target: any, key: string) => {
     const tokenKey = 'accesstoken';
 
