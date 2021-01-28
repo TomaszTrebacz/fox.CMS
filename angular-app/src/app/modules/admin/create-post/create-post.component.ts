@@ -21,7 +21,7 @@ import { ImageService } from 'src/app/core/services/image/image.service';
 export class CreatePostComponent implements OnInit {
   createPostForm: FormGroup;
   error: '';
-  cities: any;
+  categories: any;
   cat: Observable<Category[]>;
   file: any;
   imageCloudUrl: string;
@@ -37,7 +37,7 @@ export class CreatePostComponent implements OnInit {
 
   ngOnInit(): void {
     this.categoriesService.findAll().subscribe((result) => {
-      this.cities = result.map(({ id: value, name: name }) => ({
+      this.categories = result.map(({ id: value, name: name }) => ({
         value,
         name,
       }));
@@ -81,7 +81,7 @@ export class CreatePostComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (result) => {
-          this.router.navigateByUrl(`/blog/post/${result.createPost.id}`);
+          this.router.navigateByUrl(`/blog/post/${result.id}`);
           this.messageService.add({
             key: 'defaultToast',
             severity: 'success',
@@ -93,7 +93,7 @@ export class CreatePostComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Post has not been created',
+            summary: 'Error',
             detail: error.message,
           });
         },

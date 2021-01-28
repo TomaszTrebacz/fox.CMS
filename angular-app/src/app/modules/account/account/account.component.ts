@@ -7,7 +7,7 @@ import { UserService } from 'src/app/core/services/user/user.service';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+  styleUrls: ['./account.component.css'],
 })
 export class AccountComponent implements OnInit {
   user: Observable<User>;
@@ -15,6 +15,6 @@ export class AccountComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.user = this.userService.getCurrentUser().pipe(map(result => result));
+    this.user = this.userService.getCurrentUser();
   }
 }

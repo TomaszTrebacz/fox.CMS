@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/core/services/user/user.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
@@ -31,18 +31,26 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group({
       email: [
         '',
-        [Validators.required, Validators.email, Validators.minLength(6)]
+        [Validators.required, Validators.email, Validators.minLength(6)],
       ],
       password: ['', [Validators.required, Validators.minLength(3)]],
       firstName: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+        ],
       ],
       lastName: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+        ],
       ],
-      phoneNumber: ['', [Validators.pattern(this.numberPattern)]]
+      phoneNumber: ['', [Validators.pattern(this.numberPattern)]],
     });
   }
 
@@ -55,8 +63,6 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    console.log(this.registerForm.value);
-
     this.userService
       .register(this.registerForm.value)
       .pipe(first())
@@ -67,17 +73,17 @@ export class RegisterComponent implements OnInit {
             key: 'defaultToast',
             severity: 'success',
             summary: 'Successfully registered!',
-            detail: `You have to confirm your account by clicking link sent on email!`
+            detail: `You have to confirm your account by clicking link sent on email!`,
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Can not register user',
-            detail: error
+            summary: 'Error!',
+            detail: error,
           });
-        }
+        },
       });
   }
 }

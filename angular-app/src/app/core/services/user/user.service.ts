@@ -13,19 +13,6 @@ import {
 import { User } from 'src/app/core/models';
 import { UsersGQL } from '../../graphql/query/user/users.query';
 
-export interface RegisterForm {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-}
-
-export interface UpdateUserForm {
-  firstName: string;
-  lastName: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -43,8 +30,8 @@ export class UserService {
 
   getUser(id: string): Observable<User> {
     return this.userGQL
-      .fetch({ id: id })
-      .pipe(map((result) => result.data.user));
+      .watch({ id: id })
+      .valueChanges.pipe(map((result) => result.data.user));
   }
 
   getUsers(): Promise<User[]> {
@@ -56,33 +43,46 @@ export class UserService {
 
   getCurrentUser(): Observable<User> {
     return this.currentUserSQL
-      .fetch()
-      .pipe(map((result) => result.data.currentUser));
+      .watch()
+      .valueChanges.pipe(map((result) => result.data.currentUser));
   }
 
-  register(credentials: RegisterForm): Observable<any> {
-    return this.registerGQL.mutate({
-      input: credentials,
-    });
+  register(
+    credentials: Pick<
+      User,
+      'email' | 'password' | 'firstName' | 'lastName' | 'phoneNumber'
+    >
+  ): Observable<User> {
+    return this.registerGQL
+      .mutate({
+        input: credentials,
+      })
+      .pipe(map((result) => result.data));
   }
 
-  updateUser(input: UpdateUserForm): Observable<any> {
-    return this.updateUserGQL.mutate({ input: input });
+  updateUser(input: Pick<User, 'firstName' | 'lastName'>): Observable<boolean> {
+    return this.updateUserGQL
+      .mutate({ input: input })
+      .pipe(map((res) => res.data));
   }
 
-  sendChangePhoneEmail(phoneNumber: string): Observable<any> {
-    return this.sendChangePhoneEmailGQL.mutate({
-      phoneNumber: phoneNumber,
-    });
+  sendChangePhoneEmail(phoneNumber: string): Observable<boolean> {
+    return this.sendChangePhoneEmailGQL
+      .mutate({
+        phoneNumber: phoneNumber,
+      })
+      .pipe(map((res) => res.data));
   }
 
-  changePhoneNumber(token: string): Observable<any> {
-    return this.changePhoneNumberGQL.mutate({
-      token: token,
-    });
+  changePhoneNumber(token: string): Observable<boolean> {
+    return this.changePhoneNumberGQL
+      .mutate({
+        token: token,
+      })
+      .pipe(map((res) => res.data));
   }
 
-  deleteUser(id: string): Observable<any> {
-    return this.deleteUserGQL.mutate({ id: id });
+  deleteUser(id: string): Observable<boolean> {
+    return this.deleteUserGQL.mutate({ id: id }).pipe(map((res) => res.data));
   }
 }

@@ -35,36 +35,37 @@ export class PostsService {
 
   findOne(id: number): Observable<Post> {
     return this.postGQL
-      .fetch({ id: id })
-      .pipe(map((result) => result.data.post));
+      .watch({ id: id })
+      .valueChanges.pipe(map((result) => result.data.post));
   }
 
   findUserPosts(id: string): Observable<Post[]> {
     return this.userPostsGQL
-      .fetch({ id: id })
-      .pipe(map((result) => result.data.userPosts));
+      .watch({ id: id })
+      .valueChanges.pipe(map((result) => result.data.userPosts));
   }
 
-  createPost(input: any): Observable<any> {
+  createPost(
+    input: Pick<Post, 'title' | 'text' | 'category' | 'imageUrl'>
+  ): Observable<Post> {
     return this.createPostGQL
       .mutate({ input: input })
-      .pipe(map((result) => result.data));
+      .pipe(map((result) => result.data.createPost));
   }
 
-  editPost(input: any): Observable<any> {
+  editPost(input: Pick<Post, 'id' | 'title' | 'text'>): Observable<boolean> {
     return this.editPostGQL
       .mutate({ input: input })
       .pipe(map((result) => result.data));
   }
 
-  changeCategory(input: any): Observable<any> {
-    console.log('eee');
-    console.log(input);
-    console.log('eee');
-    return this.changeCategoryGQL.mutate({ input: input });
+  changeCategory(input: any): Observable<boolean> {
+    return this.changeCategoryGQL
+      .mutate({ input: input })
+      .pipe(map((res) => res.data));
   }
 
-  deletePost(id: number): Observable<any> {
-    return this.deletePostGQL.mutate({ id: id });
+  deletePost(id: number): Observable<boolean> {
+    return this.deletePostGQL.mutate({ id: id }).pipe(map((res) => res.data));
   }
 }

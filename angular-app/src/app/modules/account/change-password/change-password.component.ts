@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.css']
+  styleUrls: ['./change-password.component.css'],
 })
 export class ChangePasswordComponent implements OnInit {
   form: FormGroup;
@@ -24,8 +24,12 @@ export class ChangePasswordComponent implements OnInit {
     this.form = this.fb.group({
       password: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(30)]
-      ]
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+        ],
+      ],
     });
   }
 
@@ -39,17 +43,17 @@ export class ChangePasswordComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Successfully changed!',
-            detail: 'Now you have to use your new password!'
+            detail: 'Now you have to use your new password!',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Error! :(',
-            detail: `Password was not changed: ${error}`
+            summary: 'Error!',
+            detail: error.message,
           });
-        }
+        },
       });
   }
 }

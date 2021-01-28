@@ -22,7 +22,7 @@ export class ChangeCategoryComponent implements OnInit {
   @Input() id;
   changeCategoryForm: FormGroup;
   error: '';
-  cities: any;
+  categories: any;
   cat: Observable<Category[]>;
 
   constructor(
@@ -35,7 +35,7 @@ export class ChangeCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.categoriesService.findAll().subscribe((result) => {
-      this.cities = result.map(({ id: value, name: name }) => ({
+      this.categories = result.map(({ id: value, name: name }) => ({
         value,
         name,
       }));
@@ -74,7 +74,7 @@ export class ChangeCategoryComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: `Post's category has not been changed`,
+            summary: 'Error',
             detail: error.message,
           });
         },

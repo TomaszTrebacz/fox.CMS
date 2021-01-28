@@ -1,21 +1,24 @@
-<p-fieldset *ngIf="(user | async) as user">    
+<p-fieldset *ngIf="(user | async) as user">
     <p-header class="main">
-        <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined" style="margin-right: 10px;"></button>
+        <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined"
+            style="margin-right: 10px;"></button>
         {{ user.firstName }} {{ user.lastName }}
     </p-header>
-     <ul>
-       <li>
-           <button pButton pRipple type="button" icon="pi pi-user-edit" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
+    <ul>
+        <li>
+            <button pButton pRipple type="button" icon="pi pi-user-edit" class="p-button-rounded p-button-info"
+                style="margin-right: 10px;"></button>
             <b><a routerLink="/account/edit-account">Edit Account</a></b>
-        </li> 
+        </li>
         <li>
-            <button pButton pRipple type="button" icon="pi pi-key" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
+            <button pButton pRipple type="button" icon="pi pi-key" class="p-button-rounded p-button-info"
+                style="margin-right: 10px;"></button>
             <b><a routerLink="/account/change-password">Change Password</a></b>
-        </li> 
+        </li>
         <li>
-            <button pButton pRipple type="button" icon="pi pi-phone" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
+            <button pButton pRipple type="button" icon="pi pi-phone" class="p-button-rounded p-button-info"
+                style="margin-right: 10px;"></button>
             <b><a routerLink="/account/change-phone">Change Phone Number</a></b>
-        </li> 
+        </li>
     </ul>
 </p-fieldset>
-

@@ -58,7 +58,6 @@ export class EditAccountComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    console.log(this.form.value);
 
     this.userService
       .updateUser(this.form.value)
@@ -77,7 +76,7 @@ export class EditAccountComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Can not edit data',
+            summary: 'Error!',
             detail: error.message,
           });
         },

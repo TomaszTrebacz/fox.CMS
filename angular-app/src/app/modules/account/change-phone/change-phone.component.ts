@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -14,7 +14,7 @@ import { UserService } from 'src/app/core/services/user/user.service';
 @Component({
   selector: 'change-phone',
   templateUrl: './change-phone.component.html',
-  styleUrls: ['./change-phone.component.css']
+  styleUrls: ['./change-phone.component.css'],
 })
 export class ChangePhoneComponent implements OnInit {
   phoneForm: FormGroup;
@@ -31,8 +31,8 @@ export class ChangePhoneComponent implements OnInit {
     this.phoneForm = this.fb.group({
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(this.numberPattern)]
-      ]
+        [Validators.required, Validators.pattern(this.numberPattern)],
+      ],
     });
   }
 
@@ -51,17 +51,17 @@ export class ChangePhoneComponent implements OnInit {
             severity: 'success',
             summary: 'Link sent!',
             detail:
-              'Please check your inbox and click in link to change phone number!'
+              'Please check your inbox and click in link to change phone number!',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Phone number can not be changed',
-            detail: error
+            summary: 'Error!',
+            detail: error.message,
           });
-        }
+        },
       });
   }
 }

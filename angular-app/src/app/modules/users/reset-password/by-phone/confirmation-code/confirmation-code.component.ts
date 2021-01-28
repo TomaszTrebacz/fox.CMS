@@ -2,17 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { distinct, first, map, tap } from 'rxjs/operators';
+import { Loading } from 'src/app/core/enums/loading.enum';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-
-enum Loading {
-  true,
-  false
-}
 
 @Component({
   selector: 'app-confirmation-code',
   templateUrl: './confirmation-code.component.html',
-  styleUrls: ['./confirmation-code.component.css']
+  styleUrls: ['./confirmation-code.component.css'],
 })
 export class ConfirmationCodeComponent implements OnInit {
   codeForm: FormGroup;
@@ -31,12 +27,12 @@ export class ConfirmationCodeComponent implements OnInit {
     this.codeForm = this.fb.group({
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(this.numberPattern)]
+        [Validators.required, Validators.pattern(this.numberPattern)],
       ],
       code: [
         '',
-        [Validators.required, Validators.minLength(4), Validators.maxLength(4)]
-      ]
+        [Validators.required, Validators.minLength(4), Validators.maxLength(4)],
+      ],
     });
   }
 
@@ -48,7 +44,7 @@ export class ConfirmationCodeComponent implements OnInit {
     this.loading = Loading.true;
 
     this.codeForm.patchValue({
-      code: +this.codeForm.value.code
+      code: +this.codeForm.value.code,
     });
 
     this.authService
@@ -61,18 +57,18 @@ export class ConfirmationCodeComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Password reset & send by SMS!',
-            detail: 'Please check your phone!'
+            detail: 'Please check your phone!',
           });
         },
-        error: error => {
+        error: (error) => {
           this.loading = Loading.false;
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
             summary: 'Password was not reset',
-            detail: error
+            detail: error,
           });
-        }
+        },
       });
   }
 }

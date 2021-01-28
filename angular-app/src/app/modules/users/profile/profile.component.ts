@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Role has not been changed',
+            summary: 'Error!',
             detail: error.message,
           });
         },
@@ -102,7 +102,7 @@ export class ProfileComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'User has not been deleted',
+            summary: 'Error!',
             detail: error.message,
           });
         },

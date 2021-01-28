@@ -3,7 +3,7 @@ import {
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { first } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-resend-confirm-link',
   templateUrl: './resend-confirm-link.component.html',
-  styleUrls: ['./resend-confirm-link.component.css']
+  styleUrls: ['./resend-confirm-link.component.css'],
 })
 export class ResendConfirmLinkComponent implements OnInit {
   form: FormGroup;
@@ -28,8 +28,8 @@ export class ResendConfirmLinkComponent implements OnInit {
     this.form = this.fb.group({
       email: [
         '',
-        [Validators.required, Validators.email, Validators.minLength(6)]
-      ]
+        [Validators.required, Validators.email, Validators.minLength(6)],
+      ],
     });
   }
 
@@ -51,17 +51,17 @@ export class ResendConfirmLinkComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Email with new link was send.',
-            detail: 'Please confirm your account!'
+            detail: 'Please confirm your account!',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Can not resend email with new link',
-            detail: error
+            summary: 'Error!',
+            detail: error,
           });
-        }
+        },
       });
   }
 }

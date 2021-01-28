@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import {
   ChangeConfirmTokenGQL,
   ChangePassByTokenGQL,
+  ChangePassByTokenI,
   ChangePasswordGQL,
   ConfirmUserGQL,
   LoginGQL,
@@ -14,27 +15,14 @@ import {
   SendCodePhoneGQL,
   ChangeRoleGQL,
   ChangeRoleI,
+  ResetFormI,
 } from 'src/app/core/graphql';
 import { AccessToken, RefreshToken, UserStorage } from 'src/app/core/storage';
-
-export interface LoginForm {
-  email: string;
-  password: string;
-}
-
-export interface resetForm {
-  code: number;
-  phoneNumber: string;
-}
+import { User } from '../../models';
 
 export interface jwtResponse {
   role: string;
   valid: boolean;
-}
-
-export interface changePassByTokenForm {
-  token: string;
-  password: string;
 }
 
 @Injectable({
@@ -72,7 +60,7 @@ export class AuthService {
     return this.userSubject.value.role;
   }
 
-  login(credentials: LoginForm) {
+  login(credentials: Pick<User, 'email' | 'password'>) {
     return this.loginGQL
       .fetch({
         input: credentials,
@@ -94,44 +82,59 @@ export class AuthService {
   }
 
   logout() {
-    const user = this.userValue;
-    this.logoutGQL.mutate({ id: user.id });
+    const { id } = this.userValue;
+    this.logoutGQL.mutate({ id: id });
 
     localStorage.removeItem('accesstoken');
     localStorage.removeItem('refreshtoken');
     localStorage.removeItem('user');
+
     this.userSubject.next(null);
   }
 
-  confirmUser(token: string): Observable<any> {
-    return this.confirmUserGQL.mutate({ token: token });
+  confirmUser(token: string): Observable<boolean> {
+    return this.confirmUserGQL
+      .mutate({ token: token })
+      .pipe(map((res) => res.data));
   }
 
-  sendCodePhone(phoneNumber: string): Observable<any> {
-    return this.sendCodePhoneGQL.mutate({ phoneNumber: phoneNumber });
+  sendCodePhone(phoneNumber: string): Observable<boolean> {
+    return this.sendCodePhoneGQL
+      .mutate({ phoneNumber: phoneNumber })
+      .pipe(map((res) => res.data));
   }
 
-  changeConfirmToken(email: string) {
-    return this.changeConfirmTokenGQL.mutate({ email: email });
+  changeConfirmToken(email: string): Observable<boolean> {
+    return this.changeConfirmTokenGQL
+      .mutate({ email: email })
+      .pipe(map((res) => res.data));
   }
 
-  resetPassword(input: resetForm) {
-    return this.resetPasswordGQL.mutate({ input: input });
+  resetPassword(input: ResetFormI): Observable<boolean> {
+    return this.resetPasswordGQL
+      .mutate({ input: input })
+      .pipe(map((res) => res.data));
   }
 
-  sendChangePassEmail(email: string) {
-    return this.sendChangePassEmailGQL.mutate({ email: email });
+  sendChangePassEmail(email: string): Observable<boolean> {
+    return this.sendChangePassEmailGQL
+      .mutate({ email: email })
+      .pipe(map((res) => res.data));
   }
 
-  changePassByToken(input: changePassByTokenForm) {
-    return this.changePassByTokenGQL.mutate({ input: input });
+  changePassByToken(input: ChangePassByTokenI): Observable<boolean> {
+    return this.changePassByTokenGQL
+      .mutate({ input: input })
+      .pipe(map((res) => res.data));
   }
 
-  changePassword(password: string) {
-    return this.changePasswordGQL.mutate({ password: password });
+  changePassword(password: string): Observable<boolean> {
+    return this.changePasswordGQL
+      .mutate({ password: password })
+      .pipe(map((res) => res.data));
   }
 
-  changeRole(input: ChangeRoleI): Observable<boolean> {
+  changeRole(input: Pick<User, 'id' | 'role'>): Observable<boolean> {
     return this.changeRoleGQL
       .mutate({ input: input })
       .pipe(map((result) => result.data));

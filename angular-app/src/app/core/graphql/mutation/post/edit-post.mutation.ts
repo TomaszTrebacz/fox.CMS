@@ -4,7 +4,7 @@ import { Mutation, gql } from 'apollo-angular';
 @Injectable({
   providedIn: 'root',
 })
-export class EditPostGQL extends Mutation {
+export class EditPostGQL extends Mutation<boolean> {
   document = gql`
     mutation($input: EditPostInput) {
       editPost(editPostInput: $input)

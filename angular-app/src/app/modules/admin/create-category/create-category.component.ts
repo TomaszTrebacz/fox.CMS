@@ -29,6 +29,7 @@ export class CreateCategoryComponent implements OnInit {
     private categoriesService: CategoriesService,
     private postsService: PostsService
   ) {}
+
   ngOnInit(): void {
     this.createCategoryForm = this.fb.group({
       name: [
@@ -41,6 +42,7 @@ export class CreateCategoryComponent implements OnInit {
       ],
     });
   }
+
   hasFormErrors() {
     return !this.createCategoryForm.valid;
   }
@@ -55,9 +57,7 @@ export class CreateCategoryComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (result) => {
-          this.router.navigateByUrl(
-            `/blog/category/${result.createCategory.id}`
-          );
+          this.router.navigateByUrl(`/blog/category/${result.id}`);
           this.messageService.add({
             key: 'defaultToast',
             severity: 'success',
@@ -69,7 +69,7 @@ export class CreateCategoryComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Category has not been created',
+            summary: 'Error!',
             detail: error.message,
           });
         },

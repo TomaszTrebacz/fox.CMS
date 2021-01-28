@@ -50,7 +50,7 @@ export class CategoryComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Category has not been deleted',
+            summary: 'Error!',
             detail: error.message,
           });
         },

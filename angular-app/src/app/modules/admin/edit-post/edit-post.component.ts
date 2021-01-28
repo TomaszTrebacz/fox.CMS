@@ -66,8 +66,6 @@ export class EditPostComponent implements OnInit {
       return;
     }
 
-    console.log(this.editPostForm.value);
-
     this.postsService
       .editPost(this.editPostForm.value)
       .pipe(first())
@@ -85,7 +83,7 @@ export class EditPostComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Post has not been edited',
+            summary: 'Error!',
             detail: error.message,
           });
         },

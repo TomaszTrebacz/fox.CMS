@@ -45,6 +45,7 @@ export class EditCategoryComponent implements OnInit {
       ],
     });
   }
+
   hasFormErrors() {
     return !this.editCategoryForm.valid;
   }
@@ -71,7 +72,7 @@ export class EditCategoryComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Category has not been edited',
+            summary: 'Error!',
             detail: error.message,
           });
         },

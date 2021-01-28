@@ -4,7 +4,7 @@ import { Mutation, gql } from 'apollo-angular';
 @Injectable({
   providedIn: 'root',
 })
-export class ConfirmUserGQL extends Mutation {
+export class ConfirmUserGQL extends Mutation<boolean> {
   document = gql`
     mutation($token: String!) {
       confirmUser(confirmToken: $token)

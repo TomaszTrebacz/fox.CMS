@@ -34,17 +34,21 @@ export class CategoriesService {
       .then((result) => result.data.category);
   }
 
-  createCategory(input: any): Observable<any> {
+  createCategory(name: string): Observable<Category> {
     return this.createCategoryGQL
-      .mutate({ input: input })
-      .pipe(map((result) => result.data));
+      .mutate({ input: name })
+      .pipe(map((result) => result.data.createCategory));
   }
 
-  deleteCategory(id: number): Observable<any> {
-    return this.deleteCategoryGQL.mutate({ id: id });
+  deleteCategory(id: number): Observable<boolean> {
+    return this.deleteCategoryGQL
+      .mutate({ id: id })
+      .pipe(map((res) => res.data));
   }
 
-  editCategory(input: any): Observable<any> {
-    return this.editCategoryGQL.mutate({ input: input });
+  editCategory(name: string): Observable<boolean> {
+    return this.editCategoryGQL
+      .mutate({ input: name })
+      .pipe(map((res) => res.data));
   }
 }

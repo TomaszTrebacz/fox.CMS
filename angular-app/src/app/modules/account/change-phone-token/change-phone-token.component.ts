@@ -40,8 +40,8 @@ export class ChangePhoneTokenComponent implements OnInit {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Error! :(',
-            detail: `Phone number was not changed: ${error.message}`,
+            summary: 'Error!',
+            detail: error.message,
           });
         },
       });

@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 @Component({
   selector: 'app-confirm-account',
   templateUrl: './confirm-account.component.html',
-  styleUrls: ['./confirm-account.component.css']
+  styleUrls: ['./confirm-account.component.css'],
 })
 export class ConfirmAccountComponent implements OnInit {
   constructor(
@@ -32,17 +32,17 @@ export class ConfirmAccountComponent implements OnInit {
             key: 'defaultMessage',
             severity: 'success',
             summary: 'Successfully confirmed!',
-            detail: 'Now you can log in'
+            detail: 'Now you can log in',
           });
         },
-        error: error => {
+        error: (error) => {
           this.messageService.add({
             key: 'defaultMessage',
             severity: 'error',
-            summary: 'Error! :(',
-            detail: `Account was not confirmed: ${error}`
+            summary: 'Error!',
+            detail: error.message,
           });
-        }
+        },
       });
   }
 }

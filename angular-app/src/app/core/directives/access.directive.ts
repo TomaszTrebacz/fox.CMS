@@ -15,10 +15,12 @@ export class AccessDirective {
   @Input('access') set access(roles: userRole[]) {
     const role = this.authService.userRole;
 
-    if (roles.includes(role)) {
-      this.viewCont.createEmbeddedView(this.tempRef);
-    } else {
-      this.viewCont.clear();
+    if (role) {
+      if (roles.includes(role)) {
+        this.viewCont.createEmbeddedView(this.tempRef);
+      } else {
+        this.viewCont.clear();
+      }
     }
   }
 }

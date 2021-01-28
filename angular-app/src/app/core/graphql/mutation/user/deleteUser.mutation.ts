@@ -4,7 +4,7 @@ import { Mutation, gql } from 'apollo-angular';
 @Injectable({
   providedIn: 'root',
 })
-export class DeleteUserGQL extends Mutation {
+export class DeleteUserGQL extends Mutation<boolean> {
   document = gql`
     mutation($id: String!) {
       deleteUser(id: $id)

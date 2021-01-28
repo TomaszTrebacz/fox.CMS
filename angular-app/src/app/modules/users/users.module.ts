@@ -6,7 +6,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
-import { ResendConfirmLinkComponent } from './confirm-account/resend-confirm-link/resend-confirm-link.component';
+import { ResendConfirmLinkComponent } from './resend-confirm-link/resend-confirm-link.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ConfirmationCodeComponent } from './reset-password/by-phone/confirmation-code/confirmation-code.component';
 import { ByPhoneComponent } from './reset-password/by-phone/by-phone.component';
