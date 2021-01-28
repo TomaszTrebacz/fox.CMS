@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
 import { Post } from '../../../models/post.interface';
+import { FullName, PostContent } from '../../fragments';
 
 export interface ResponseInterface {
   posts: Post[];
@@ -13,15 +14,15 @@ export class AllPostsGQL extends Query<ResponseInterface> {
   document = gql`
     query {
       posts {
-        id
-        title
-        text
+        ...PostContent
         imageUrl
         user {
-          firstName
-          lastName
+          ...FullName
         }
       }
     }
+
+    ${PostContent}
+    ${FullName}
   `;
 }

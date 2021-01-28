@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
+import { FullName } from '../../fragments';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +11,12 @@ export class UsersGQL extends Query<any> {
       users {
         id
         email
-        firstName
-        lastName
+        ....FullName
         phoneNumber
         created
       }
     }
+
+    ${FullName}
   `;
 }

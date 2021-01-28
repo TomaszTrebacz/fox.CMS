@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query, gql } from 'apollo-angular';
+import { CategoryContent, FullName, PostContent } from '../../fragments';
 
 @Injectable({
   providedIn: 'root',
@@ -8,20 +9,20 @@ export class CategoryGQL extends Query<any> {
   document = gql`
     query($id: Int!) {
       category(id: $id) {
-        id
-        name
+        ...CategoryContent
         posts {
-          id
-          title
-          text
+          ...PostContent
           imageUrl
           user {
             id
-            firstName
-            lastName
+            ...FullName
           }
         }
       }
     }
+
+    ${CategoryContent}
+    ${PostContent}
+    ${FullName}
   `;
 }

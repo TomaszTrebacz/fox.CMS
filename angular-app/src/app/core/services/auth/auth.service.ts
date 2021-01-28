@@ -57,7 +57,6 @@ export class AuthService {
   login(input: Pick<User, 'email' | 'password'>): Observable<void> {
     return this.loginGQL.fetch({ input }).pipe(
       map((result) => {
-        console.log(result.data.login.role);
         const user = {
           ...result.data.login.user,
           role: result.data.login.role,
