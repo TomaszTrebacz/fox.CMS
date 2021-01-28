@@ -1,17 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
-import { Category } from 'src/app/core/models';
-import { PostsService } from 'src/app/core/services/posts/posts.service';
+
 @Component({
   selector: 'app-edit-category',
   templateUrl: './edit-category.component.html',

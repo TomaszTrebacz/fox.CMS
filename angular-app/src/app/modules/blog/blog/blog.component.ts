@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Category, Post } from 'src/app/core/models';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { PostsService } from 'src/app/core/services/posts/posts.service';

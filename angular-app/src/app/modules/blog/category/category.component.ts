@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { Category, Post } from 'src/app/core/models';
+import { Category } from 'src/app/core/models';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { distinct, first, map, tap } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { Loading } from 'src/app/core/enums/loading.enum';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 

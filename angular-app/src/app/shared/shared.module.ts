@@ -8,7 +8,6 @@ import { AccordionModule } from 'primeng/accordion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { PanelModule } from 'primeng/panel';
-import { AdminModule } from '../modules/admin/admin.module';
 import { InputMaskModule } from 'primeng/inputmask';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -20,15 +19,13 @@ import { RouterModule } from '@angular/router';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { CutHtmlTagsPipe, CutPipe } from '../core/pipes';
-import { AccessDirective } from '../core/directives';
 
 @NgModule({
   declarations: [
     FielderrorsComponent,
     DisplayPostsComponent,
-    CutPipe,
     CutHtmlTagsPipe,
-    AccessDirective,
+    CutPipe,
   ],
   imports: [
     CommonModule,
@@ -68,9 +65,8 @@ import { AccessDirective } from '../core/directives';
     PanelModule,
     DisplayPostsComponent,
     RouterModule,
-    CutPipe,
     CutHtmlTagsPipe,
-    AccessDirective,
+    CutPipe,
   ],
 })
 export class SharedModule {}

@@ -3,13 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { Observable } from 'rxjs';
 import { Post, User } from 'src/app/core/models';
-import { first, map, tap, toArray } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { PostsService } from 'src/app/core/services/posts/posts.service';
 import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { userRole } from 'src/app/core/enums';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { EnumI, enumtoArray } from 'src/app/core/utils';
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
