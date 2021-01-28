@@ -1,34 +1,34 @@
 <form [formGroup]="editPostForm" class="ui-g">
     <p-panel>
         <p-header class="main">
-            <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success" style="margin-right: 10px;"></button>
+            <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                style="margin-right: 10px;"></button>
             <b>Edit Post</b>
         </p-header>
-        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div *ngIf="error" class="ui-g">{{error}}</div>
 
         <div class="ui-g" style="padding-bottom: 15px">
             <div class="p-inputgroup">
                 <span class="p-inputgroup-addon"><i class="pi pi-tag"></i></span>
-                <input pInputText id="title" formControlName="title" placeholder="Enter your title" class="ui-g-12 ui-md-5"/>
+                <input pInputText id="title" formControlName="title" placeholder="Enter your title"
+                    class="ui-g-12 ui-md-5" />
                 <div class="ui-g-12 ui-md-5">
                     <app-fielderrors [form]="editPostForm" field="title" nicename="title"></app-fielderrors>
-                </div>  
+                </div>
             </div>
         </div>
 
-
         <div class="ui-g" style="padding-bottom: 15px">
             <p-editor id="text" formControlName="text" placeholder="Enter your text" [style]="{'height':'360px'}">
-            <div class="ui-g-12 ui-md-5">
-                <app-fielderrors [form]="editPostForm" field="text" nicename="text"></app-fielderrors>
-            </div>
-        </p-editor>
+                <div class="ui-g-12 ui-md-5">
+                    <app-fielderrors [form]="editPostForm" field="text" nicename="text"></app-fielderrors>
+                </div>
+            </p-editor>
 
         </div>
 
         <button pButton type="button" label="Edit" [disabled]="!editPostForm.valid" (click)="onSubmit()"></button>
 
     </p-panel>
-    
 </form>
 <app-change-category [id]="id"></app-change-category>

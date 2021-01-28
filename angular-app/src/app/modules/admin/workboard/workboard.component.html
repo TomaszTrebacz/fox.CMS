@@ -1,14 +1,21 @@
-<p-fieldset>    
+<p-fieldset>
     <p-header class="main">
-        <button pButton pRipple type="button" icon="pi pi-save" class="p-button-rounded p-button-info p-button-outlined" style="margin-right: 10px;"></button>
+        <button pButton pRipple type="button" icon="pi pi-save" class="p-button-rounded p-button-info p-button-outlined"
+            style="margin-right: 10px;"></button>
         Workboard
     </p-header>
-        <ul>
-       <li><button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success" style="margin-right: 10px;"></button>
-        <a routerLink="/admin/create-post">Add post</a></li> 
-        <li><button pButton pRipple type="button" icon="pi pi-table" class="p-button-rounded p-button-info" style="margin-right: 10px;"></button>
-        <a routerLink="/admin/create-category">Add category</a></li>
-        <li *access="'root'"><button pButton pRipple type="button" icon="pi pi-users" class="p-button-rounded p-button-help" style="margin-right: 10px;"></button>
-        <a routerLink="/admin/manage-users">Manage Users</a></li>  
+    <ul>
+        <li><button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                style="margin-right: 10px;"></button>
+            <a routerLink="/admin/create-post">Add post</a>
+        </li>
+        <li><button pButton pRipple type="button" icon="pi pi-table" class="p-button-rounded p-button-info"
+                style="margin-right: 10px;"></button>
+            <a routerLink="/admin/create-category">Add category</a>
+        </li>
+        <li *access="'root'"><button pButton pRipple type="button" icon="pi pi-users"
+                class="p-button-rounded p-button-help" style="margin-right: 10px;"></button>
+            <a routerLink="/admin/manage-users">Manage Users</a>
+        </li>
     </ul>
 </p-fieldset>

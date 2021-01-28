@@ -1,13 +1,15 @@
 <form [formGroup]="phoneForm" class="ui-g">
     <p-panel header="Change phone number" class="ui-g-12">
-        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div *ngIf="error" class="ui-g">{{error}}</div>
         <div class="ui-g" style="padding-bottom: 10px">
             <div class="p-inputgroup">
                 <span class="p-inputgroup-addon"><i class="pi pi-phone"></i></span>
-            <input pInputText id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number" class="ui-g-12 ui-md-5">
-            <app-fielderrors [form]="phoneForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
+                <input pInputText id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number"
+                    class="ui-g-12 ui-md-5">
+                <app-fielderrors [form]="phoneForm" field="phoneNumber" nicename="phoneNumber"></app-fielderrors>
+            </div>
         </div>
-        </div>
-        <button pButton type="button" label="Send SMS" [disabled]="!phoneForm.valid" (click)="onPhoneFormSubmit()"></button>
-    </p-panel>    
+        <button pButton type="button" label="Send SMS" [disabled]="!phoneForm.valid"
+            (click)="onPhoneFormSubmit()"></button>
+    </p-panel>
 </form>

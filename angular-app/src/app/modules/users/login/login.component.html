@@ -1,42 +1,46 @@
 <form [formGroup]="loginForm" class="ui-g">
     <p-panel header="Sign in" class="ui-g-12">
 
-        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div *ngIf="error" class="ui-g">{{error}}</div>
 
         <div class="ui-g" style="margin-bottom: 15px;">
             <div class="p-inputgroup">
-            <span class="p-inputgroup-addon"><i class="pi pi-inbox"></i></span>
-            <input pInputText id="email" formControlName="email" placeholder="Enter your email" class="ui-g-12 ui-md-5"/>
-            <div class="ui-g-12 ui-md-5">
-                <app-fielderrors [form]="loginForm" field="email" nicename="email"></app-fielderrors>
+                <span class="p-inputgroup-addon"><i class="pi pi-inbox"></i></span>
+                <input pInputText id="email" formControlName="email" placeholder="Enter your email"
+                    class="ui-g-12 ui-md-5" />
+                <div class="ui-g-12 ui-md-5">
+                    <app-fielderrors [form]="loginForm" field="email" nicename="email"></app-fielderrors>
+                </div>
             </div>
         </div>
-    </div>
 
         <div class="ui-g" style="margin-bottom: 15px;">
             <div class="p-inputgroup">
                 <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
-            <input pInputText id="password" formControlName="password" type="password" placeholder="Enter your password" class="ui-g-12 ui-md-5"/>
-            <div class="ui-g-12 ui-md-5">
-                <app-fielderrors [form]="loginForm" field="password" nicename="password"></app-fielderrors>
+                <input pInputText id="password" formControlName="password" type="password"
+                    placeholder="Enter your password" class="ui-g-12 ui-md-5" />
+                <div class="ui-g-12 ui-md-5">
+                    <app-fielderrors [form]="loginForm" field="password" nicename="password"></app-fielderrors>
+                </div>
             </div>
-        </div>
         </div>
 
         <div class="ui-g">
-        <button pButton type="button" label="Sign in" [disabled]="!loginForm.valid" (click)="onSubmit()" style="margin-bottom: 15px;"></button>
+            <button pButton type="button" label="Sign in" [disabled]="!loginForm.valid" (click)="onSubmit()"
+                style="margin-bottom: 15px;"></button>
         </div>
 
         <div class="ui-g">
             <a routerLink="/users/resend-confirmLink">
-                <button pButton pRipple type="button" label="Resend confirmation link" icon="pi pi-inbox" class="p-button-rounded p-button-success p-button-text"></button>
+                <button pButton pRipple type="button" label="Resend confirmation link" icon="pi pi-inbox"
+                    class="p-button-rounded p-button-success p-button-text"></button>
             </a>
         </div>
-           <div class="ui-g">
+        <div class="ui-g">
             <a routerLink="/users/reset-password">
-                <button pButton pRipple type="button" label="Reset password by phone or email"icon="pi pi-key" class="p-button-rounded p-button-text p-button-plain"></button>
+                <button pButton pRipple type="button" label="Reset password by phone or email" icon="pi pi-key"
+                    class="p-button-rounded p-button-text p-button-plain"></button>
             </a>
         </div>
     </p-panel>
 </form>
-

@@ -37,7 +37,7 @@
         <div class="ui-g" style="padding-bottom: 15px">
             <div class="p-inputgroup">
                 <span class="p-inputgroup-addon"><i class="pi pi-table"></i></span>
-            <p-dropdown id="category" formControlName="category" [options]="cities" optionLabel="name" value="1"></p-dropdown>
+            <p-dropdown id="category" formControlName="category" [options]="categories" optionLabel="name" value="1"></p-dropdown>
             <div class="ui-g-12 ui-md-5">
                 <app-fielderrors [form]="createPostForm" field="category" nicename="category"></app-fielderrors>
             </div>

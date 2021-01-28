@@ -1,23 +1,25 @@
 <form [formGroup]="changeCategoryForm" class="ui-g">
     <p-panel>
         <p-header class="main">
-            <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success" style="margin-right: 10px;"></button>
+            <button pButton pRipple type="button" icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                style="margin-right: 10px;"></button>
             <b>Change Category</b>
         </p-header>
-        <div *ngIf="error" class="ui-g">{{error}}</div> 
+        <div *ngIf="error" class="ui-g">{{error}}</div>
 
         <div class="ui-g" style="padding-bottom: 15px">
             <div class="p-inputgroup">
                 <span class="p-inputgroup-addon"><i class="pi pi-table"></i></span>
-            <p-dropdown id="category" formControlName="category" [options]="cities" optionLabel="name" value="1"></p-dropdown>
-            <div class="ui-g-12 ui-md-5">
-                <app-fielderrors [form]="changeCategoryForm" field="category" nicename="category"></app-fielderrors>
+                <p-dropdown id="category" formControlName="category" [options]="categories" optionLabel="name"
+                    value="1"></p-dropdown>
+                <div class="ui-g-12 ui-md-5">
+                    <app-fielderrors [form]="changeCategoryForm" field="category" nicename="category"></app-fielderrors>
+                </div>
             </div>
         </div>
-    </div>
 
-        <button pButton type="button" label="Change" [disabled]="!changeCategoryForm.valid" (click)="onSubmit()"></button>
+        <button pButton type="button" label="Change" [disabled]="!changeCategoryForm.valid"
+            (click)="onSubmit()"></button>
 
     </p-panel>
-    
 </form>
