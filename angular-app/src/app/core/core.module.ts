@@ -5,12 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { GraphQLModule } from './graphql/config/graphql.module';
 import { ProgressBarService } from './progress-bar/progress-bar.service';
-import { MessageService, SharedModule } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { ProgressBarInterceptor } from 'src/app/core/interceptors';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { ToastModule } from 'primeng/toast';
-import { CutHtmlTagsPipe, CutPipe } from './pipes';
-import { AccessDirective } from './directives';
 
 @NgModule({
   declarations: [ProgressBarComponent],
@@ -21,7 +19,6 @@ import { AccessDirective } from './directives';
     HttpClientModule,
     GraphQLModule,
     ToastModule,
-    SharedModule,
   ],
   providers: [
     MessageService,

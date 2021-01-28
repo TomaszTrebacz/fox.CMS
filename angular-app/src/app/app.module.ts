@@ -10,9 +10,10 @@ import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { BlogModule } from './modules/blog/blog.module';
 import { AccountModule } from './modules/account/account.module';
+import { AccessDirective } from './core/directives';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AccessDirective],
   imports: [
     AppRoutingModule,
     LayoutModule,
@@ -26,5 +27,6 @@ import { AccountModule } from './modules/account/account.module';
     ToastModule,
   ],
   bootstrap: [AppComponent],
+  exports: [AccessDirective],
 })
 export class AppModule {}

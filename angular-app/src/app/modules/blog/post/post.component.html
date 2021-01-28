@@ -18,7 +18,7 @@
                 class="p-button-rounded p-button-help p-button-outlined"></button>
         </p-footer>
     </p-panel>
-    <p-panel [appRoleAccess]="['admin', 'root']" header="Settings" class="settings">
+    <p-panel appRoleAccess="['admin', 'root']" header="Settings" class="settings">
         <button pButton pRipple type="button" label="Edit Post" icon="pi pi-pencil"
             class="p-button-rounded p-button-help p-button-text" [routerLink]="['/admin/edit-post/', post.id]"></button>
         <button pButton pRipple type="button" label="Delete Post" icon="pi pi-times"
