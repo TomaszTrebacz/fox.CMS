@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostEntity } from '../entities/post.entity';
+import { PostEntity } from '../database/entities/post.entity';
 import { PostI } from '../models/post.interface';
 import { isExecuted, isFound } from '../utils';
 
@@ -9,11 +9,11 @@ import { isExecuted, isFound } from '../utils';
 export class PostsService {
   constructor(
     @InjectRepository(PostEntity)
-    private PostsRepository: Repository<PostI>,
+    private readonly postsRepository: Repository<PostI>,
   ) {}
 
   async findAll(): Promise<PostI[]> {
-    const res = await this.PostsRepository.find({
+    const res = await this.postsRepository.find({
       relations: ['category'],
     });
 
@@ -23,13 +23,13 @@ export class PostsService {
   }
 
   async findOne(id: number): Promise<PostI> {
-    return await this.PostsRepository.findOneOrFail(id, {
+    return await this.postsRepository.findOneOrFail(id, {
       relations: ['category'],
     });
   }
 
   async findUserPosts(id: string): Promise<PostI[]> {
-    const res = await this.PostsRepository.find({ userId: id });
+    const res = await this.postsRepository.find({ userId: id });
 
     await isFound(res);
 
@@ -39,9 +39,9 @@ export class PostsService {
   async createPost(
     createData: Pick<PostI, 'title' | 'text' | 'category' | 'imageUrl'>,
   ): Promise<PostI> {
-    const { id } = await this.PostsRepository.save(createData);
+    const { id } = await this.postsRepository.save(createData);
 
-    const postWithCategory = await this.PostsRepository.findOne({
+    const postWithCategory = await this.postsRepository.findOne({
       where: { id: id },
       relations: ['category'],
     });
@@ -54,7 +54,7 @@ export class PostsService {
     title,
     text,
   }: Pick<PostI, 'id' | 'title' | 'text'>): Promise<boolean> {
-    const res = await this.PostsRepository.update(id, {
+    const res = await this.postsRepository.update(id, {
       title: title,
       text: text,
     });
@@ -68,14 +68,14 @@ export class PostsService {
     id,
     category,
   }: Pick<PostI, 'id' | 'category'>): Promise<PostI> {
-    return await this.PostsRepository.save({
+    return await this.postsRepository.save({
       id: id,
       category: category,
     });
   }
 
   async deletePost(id: number): Promise<boolean> {
-    const res = await this.PostsRepository.delete(id);
+    const res = await this.postsRepository.delete(id);
 
     await isExecuted(res);
 
@@ -83,7 +83,7 @@ export class PostsService {
   }
 
   async deleteUserPosts(id: string): Promise<boolean> {
-    const res = await this.PostsRepository.delete({ userId: id });
+    const res = await this.postsRepository.delete({ userId: id });
 
     await isExecuted(res);
 

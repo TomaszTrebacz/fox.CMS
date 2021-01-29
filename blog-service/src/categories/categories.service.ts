@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CategoryEntity } from '../entities/category.entity';
+import { CategoryEntity } from '../database/entities/category.entity';
 import { CategoryI } from '../models/category.interface';
 import { isExecuted, isFound } from '../utils';
 
@@ -9,11 +9,11 @@ import { isExecuted, isFound } from '../utils';
 export class CategoriesService {
   constructor(
     @InjectRepository(CategoryEntity)
-    private CategoriesService: Repository<CategoryI>,
+    private readonly categoriesRepository: Repository<CategoryI>,
   ) {}
 
   async findAll(): Promise<CategoryI[]> {
-    const res = await this.CategoriesService.find({ relations: ['posts'] });
+    const res = await this.categoriesRepository.find({ relations: ['posts'] });
 
     await isFound(res);
 
@@ -21,26 +21,26 @@ export class CategoriesService {
   }
 
   async findOneById(id: number): Promise<CategoryI> {
-    return await this.CategoriesService.findOneOrFail(id, {
+    return await this.categoriesRepository.findOneOrFail(id, {
       relations: ['posts'],
     });
   }
 
   async findOneByName(name: string): Promise<CategoryI> {
-    return await this.CategoriesService.findOne({ name: name });
+    return await this.categoriesRepository.findOne({ name: name });
   }
 
   async createCategory(
     createData: Pick<CategoryI, 'name'>,
   ): Promise<CategoryI> {
-    return await this.CategoriesService.save(createData);
+    return await this.categoriesRepository.save(createData);
   }
 
   async editCategory({
     id,
     name,
   }: Pick<CategoryI, 'id' | 'name'>): Promise<boolean> {
-    const res = await this.CategoriesService.update(id, {
+    const res = await this.categoriesRepository.update(id, {
       name: name,
     });
 
@@ -50,7 +50,7 @@ export class CategoriesService {
   }
 
   async deleteCategory(id: number): Promise<boolean> {
-    const res = await this.CategoriesService.delete(id);
+    const res = await this.categoriesRepository.delete(id);
 
     await isExecuted(res);
 
