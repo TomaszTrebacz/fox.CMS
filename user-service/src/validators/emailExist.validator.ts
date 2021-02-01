@@ -14,7 +14,7 @@ export class emailExist implements ValidatorConstraintInterface {
   constructor(protected readonly usersService: UsersService) {}
 
   validate(email: string) {
-    return this.usersService.findOneByEmail(email).then(user => {
+    return this.usersService.findOneByEmail(email, false).then(user => {
       if (user) return false;
       return true;
     });
