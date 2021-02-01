@@ -1,0 +1,24 @@
+/angular-app/.env
+/angular-app/node_modules
+/angular-app/dist/
+
+/api-gateway/node_modules
+/api-gateway/dist/
+/api-gateway/.env
+
+/blog-service/node_modules
+/blog-service/dist/
+/blog-service/.env
+/blog-service/.env.test
+/blog-service/.npmrc
+
+/user-service/node_modules
+/user-service/dist/
+/user-service/.env
+/user-service/.env.test
+/user-service/.npmrc
+
+# temporary hidden
+docker-compose.yml
+graphql.ts
+
