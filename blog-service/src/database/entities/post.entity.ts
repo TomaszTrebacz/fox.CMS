@@ -45,4 +45,11 @@ export const PostEntity = new EntitySchema<PostI>({
       joinColumn: true,
     },
   },
+  indices: [
+    {
+      name: 'IDX_POST',
+      unique: true,
+      columns: ['id', 'userId'],
+    },
+  ],
 });

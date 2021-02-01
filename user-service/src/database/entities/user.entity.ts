@@ -12,7 +12,6 @@ export const UserEntity = new EntitySchema<UserI>({
     email: {
       type: String,
       length: 50,
-      unique: true,
     },
     firstName: {
       type: String,
@@ -45,4 +44,17 @@ export const UserEntity = new EntitySchema<UserI>({
       nullable: true,
     },
   },
+  indices: [
+    {
+      name: 'IDX_USER',
+      unique: true,
+      columns: ['id', 'email', 'phoneNumber'],
+    },
+  ],
+  uniques: [
+    {
+      name: 'UNIQUE_TEST',
+      columns: ['email'],
+    },
+  ],
 });

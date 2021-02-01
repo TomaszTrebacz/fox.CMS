@@ -23,4 +23,11 @@ export const CategoryEntity = new EntitySchema<CategoryI>({
       inverseSide: 'category',
     },
   },
+  indices: [
+    {
+      name: 'IDX_CATEGORY',
+      unique: true,
+      columns: ['id'],
+    },
+  ],
 });
