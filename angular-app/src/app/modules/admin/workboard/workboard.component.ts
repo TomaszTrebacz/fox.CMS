@@ -3,13 +3,10 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-workboard',
   templateUrl: './workboard.component.html',
-  styleUrls: ['./workboard.component.css']
+  styleUrls: ['./workboard.component.css'],
 })
 export class WorkboardComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

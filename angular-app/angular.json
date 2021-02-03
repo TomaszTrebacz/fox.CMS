@@ -38,7 +38,8 @@
             "allowedCommonJsDependencies": [
               "crypto-es",
               "graphql-tag",
-              "zen-observable"
+              "zen-observable",
+              "aws-sdk/clients/s3"
             ],
             "scripts": ["./node_modules/quill/dist/quill.js"]
           },

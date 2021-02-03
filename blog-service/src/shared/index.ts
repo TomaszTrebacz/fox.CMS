@@ -1,1 +1,1 @@
-export * from './date.scalar';
+export * from './scalars/date.scalar';

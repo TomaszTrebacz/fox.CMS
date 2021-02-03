@@ -14,7 +14,7 @@ export class phoneNumberExist implements ValidatorConstraintInterface {
   constructor(protected readonly usersService: UsersService) {}
 
   validate(phone: string) {
-    return this.usersService.findOneByPhoneNumber(phone).then(user => {
+    return this.usersService.findOneByPhoneNumber(phone, false).then(user => {
       if (user) return false;
       return true;
     });

@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailmanModule } from '@squareboat/nest-mailman';
 import { TwilioModule } from 'nestjs-twilio';
 import { mailConfig, twilioConfig } from '../config';
+import { LoggingPlugin } from './interceptors/logging.interceptor';
 import { MailService } from './mail/mail.service';
 import { DateScalar } from './scalars/date.scalar';
 import { SmsService } from './sms/sms.service';
@@ -29,7 +30,7 @@ const ENV = process.env.NODE_ENV;
     }),
     SharedModule,
   ],
-  providers: [DateScalar, MailService, SmsService],
+  providers: [DateScalar, MailService, SmsService, LoggingPlugin],
   exports: [MailService, SmsService],
 })
 export class SharedModule {}

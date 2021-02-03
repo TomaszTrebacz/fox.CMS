@@ -7,6 +7,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { AuthGqlRedisModule } from '@tomasztrebacz/nest-auth-graphql-redis';
 import { GqlConfigService, jwtConfig, redisConfig } from './config';
 import { DatabaseModule } from './database/database.module';
+import { LoggingPlugin } from './shared/interceptors/logging.interceptor';
+import { APP_PIPE } from '@nestjs/core';
 
 // for testing purposes app can manage different env files
 const ENV = process.env.NODE_ENV;
@@ -26,6 +28,6 @@ const ENV = process.env.NODE_ENV;
     AuthGqlRedisModule,
     DatabaseModule,
   ],
-  providers: [DateScalar],
+  providers: [DateScalar, LoggingPlugin],
 })
 export class AppModule {}

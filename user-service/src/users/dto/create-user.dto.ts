@@ -4,7 +4,6 @@ import { CreateUserInput } from '../../graphql';
 
 export class CreateUserDto extends CreateUserInput {
   @IsEmail()
-  @Length(3, 62)
   @EmailExist()
   email: string;
 
