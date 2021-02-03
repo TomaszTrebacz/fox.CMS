@@ -16,6 +16,8 @@ export class AuthService {
     email,
     password,
   }: Pick<UserI, 'email' | 'password'>): Promise<UserI> {
+    console.log(email);
+    console.log(password);
     const user = await this.usersService.findOneByEmail(email, true);
 
     await comparePassword(password, user.password);

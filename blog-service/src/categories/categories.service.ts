@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CategoryEntity } from '../database/entities/category.entity';
 import { CategoryI } from '../models/category.interface';
-import { isExecuted, isFound } from '../utils';
+import { isExecuted, isArrayFound, isFound } from '../utils';
 
 @Injectable()
 export class CategoriesService {
@@ -15,25 +15,37 @@ export class CategoriesService {
   async findAll(): Promise<CategoryI[]> {
     const res = await this.categoriesRepository.find({ relations: ['posts'] });
 
-    await isFound(res);
+    await isArrayFound(res);
 
     return res;
   }
 
   async findOneById(id: number): Promise<CategoryI> {
-    return await this.categoriesRepository.findOneOrFail(id, {
+    const category = await this.categoriesRepository.findOne(id, {
       relations: ['posts'],
     });
+
+    await isFound(category, `Can not find category with id: ${id}`);
+
+    return category;
   }
 
   async findOneByName(name: string): Promise<CategoryI> {
-    return await this.categoriesRepository.findOne({ name: name });
+    const category = await this.categoriesRepository.findOne({ name: name });
+
+    await isFound(category, `Can not find category with name: ${name}`);
+
+    return category;
   }
 
   async createCategory(
     createData: Pick<CategoryI, 'name'>,
   ): Promise<CategoryI> {
-    return await this.categoriesRepository.save(createData);
+    const category = await this.categoriesRepository.save(createData);
+
+    await isFound(category, 'Can not save in database');
+
+    return category;
   }
 
   async editCategory({

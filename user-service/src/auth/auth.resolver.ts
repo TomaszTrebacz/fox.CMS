@@ -187,11 +187,7 @@ export class AuthResolver {
   @Mutation()
   async changeConfirmToken(@Args('email') email: string): Promise<boolean> {
     try {
-      const user = await this.usersService.findOneByEmail(email);
-
-      if (user == undefined) {
-        throw new Error('Wrong email or password!');
-      }
+      const user = await this.usersService.findOneByEmail(email, true);
 
       const confirmed = await this.redisHandler.getValue(user.id, 'confirmed');
 
@@ -241,6 +237,7 @@ export class AuthResolver {
     try {
       const { id, phoneNumber } = await this.usersService.findOneByPhoneNumber(
         givenphoneNumber,
+        true,
       );
 
       const randomNumber = generateRandomCode();
@@ -279,7 +276,10 @@ export class AuthResolver {
     @Args('resetPasswordInput') { phoneNumber, code }: ResetPasswordDto,
   ): Promise<boolean> {
     try {
-      const user = await this.usersService.findOneByPhoneNumber(phoneNumber);
+      const user = await this.usersService.findOneByPhoneNumber(
+        phoneNumber,
+        true,
+      );
 
       const codeToken = await this.redisHandler.getValue(user.id, 'codetoken');
 
@@ -296,7 +296,7 @@ export class AuthResolver {
 
       await this.redisHandler.deleteField(user.id, 'codetoken');
 
-      await this.usersService.changePassword(user.id, password);
+      await this.authService.changePassword(user.id, password);
 
       const smsData = {
         phoneNumber: user.phoneNumber,
@@ -314,11 +314,7 @@ export class AuthResolver {
   @Mutation()
   async sendChangePassEmail(@Args('email') email: string): Promise<boolean> {
     try {
-      const user = await this.usersService.findOneByEmail(email);
-
-      if (user == undefined) {
-        throw new Error('Wrong email or password!');
-      }
+      const user = await this.usersService.findOneByEmail(email, true);
 
       const JWTpayload = {
         id: user.id,
@@ -374,7 +370,7 @@ export class AuthResolver {
         throw new Error('Link is not valid.');
       }
 
-      await this.usersService.changePassword(id, password);
+      await this.authService.changePassword(id, password);
 
       await this.redisHandler.deleteField(id, 'changepasstoken');
       return true;
@@ -390,7 +386,7 @@ export class AuthResolver {
     @Args('password') password: string,
   ): Promise<boolean> {
     try {
-      await this.usersService.changePassword(user.id, password);
+      await this.authService.changePassword(user.id, password);
 
       return true;
     } catch (err) {

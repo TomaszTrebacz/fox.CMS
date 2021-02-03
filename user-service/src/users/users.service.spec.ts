@@ -132,17 +132,28 @@ describe('UsersService', () => {
 
         await usersRepository.findOne.mockReturnValue(expectedUser);
 
-        const user = await usersService.findOneByPhoneNumber(userNumber);
+        const user = await usersService.findOneByPhoneNumber(userNumber, true);
         expect(user).toEqual(expectedUser);
       });
     });
     describe('otherwise', () => {
-      it('should throw a detailed errorr', async () => {
-        await usersRepository.findOne.mockReturnValue(undefined);
+      describe('if param throwError is set to true', () => {
+        it('should throw a detailed error', async () => {
+          await usersRepository.findOne.mockReturnValue(undefined);
 
-        expect(usersService.findOneByPhoneNumber(userNumber)).rejects.toThrow(
-          `Can not find user with phone: ${userNumber}`,
-        );
+          expect(
+            usersService.findOneByPhoneNumber(userNumber, true),
+          ).rejects.toThrow(`Can not find user with phone: ${userNumber}`);
+        });
+      });
+      describe('if param throwError is set to false', () => {
+        it('should return no error', async () => {
+          await usersRepository.findOne.mockReturnValue(undefined);
+
+          expect(
+            await usersService.findOneByPhoneNumber(userNumber, false),
+          ).toEqual(undefined);
+        });
       });
     });
   });
@@ -166,14 +177,14 @@ describe('UsersService', () => {
 
       expect(usersRepositorySaveSpy).not.toHaveBeenCalledWith(createUserDto);
 
-      expect(usersRepositorySaveSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          email: 'jan@kowalski.pl',
-          password: expect.any(String),
-        }),
-      );
-
-      expect(res).toEqual(mockedUser);
+      expect(usersRepositorySaveSpy).toHaveBeenCalledWith({
+        email: 'Jan@kowalski.pl',
+        firstName: 'Jam',
+        lastName: 'Kowalski',
+        password: expect.any(String),
+        phoneNumber: '+47123456789',
+      }),
+        expect(res).toEqual(mockedUser);
     });
   });
 

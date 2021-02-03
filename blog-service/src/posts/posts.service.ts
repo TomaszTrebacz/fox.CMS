@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostEntity } from '../database/entities/post.entity';
 import { PostI } from '../models/post.interface';
-import { isExecuted, isFound } from '../utils';
+import { isExecuted, isArrayFound, isFound } from '../utils';
 
 @Injectable()
 export class PostsService {
@@ -17,7 +17,7 @@ export class PostsService {
       relations: ['category'],
     });
 
-    await isFound(res);
+    await isArrayFound(res);
 
     return res;
   }
@@ -31,7 +31,7 @@ export class PostsService {
   async findUserPosts(id: string): Promise<PostI[]> {
     const res = await this.postsRepository.find({ userId: id });
 
-    await isFound(res);
+    await isArrayFound(res);
 
     return res;
   }
@@ -39,10 +39,12 @@ export class PostsService {
   async createPost(
     createData: Pick<PostI, 'title' | 'text' | 'category' | 'imageUrl'>,
   ): Promise<PostI> {
-    const { id } = await this.postsRepository.save(createData);
+    const post = await this.postsRepository.save(createData);
+
+    await isFound(post, 'Can not create post');
 
     const postWithCategory = await this.postsRepository.findOne({
-      where: { id: id },
+      where: { id: post.id },
       relations: ['category'],
     });
 
@@ -68,10 +70,14 @@ export class PostsService {
     id,
     category,
   }: Pick<PostI, 'id' | 'category'>): Promise<PostI> {
-    return await this.postsRepository.save({
+    const updatedPost = await this.postsRepository.save({
       id: id,
       category: category,
     });
+
+    await isFound(updatedPost, 'Can not update post');
+
+    return updatedPost;
   }
 
   async deletePost(id: number): Promise<boolean> {

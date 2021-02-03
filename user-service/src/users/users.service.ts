@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hashPassword, isExecuted, isFound, lowercase } from '../utils';
+import { hashPassword, isArrayFound, isExecuted, isFound } from '../utils';
 import { UserI } from '../models';
 import { UserEntity } from '../database/entities/user.entity';
 
@@ -15,7 +15,7 @@ export class UsersService {
   async findAll(): Promise<UserI[]> {
     const users = await this.usersRepository.find();
 
-    await isFound(users);
+    await isArrayFound(users);
 
     return users;
   }
@@ -23,32 +23,33 @@ export class UsersService {
   async findOneById(id: string): Promise<UserI> {
     const user = await this.usersRepository.findOne(id);
 
-    if (!user) {
-      throw new Error(`Can not find user with id: ${id}`);
-    }
+    await isFound(user, `Can not find user with id: ${id}`);
 
     return user;
   }
 
   async findOneByEmail(email: string, throwError: boolean): Promise<UserI> {
     const user = await this.usersRepository.findOne({
-      email: lowercase(email),
+      email: email,
     });
 
-    if (!user && throwError === true) {
-      throw new Error('Wrong email!');
+    if (throwError === true) {
+      await isFound(user, 'Wrong email!');
     }
 
     return user;
   }
 
-  async findOneByPhoneNumber(phoneNumber: string): Promise<UserI> {
+  async findOneByPhoneNumber(
+    phoneNumber: string,
+    throwError: boolean,
+  ): Promise<UserI> {
     const user = await this.usersRepository.findOne({
       phoneNumber: phoneNumber,
     });
 
-    if (!user) {
-      throw new Error(`Can not find user with phone: ${phoneNumber}`);
+    if (throwError === true) {
+      await isFound(user, `Can not find user with phone: ${phoneNumber}`);
     }
 
     return user;
@@ -59,11 +60,13 @@ export class UsersService {
   ): Promise<UserI> {
     const validatedUser = {
       ...createData,
-      email: lowercase(createData.email),
+      email: createData.email,
       password: await hashPassword(createData.password),
     };
 
     const createdUser = await this.usersRepository.save(validatedUser);
+
+    await isFound(createdUser, 'Can not save in database');
 
     return createdUser;
   }
@@ -74,7 +77,9 @@ export class UsersService {
 
       const finalData = Object.assign(currentData, updateData);
 
-      await this.usersRepository.save(finalData);
+      const updatedUser = await this.usersRepository.save(finalData);
+
+      await isFound(updatedUser, 'Can not save in database');
 
       return true;
     } catch (err) {
