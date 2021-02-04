@@ -1,0 +1,12 @@
+[submodule "blog-service"]
+	path = blog-service
+	url = https://github.com/TomaszTrebacz/fox.CMS-blog-service
+[submodule "user-service"]
+	path = user-service
+	url = https://github.com/TomaszTrebacz/fox.CMS-user-service
+[submodule "api-gateway"]
+	path = api-gateway
+	url = https://github.com/TomaszTrebacz/fox.CMS-api-gateway
+[submodule "angular-app"]
+	path = angular-app
+	url = https://github.com/TomaszTrebacz/fox.CMS-angular-app
