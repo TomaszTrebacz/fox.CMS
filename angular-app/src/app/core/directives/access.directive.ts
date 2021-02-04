@@ -12,7 +12,7 @@ export class AccessDirective {
     private authService: AuthService
   ) {}
 
-  @Input('access') set access(roles: userRole[]) {
+  @Input('appRoleAccess') set appRoleAccess(roles: userRole[]) {
     const role = this.authService.userRole;
 
     if (roles.includes(role)) {

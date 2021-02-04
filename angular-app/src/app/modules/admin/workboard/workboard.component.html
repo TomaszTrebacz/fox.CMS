@@ -14,7 +14,7 @@
             <a routerLink="/admin/create-category">Add category</a>
         </li>
 
-        <a appRoleAccess="['root']" routerLink="admin/workboard">
+        <a *appRoleAccess="['root']" routerLink="admin/workboard">
             <li><button pButton pRipple type="button" icon="pi pi-users" class="p-button-rounded p-button-help"
                     style="margin-right: 10px;"></button>
                 Manage Users

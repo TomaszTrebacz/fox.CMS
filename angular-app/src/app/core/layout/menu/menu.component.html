@@ -4,7 +4,7 @@
             <button pButton pRipple type="button" label="Account" icon="pi pi-user"
                 class="p-button-rounded p-button-secondary p-button-text"></button>
         </a>
-        <a appRoleAccess="['admin', 'root']" routerLink="admin/workboard">
+        <a *appRoleAccess="['admin', 'root']" routerLink="admin/workboard">
             <button *ngIf="user.role !== 'user'" pButton pRipple type="button" label="Worboard" icon="pi pi-lock"
                 class="p-button-rounded p-button-text p-button-text"></button>
         </a>

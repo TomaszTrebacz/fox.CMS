@@ -13,7 +13,7 @@ import { AccountModule } from './modules/account/account.module';
 import { AccessDirective } from './core/directives';
 
 @NgModule({
-  declarations: [AppComponent, AccessDirective],
+  declarations: [AppComponent],
   imports: [
     AppRoutingModule,
     LayoutModule,
@@ -27,6 +27,5 @@ import { AccessDirective } from './core/directives';
     ToastModule,
   ],
   bootstrap: [AppComponent],
-  exports: [AccessDirective],
 })
 export class AppModule {}

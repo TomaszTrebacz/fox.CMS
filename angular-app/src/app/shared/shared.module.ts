@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { DataViewModule } from 'primeng/dataview';
 import { DropdownModule } from 'primeng/dropdown';
 import { CutHtmlTagsPipe, CutPipe } from '../core/pipes';
+import { AccessDirective } from '../core/directives';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { CutHtmlTagsPipe, CutPipe } from '../core/pipes';
     DisplayPostsComponent,
     CutHtmlTagsPipe,
     CutPipe,
+    AccessDirective,
   ],
   imports: [
     CommonModule,
@@ -48,6 +50,7 @@ import { CutHtmlTagsPipe, CutPipe } from '../core/pipes';
     DropdownModule,
   ],
   exports: [
+    AccessDirective,
     FielderrorsComponent,
     MessageModule,
     MessagesModule,
