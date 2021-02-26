@@ -20,7 +20,7 @@ Lightweight blogging platform created with NestJS & Angular.
 
 ## Architecture
 <p align="center">
-  <img src="https://i.ibb.co/6yYrZ8J/pizzagedon.png" />
+  <img src="https://i.ibb.co/CK0JdCc/fox-cms-architecture.png" />
 </p>
 
 ## Stack
