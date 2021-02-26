@@ -19,7 +19,9 @@ Lightweight blogging platform created with NestJS & Angular.
 [in progress]
 
 ## Architecture
-[in progress]
+<p align="center">
+  <img src="https://i.ibb.co/6yYrZ8J/pizzagedon.png" />
+</p>
 
 ## Stack
 
