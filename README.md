@@ -1,6 +1,5 @@
 <p align="center">
-  <img src="https://i.ibb.co/72znL7J/fox-2.png" width="100"/>
-   <h2 align="center">fox.CMS</h2>
+  <img src="https://i.ibb.co/c3t7HF2/readme-HEADER.png" />
 </p>
 
 ## Description
