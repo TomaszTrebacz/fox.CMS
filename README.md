@@ -2,9 +2,24 @@
   <img src="https://i.ibb.co/c3t7HF2/readme-HEADER.png" />
 </p>
 
+## Table of Contents
+1. [Description](#description)
+2. [Demo GIF](#demo)
+3. [Architecture](#architecture)
+4. [Stack](#stack)
+5. [Features](#features)
+6. [Testing](#testing)
+7. [Installation](#installation)
+8. [Screenshots](#screenshots)
 ## Description
 
 Lightweight blogging platform created with NestJS & Angular.
+
+## Demo
+[in progress]
+
+## Architecture
+[in progress]
 
 ## Stack
 
@@ -13,6 +28,11 @@ Lightweight blogging platform created with NestJS & Angular.
 - GraphQL with Apollo Federation
 - PostgreSQL(TypeORM) & Redis(IORedis)
 
+## Features
+[in progress]
+
+## Testing
+[in progress]
 ## Installation
 
 ```
@@ -26,10 +46,5 @@ cd fox.CMS
 git submodule init && git submodule update
 ```
 
-## Note[!]
-
-This is a `temporary readme`.
-
-## Attributions
-
-<div>App logo made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+## Screenshots
+[in progress]
