@@ -28,9 +28,11 @@ Lightweight blogging platform created with NestJS & Angular.
 ## Stack
 
 - NestJS
-- Angular
-- GraphQL with Apollo Federation
-- PostgreSQL(TypeORM) & Redis(IORedis)
+- Angular + PrimeNG
+- GraphQL & Apollo Federation
+- TypeORM and PostgreSQL,
+- IOredis and Redis,
+- Jest, Supertest
 
 ## Features
 [in progress]
