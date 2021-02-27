@@ -64,4 +64,15 @@ git submodule init && git submodule update
 ```
 
 ## Screenshots
-[in progress]
+
+|                        Homepage                         |                         Create Post                         |                     GraphQL Playground                      
+| :-----------------------------------------------------: | :-----------------------------------------------------: | :-----------------------------------------------------: | 
+| <img src="https://i.ibb.co/1my7h5w/HOMEPAGE.png" width="100%"> | <img src="https://i.ibb.co/yXsSVVx/BATMAN.png" width="100%"> | <img src="https://i.ibb.co/GQdYvrB/Screenshot-from-2021-02-27-23-40-33.png" width="100%">
+
+|                        Edit Account                         |                         Post                        |                     Manage Users                      
+| :-----------------------------------------------------: | :-----------------------------------------------------: | :-----------------------------------------------------: | 
+| <img src="https://i.ibb.co/qdBDkrM/EDIT.png" width="100%"> | <img src="https://i.ibb.co/hC3bjd2/POST.png" width="100%"> | <img src="https://i.ibb.co/MSxQPkL/manageusrs.png" width="100%">
+
+|                        Category                         |                         Sign in                         |                    Reset Password                      
+| :-----------------------------------------------------: | :-----------------------------------------------------: | :-----------------------------------------------------: | 
+| <img src="https://i.ibb.co/VVW5JTW/category.png" width="100%"> | <img src="https://i.ibb.co/ZcgWNPY/signin.png" width="100%"> | <img src="https://i.ibb.co/Dt710Wq/reset.png" width="100%">
