@@ -4,7 +4,7 @@
 
 ## Table of Contents
 1. [Description](#description)
-2. [Demo GIF](#demo)
+2. [GIF](#gif)
 3. [Architecture](#architecture)
 4. [Stack](#stack)
 5. [Features](#features)
@@ -15,8 +15,10 @@
 
 Lightweight blogging platform created with NestJS & Angular.
 
-## Demo
-[in progress]
+## Gif
+<p align="center">
+  <img src="https://s4.gifyu.com/images/20210227133110-c31361e3d9.gif-2-mp4.com.gif" />
+</p>
 
 ## Architecture
 <p align="center">
