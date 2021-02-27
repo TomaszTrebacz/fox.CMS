@@ -13,8 +13,7 @@
 8. [Screenshots](#screenshots)
 ## Description
 
-Lightweight blogging platform created with NestJS & Angular.
-
+Fox.CMS is a super-simple, lightweight content management system which provide you all needed tools to create own blog.
 ## Gif
 <p align="center">
   <img src="https://s4.gifyu.com/images/20210227133110-c31361e3d9.gif-2-mp4.com.gif" />
@@ -24,6 +23,18 @@ Lightweight blogging platform created with NestJS & Angular.
 <p align="center">
   <img src="https://i.ibb.co/CK0JdCc/fox-cms-architecture.png" />
 </p>
+
+- #### Angular-App
+Frontend app enabling user interacting with backend api.
+- #### Api-Gateway
+Api-gateway sits between a frontend and multiple backend services - the task of this microservice is to secure (Helmet, CORS, Rate limiting) and distribute incoming queries & mutations across the other two services using Apollo Federation.
+Moreover, in this repository are placed all e2e tests.
+- #### Blog-Service  
+Blog-service is responsible for all CRUD operations related to posts and categories.
+- #### User-Service  
+User-service enables the management of own account and other ones (assuming that you have appropriate permissions).
+- #### Auth Package  
+This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using key-value database and add needful layer between app and redis data store.
 
 ## Stack
 
