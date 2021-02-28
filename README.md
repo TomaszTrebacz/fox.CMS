@@ -36,7 +36,7 @@ Blog-service is responsible for all CRUD operations related to posts and categor
 - #### User-Service  
 User-service enables the management of own account and other ones (assuming that you have appropriate permissions).
 - #### Auth Package  
-This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using Passport.js and needful layer between app and redis data store.
+This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using Passport.js and add needful layer between app - redis data store.
 
 ## Stack
 
@@ -62,7 +62,7 @@ This package (which is deployed to NPM and Github Package Registry) handle authe
 - custom validators with decorators,
 - sending SMS with Twilio,
 - sending emails with package built on top of Nodemailer,
-- uploading images to Amazon S3,
+- uploading images to Amazon S3.
 
 ## Installation
 
