@@ -26,17 +26,17 @@ Fox.CMS is a super-simple, lightweight content management system which provide y
   <img src="https://i.ibb.co/CK0JdCc/fox-cms-architecture.png" />
 </p>
 
-- #### Angular-App
-Frontend enables interaction with backend api.
-- #### Api-Gateway
-Api-gateway sits between a frontend and multiple backend services - the task of this microservice is to secure (Helmet, CORS, Rate limiting) and distribute incoming queries & mutations across the other two services using Apollo Federation.
+- #### <a href="https://github.com/TomaszTrebacz/fox.CMS-angular-app/">Angular-App</a>
+Frontend enables interaction with backend api via Apollo Client.
+- #### <a href="https://github.com/TomaszTrebacz/fox.CMS-api-gateway/">Api-Gateway</a>
+Api-gateway sits between frontend and multiple backend services - the task of this microservice is to secure (Helmet, CORS, Rate limiting) and distribute incoming queries & mutations across the other two services using Apollo Federation.  
 Moreover, in this repository are placed all e2e tests.
-- #### Blog-Service  
+- #### <a href="https://github.com/TomaszTrebacz/fox.CMS-blog-service/">Blog-Service</a>
 Blog-service is responsible for all CRUD operations related to posts and categories.
-- #### User-Service  
-User-service enables the management of own account and other ones (assuming that you have appropriate permissions).
-- #### Auth Package  
-This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using Passport.js and add needful layer between app - redis data store.
+- #### <a href="https://github.com/TomaszTrebacz/fox.CMS-user-service/">User-Service</a>
+User-service enables the management of own account and others (assuming that you have appropriate permissions).
+- #### <a href="https://github.com/TomaszTrebacz/nest-auth-graphql-redis">Auth Package</a>
+This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using Passport.js and adds needed layer between app - redis data store.
 
 ## Stack
 
