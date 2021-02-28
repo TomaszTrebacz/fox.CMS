@@ -12,7 +12,7 @@
 8. [Seeding](#seeding)
 9. [Testing](#testing)
 10. [Screenshots](#screenshots)
-11. 
+ 
 ## Description
 
 Fox.CMS is a super-simple, lightweight content management system which provide you all needed tools to create own blog.
@@ -36,19 +36,33 @@ Blog-service is responsible for all CRUD operations related to posts and categor
 - #### User-Service  
 User-service enables the management of own account and other ones (assuming that you have appropriate permissions).
 - #### Auth Package  
-This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using Passport.js and add needful layer between app and redis data store.
+This package (which is deployed to NPM and Github Package Registry) handle authentication & authorization using Passport.js and needful layer between app and redis data store.
 
 ## Stack
 
-- NestJS
-- Angular + PrimeNG
-- GraphQL & Apollo Federation
+- NestJS,
+- Angular + PrimeNG,
+- GraphQL & Apollo Federation,
 - TypeORM and PostgreSQL,
 - IOredis and Redis,
-- Jest, Supertest
+- Jest, Supertest.
 
 ## Features
-[in progress]
+- unit/integration/e2e tests on backend,
+- microservices-based architecture, 
+- GraphQL api created with Apollo Federation,
+- storing data in relational postgresql database and redis key-value data store, 
+- authentication & authorization handled by external package deployed to NPM & Github Package Registry,
+- access to endpoints depended by user roles-permissions,
+- refresh token with count mechanism (alternative to blacklist),
+- confirming user with email,
+- changing/resetting sensitive data like password/phone number,
+- CRUD operations which enables management of blog,
+- admin panel,
+- custom validators with decorators,
+- sending SMS with Twilio,
+- sending emails with package built on top of Nodemailer,
+- uploading images to Amazon S3,
 
 ## Installation
 
