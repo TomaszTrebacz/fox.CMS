@@ -52,7 +52,7 @@ This package (which is deployed to NPM and Github Package Registry) handle authe
 - microservices-based architecture, 
 - GraphQL api created with Apollo Federation,
 - storing data in relational postgresql database and redis key-value data store, 
-- authentication & authorization handled by external package deployed to NPM & Github Package Registry,
+- authentication & authorization handled by authored package deployed to NPM & Github Package Registry,
 - access to endpoints depended by user roles-permissions,
 - refresh token with count mechanism (alternative to blacklist),
 - confirming user with email,
@@ -79,7 +79,11 @@ cd fox.CMS
 git submodule init
 git submodule update // optionally
 ```
-4. Run backend
+4. Run databases
+```
+docker-compose up -d
+```
+5. Run backend
 ```
 cd ./[backend-service-name] // move into each service
 npm install
@@ -87,7 +91,7 @@ npm run start
 ```
 &nbsp;*Note: Run blog-service and user-service in the first place.*
 
-5. Run frontend
+6. Run frontend
 ```
 cd ./angular-app
 npm install
