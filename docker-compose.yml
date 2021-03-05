@@ -27,5 +27,7 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - 0.0.0.0:5437:5432
+    networks:
+      - fox-cms
 networks:
   fox-cms:
